@@ -1,9 +1,9 @@
 [Licensing::Module] Trying to connect to existing licensing client channel...
 Built from '6000.2/staging' branch; Version is '6000.2.9f1 (e0c4e791ab71) revision 14730471'; Using compiler version '194234433'; Build Type 'Release'
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib" at "2025-12-06T10:27:57.7927026Z"
 OS: 'Windows 10  (10.0.19045) 64bit CoreSingleLanguage' Language: 'en' Physical Memory: 16300 MB
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib" at "2025-11-21T19:28:35.7527034Z"
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
-Date: 2025-11-21T19:28:35Z
+Date: 2025-12-06T10:27:57Z
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.2.9f1\Editor\Unity.exe
@@ -17,7 +17,7 @@ C:/Users/Abdalrahman Abotalib/Saleem/Saleem
 -logFile
 Logs/AssetImportWorker0.log
 -srvPort
-65293
+50396
 -licensingIpc
 LicenseClient-Abdalrahman Abotalib
 -job-worker-count
@@ -65,35 +65,35 @@ C:/Users/Abdalrahman Abotalib/Saleem/Saleem
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [828]  Target information:
+Player connection [9864]  Target information:
 
-Player connection [828]  * "[IP] 192.168.100.35 [Port] 0 [Flags] 2 [Guid] 2838504392 [EditorId] 2838504392 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-F47SOVI) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [9864]  * "[IP] 192.168.8.118 [Port] 0 [Flags] 2 [Guid] 3575027844 [EditorId] 3575027844 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-F47SOVI) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [828] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [828] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [9864] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [9864] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 3
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-Library Redirect Path: Library/
-[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 7792, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 13436, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.17.3+a4e98f1
-  Session Id:              e7de53c97191421eac944210a5659c09
-  Correlation Id:          91ae0cf11340164b8774e88fe9e8665d
-  External correlation Id: 249381199036899151
+  Session Id:              a408d4b05984424c88ff8bdd58cd1205
+  Correlation Id:          400d47dd307d57be05af1ef32dd4a7ca
+  External correlation Id: 5179567641613132319
   Machine Id:              0R0ztDuWr7Mzm+xArcdnNjCxaQc=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Abdalrahman Abotalib" (connect: 0.00s, validation: 0.00s, handshake: 0.15s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib-notifications" at "2025-11-21T19:28:35.9126426Z"
-[Licensing::Module] Licensing Background thread has ended after 0.16s
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Abdalrahman Abotalib" (connect: 0.00s, validation: 0.00s, handshake: 0.07s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib-notifications" at "2025-12-06T10:27:57.8661034Z"
+[Licensing::Module] Licensing Background thread has ended after 0.07s
+Library Redirect Path: Library/
 [Physics::Module] Selected backend.
 [Physics::Module] Name: PhysX
 [Physics::Module] Id: 0xf2b8ea05
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 3.48 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 4.14 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.2.9f1 (e0c4e791ab71)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/Resources/UnitySubsystems
@@ -110,7 +110,7 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56556
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56856
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
@@ -121,41 +121,41 @@ Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.2.9f1/E
   Type: Assigned
   Expiration: Unlimited
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
-Registered in 0.007843 seconds.
-- Loaded All Assemblies, in  0.638 seconds
+Registered in 0.006914 seconds.
+- Loaded All Assemblies, in  0.769 seconds
 Native extension for Android target not found
-Android Extension - Scanning For ADB Devices 323 ms
+Android Extension - Scanning For ADB Devices 368 ms
 Native extension for WindowsStandalone target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.922 seconds
-Domain Reload Profiling: 1557ms
-	BeginReloadAssembly (207ms)
+- Finished resetting the current domain, in  1.084 seconds
+Domain Reload Profiling: 1850ms
+	BeginReloadAssembly (266ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (58ms)
-	RebuildNativeTypeToScriptingClass (21ms)
-	initialDomainReloadingComplete (86ms)
-	LoadAllAssembliesAndSetupDomain (263ms)
-		LoadAssemblies (204ms)
+		CreateAndSetChildDomain (2ms)
+	RebuildCommonClasses (72ms)
+	RebuildNativeTypeToScriptingClass (25ms)
+	initialDomainReloadingComplete (111ms)
+	LoadAllAssembliesAndSetupDomain (291ms)
+		LoadAssemblies (260ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (258ms)
-			TypeCache.Refresh (255ms)
-				TypeCache.ScanAssembly (230ms)
+		AnalyzeDomain (285ms)
+			TypeCache.Refresh (283ms)
+				TypeCache.ScanAssembly (262ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (922ms)
+	FinalizeReload (1085ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (854ms)
+		SetupLoadedEditorAssemblies (1028ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (450ms)
-			SetLoadedEditorAssemblies (7ms)
-			BeforeProcessingInitializeOnLoad (109ms)
-			ProcessInitializeOnLoadAttributes (194ms)
-			ProcessInitializeOnLoadMethodAttributes (94ms)
+			InitializePlatformSupportModulesInManaged (553ms)
+			SetLoadedEditorAssemblies (6ms)
+			BeforeProcessingInitializeOnLoad (115ms)
+			ProcessInitializeOnLoadAttributes (232ms)
+			ProcessInitializeOnLoadMethodAttributes (122ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -165,8 +165,8 @@ Worker process is ready to serve import requests
 Import Worker Mode flag is 0x00
 Begin MonoManager ReloadAssembly
 [Licensing::Client] Successfully resolved entitlement details
-- Loaded All Assemblies, in  1.284 seconds
-Refreshing native plugins compatible for Editor in 1.11 ms, found 3 plugins.
+- Loaded All Assemblies, in  1.408 seconds
+Refreshing native plugins compatible for Editor in 2.13 ms, found 3 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Package Manager log level set to [2]
@@ -174,269 +174,174 @@ Package Manager log level set to [2]
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.644 seconds
-Domain Reload Profiling: 2921ms
-	BeginReloadAssembly (301ms)
+- Finished resetting the current domain, in  1.731 seconds
+Domain Reload Profiling: 3132ms
+	BeginReloadAssembly (343ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (14ms)
+		DisableScriptedObjects (17ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (49ms)
-	RebuildCommonClasses (56ms)
-	RebuildNativeTypeToScriptingClass (18ms)
-	initialDomainReloadingComplete (57ms)
-	LoadAllAssembliesAndSetupDomain (845ms)
-		LoadAssemblies (588ms)
+		CreateAndSetChildDomain (51ms)
+	RebuildCommonClasses (72ms)
+	RebuildNativeTypeToScriptingClass (23ms)
+	initialDomainReloadingComplete (70ms)
+	LoadAllAssembliesAndSetupDomain (892ms)
+		LoadAssemblies (623ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (415ms)
-			TypeCache.Refresh (313ms)
-				TypeCache.ScanAssembly (285ms)
-			BuildScriptInfoCaches (77ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1644ms)
+		AnalyzeDomain (450ms)
+			TypeCache.Refresh (336ms)
+				TypeCache.ScanAssembly (308ms)
+			BuildScriptInfoCaches (87ms)
+			ResolveRequiredComponents (23ms)
+	FinalizeReload (1732ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1330ms)
+		SetupLoadedEditorAssemblies (1382ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (19ms)
+			InitializePlatformSupportModulesInManaged (17ms)
 			SetLoadedEditorAssemblies (7ms)
-			BeforeProcessingInitializeOnLoad (285ms)
-			ProcessInitializeOnLoadAttributes (926ms)
-			ProcessInitializeOnLoadMethodAttributes (86ms)
-			AfterProcessingInitializeOnLoad (7ms)
+			BeforeProcessingInitializeOnLoad (269ms)
+			ProcessInitializeOnLoadAttributes (971ms)
+			ProcessInitializeOnLoadMethodAttributes (108ms)
+			AfterProcessingInitializeOnLoad (9ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (11ms)
+		AwakeInstancesAfterBackupRestoration (9ms)
 Shader Hidden/ProbeVolume/VoxelizeScene is not supported: GPU does not support conservative rasterization
 Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
-Refreshing native plugins compatible for Editor in 1.74 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 1.87 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 14 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 6125 unused Assets / (3.6 MB). Loaded Objects now: 6821.
-Memory consumption went from 129.1 MB to 125.4 MB.
-Total: 14.451500 ms (FindLiveObjects: 1.008900 ms CreateObjectMapping: 1.796800 ms MarkObjects: 8.631300 ms  DeleteObjects: 3.013200 ms)
+Unloading 6125 unused Assets / (4.4 MB). Loaded Objects now: 6821.
+Memory consumption went from 129.0 MB to 124.6 MB.
+Total: 16.194100 ms (FindLiveObjects: 0.871500 ms CreateObjectMapping: 1.035700 ms MarkObjects: 10.593900 ms  DeleteObjects: 3.691200 ms)
 
 ========================================================================
 Received Import Request.
-  Time since last request: 163999.443770 seconds.
-  path: Assets/Characters/saleemForUnity.fbx
-  artifactKey: Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/saleemForUnity.fbx using Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1f979c202014f8812a6e62c1011402e3') in 0.8051949 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 213
+  Time since last request: 4823.077869 seconds.
+  path: Assets/Scenes/Class Room Lvl2.unity
+  artifactKey: Guid(196eae81ba3702f4b9f181a6fe811f29) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Scenes/Class Room Lvl2.unity using Guid(196eae81ba3702f4b9f181a6fe811f29) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7d76c6e1abd876bc5ac9a1bb456ccf35') in 0.0071422 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 20.316813 seconds.
-  path: Assets/Characters/saleemForUnity.fbx
-  artifactKey: Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/saleemForUnity.fbx using Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '18be3fd9af9f71ab5485cec720ef229e') in 0.3251979 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
+  Time since last request: 59.878522 seconds.
+  path: Assets/PlayGround Assets lvl1/uploads_files_3835558_untitled.fbx
+  artifactKey: Guid(13d4374fde523764cbd8b7e27b19015d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/PlayGround Assets lvl1/uploads_files_3835558_untitled.fbx using Guid(13d4374fde523764cbd8b7e27b19015d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7716b62ef759b6a5f9150b7e65216baf') in 0.9131439 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 7
 
 ========================================================================
 Received Import Request.
-  Time since last request: 110.188182 seconds.
-  path: Assets/Characters/saleemForUnity.fbx
-  artifactKey: Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/saleemForUnity.fbx using Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '03114ac2f1542e2555cec037612430a4') in 0.2262425 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
+  Time since last request: 1.632120 seconds.
+  path: Assets/PlayGround Assets lvl1/uploads_files_3589734_monkey_bar.fbx
+  artifactKey: Guid(ff01ffd119bbdc54396f8e5630d88a6b) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/PlayGround Assets lvl1/uploads_files_3589734_monkey_bar.fbx using Guid(ff01ffd119bbdc54396f8e5630d88a6b) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f94a7e19757a307eb5914c6cd4040a38') in 0.1286568 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 20
 
 ========================================================================
 Received Import Request.
-  Time since last request: 255.267558 seconds.
-  path: Assets/Characters/saleemForUnity.fbx
-  artifactKey: Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/saleemForUnity.fbx using Guid(7957a1e57385e7b468af377d761b0ce9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'effc42d42a3f2af25275288ad1fa1d6f') in 0.2243765 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 216
+  Time since last request: 15.658528 seconds.
+  path: Assets/PlayGround Assets lvl1/uploads_files_3835558_untitled.fbx
+  artifactKey: Guid(13d4374fde523764cbd8b7e27b19015d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/PlayGround Assets lvl1/uploads_files_3835558_untitled.fbx using Guid(13d4374fde523764cbd8b7e27b19015d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e3ce805062ead0c5fe3299ca24920769') in 0.0818712 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 8
 
 ========================================================================
 Received Import Request.
-  Time since last request: 73.988374 seconds.
-  path: Assets/Characters/boy1.fbx
-  artifactKey: Guid(52db782de7f13a743ae4cc5662a77b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy1.fbx using Guid(52db782de7f13a743ae4cc5662a77b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'ce474c7bd0c2ef4a377b945b3d349162') in 0.0611441 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 108
-
-========================================================================
-Received Import Request.
-  Time since last request: 5.912673 seconds.
-  path: Assets/Characters/boy1.fbx
-  artifactKey: Guid(52db782de7f13a743ae4cc5662a77b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy1.fbx using Guid(52db782de7f13a743ae4cc5662a77b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '695ea0fc1977916e43f06ba753cecabe') in 0.3167371 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 109
-
-========================================================================
-Received Import Request.
-  Time since last request: 7.691665 seconds.
-  path: Assets/Characters/boy1.fbx
-  artifactKey: Guid(52db782de7f13a743ae4cc5662a77b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy1.fbx using Guid(52db782de7f13a743ae4cc5662a77b53) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '85891a164a7929ac37a1365298fe1d46') in 0.2887733 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 109
-
-========================================================================
-Received Import Request.
-  Time since last request: 608.465401 seconds.
-  path: Assets/Characters/coach for Unity.fbx
-  artifactKey: Guid(a5f489780d98b5c4bb436ebe6f0a7af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/coach for Unity.fbx using Guid(a5f489780d98b5c4bb436ebe6f0a7af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'df95cf58169769b3482870b6939cdce7') in 0.3609141 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 213
-
-========================================================================
-Received Import Request.
-  Time since last request: 11.937278 seconds.
-  path: Assets/Characters/coach for Unity.fbx
-  artifactKey: Guid(a5f489780d98b5c4bb436ebe6f0a7af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/coach for Unity.fbx using Guid(a5f489780d98b5c4bb436ebe6f0a7af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '0856fb90fd5c6dd1bc5cef37aa0c252c') in 0.4818197 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
-
-========================================================================
-Received Import Request.
-  Time since last request: 19.409119 seconds.
-  path: Assets/Characters/coach for Unity.fbx
-  artifactKey: Guid(a5f489780d98b5c4bb436ebe6f0a7af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/coach for Unity.fbx using Guid(a5f489780d98b5c4bb436ebe6f0a7af9) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b37a81047c7752a206fb043bb28bd863') in 0.2902249 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
-
-========================================================================
-Received Import Request.
-  Time since last request: 136.330370 seconds.
-  path: Assets/Characters/boy3forunity.fbx
-  artifactKey: Guid(8ac56d06ac92aca48882ed2a8fc2a38d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy3forunity.fbx using Guid(8ac56d06ac92aca48882ed2a8fc2a38d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd32638339cd5b453416cf877616985c7') in 0.1342019 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 213
-
-========================================================================
-Received Import Request.
-  Time since last request: 6.036410 seconds.
-  path: Assets/Characters/boy3forunity.fbx
-  artifactKey: Guid(8ac56d06ac92aca48882ed2a8fc2a38d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy3forunity.fbx using Guid(8ac56d06ac92aca48882ed2a8fc2a38d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'f17b8be5a6f2646d170105b1532e1e3c') in 0.2966689 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
-
-========================================================================
-Received Import Request.
-  Time since last request: 9.336348 seconds.
-  path: Assets/Characters/boy3forunity.fbx
-  artifactKey: Guid(8ac56d06ac92aca48882ed2a8fc2a38d) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy3forunity.fbx using Guid(8ac56d06ac92aca48882ed2a8fc2a38d) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a9df8bb62a0cf84a2a15222a7726f968') in 0.2900416 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
-
-========================================================================
-Received Import Request.
-  Time since last request: 64.889300 seconds.
-  path: Assets/Characters/boy4.fbx
-  artifactKey: Guid(48c7b697d4dd66345af783123046a524) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy4.fbx using Guid(48c7b697d4dd66345af783123046a524) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '845f4cc50079136f4a7b2194948439b8') in 0.1172463 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 92
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.474809 seconds.
-  path: Assets/Characters/boy4.fbx
-  artifactKey: Guid(48c7b697d4dd66345af783123046a524) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy4.fbx using Guid(48c7b697d4dd66345af783123046a524) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '36be879aa139a211e4c1e331cff14760') in 0.4668816 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 93
-
-========================================================================
-Received Import Request.
-  Time since last request: 75.928568 seconds.
-  path: Assets/Characters/boy5forUnity.fbx
-  artifactKey: Guid(b213b29d53a8278478004e6fc9ba9dfc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy5forUnity.fbx using Guid(b213b29d53a8278478004e6fc9ba9dfc) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '2765853dac6dd4796adbbceec7887a10') in 0.2974296 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 213
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.803066 seconds.
-  path: Assets/Characters/boy5forUnity.fbx
-  artifactKey: Guid(b213b29d53a8278478004e6fc9ba9dfc) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy5forUnity.fbx using Guid(b213b29d53a8278478004e6fc9ba9dfc) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '095fc667d594fad484be856274f2c4a1') in 0.364025 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
-
-========================================================================
-Received Import Request.
-  Time since last request: 1140.118097 seconds.
-  path: Assets/Characters/boy6.fbx
-  artifactKey: Guid(1b09ab2f5bacd9743bd60ddf254eb462) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy6.fbx using Guid(1b09ab2f5bacd9743bd60ddf254eb462) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9a34aa2db54d665f28ec66215041cf6c') in 0.2308439 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 140
-
-========================================================================
-Received Import Request.
-  Time since last request: 11.418435 seconds.
-  path: Assets/Characters/boy6.fbx
-  artifactKey: Guid(1b09ab2f5bacd9743bd60ddf254eb462) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy6.fbx using Guid(1b09ab2f5bacd9743bd60ddf254eb462) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '9a7ee8161949b86e3f4ae03cba2d51ac') in 0.2798262 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 141
-
-========================================================================
-Received Import Request.
-  Time since last request: 49.118681 seconds.
-  path: Assets/Characters/boy7ForUnity.fbx
-  artifactKey: Guid(512da3f2cf0f64e4f8109ea75fa3e5b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy7ForUnity.fbx using Guid(512da3f2cf0f64e4f8109ea75fa3e5b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '26ed9f2a56526d48194f4cd6181e0587') in 0.2604242 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 213
-
-========================================================================
-Received Import Request.
-  Time since last request: 12.440711 seconds.
-  path: Assets/Characters/boy7ForUnity.fbx
-  artifactKey: Guid(512da3f2cf0f64e4f8109ea75fa3e5b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy7ForUnity.fbx using Guid(512da3f2cf0f64e4f8109ea75fa3e5b4) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '4364efc6201e7387b58b60f3ff7774bc') in 0.118072 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 214
-
-========================================================================
-Received Import Request.
-  Time since last request: 34.473084 seconds.
-  path: Assets/Characters/boy8.fbx
-  artifactKey: Guid(c28a6d79e2659a84291e950855b6e96f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy8.fbx using Guid(c28a6d79e2659a84291e950855b6e96f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'c8bd07f307fcc1ca409cf164adc50c0a') in 0.0897412 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 92
-
-========================================================================
-Received Import Request.
-  Time since last request: 14.001537 seconds.
-  path: Assets/Characters/boy8.fbx
-  artifactKey: Guid(c28a6d79e2659a84291e950855b6e96f) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy8.fbx using Guid(c28a6d79e2659a84291e950855b6e96f) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '1d3c50248f56b1b94e18a5c16260939d') in 0.2456274 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 93
-
-========================================================================
-Received Import Request.
-  Time since last request: 21.141096 seconds.
-  path: Assets/Characters/boy9.fbx
-  artifactKey: Guid(f229ed7bf7df86e4c8136fb990cde556) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy9.fbx using Guid(f229ed7bf7df86e4c8136fb990cde556) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'd1707083f1cfd68ca20b77194b7dbca7') in 0.2956529 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 140
-
-========================================================================
-Received Import Request.
-  Time since last request: 4.120036 seconds.
-  path: Assets/Characters/boy9.fbx
-  artifactKey: Guid(f229ed7bf7df86e4c8136fb990cde556) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Characters/boy9.fbx using Guid(f229ed7bf7df86e4c8136fb990cde556) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '368cc92966ec7b3b2ce3ac88e401d6a8') in 0.1104699 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 141
-
-========================================================================
-Received Import Request.
-  Time since last request: 50806.005372 seconds.
-  path: Assets/Scenes/SampleScene.unity
+  Time since last request: 25.735652 seconds.
+  path: Assets/Scenes/Play Ground Lvl1.unity
   artifactKey: Guid(99c9720ab356a0642a771bea13969a05) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/Scenes/SampleScene.unity using Guid(99c9720ab356a0642a771bea13969a05) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a22b7cb0647a1c2005d3490c951718a7') in 0.0069574 seconds
+Start importing Assets/Scenes/Play Ground Lvl1.unity using Guid(99c9720ab356a0642a771bea13969a05) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '7e3221f018d2c255be8a46abd46317a8') in 0.0007998 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 10.061093 seconds.
-  path: Assets/_Recovery
-  artifactKey: Guid(cc5ae7f64e31975448c0c56cd02ea402) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/_Recovery using Guid(cc5ae7f64e31975448c0c56cd02ea402) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b92819b6d98f6d57d9c9c7627a240432') in 0.0031329 seconds
+  Time since last request: 366.091875 seconds.
+  path: Assets/Class Room Assets lvl2/School Char and Desk.fbx
+  artifactKey: Guid(1777510afcff3074b970a991cd22c7c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Class Room Assets lvl2/School Char and Desk.fbx using Guid(1777510afcff3074b970a991cd22c7c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6adbb1cb2ae04e41810cf1d3d25e2036') in 0.0836064 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 16
+
+========================================================================
+Received Import Request.
+  Time since last request: 27.043934 seconds.
+  path: Assets/Class Room Assets lvl2/School Char and Desk.fbx
+  artifactKey: Guid(1777510afcff3074b970a991cd22c7c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Class Room Assets lvl2/School Char and Desk.fbx using Guid(1777510afcff3074b970a991cd22c7c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'a3a7277dc75817838736ed38f6bb97a2') in 0.1241718 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 20
+
+========================================================================
+Received Import Request.
+  Time since last request: 10.083959 seconds.
+  path: Assets/Class Room Assets lvl2/School Char and Desk.fbx
+  artifactKey: Guid(1777510afcff3074b970a991cd22c7c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Class Room Assets lvl2/School Char and Desk.fbx using Guid(1777510afcff3074b970a991cd22c7c2) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: '6cbcbdd126564079a95e70f72c3fae19') in 0.2832872 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 20
+
+========================================================================
+Received Import Request.
+  Time since last request: 268.444125 seconds.
+  path: Assets/Matirals/Material.001.mat
+  artifactKey: Guid(c3d6297274feed5408d816319fe2bf00) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Matirals/Material.001.mat using Guid(c3d6297274feed5408d816319fe2bf00) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '2eeb2cf1ddce10b969acc9bf3865c9ff') in 0.2387552 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000061 seconds.
+  path: Assets/Textures/shool chair textures
+  artifactKey: Guid(6e51959436fc7534399e062312125756) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures using Guid(6e51959436fc7534399e062312125756) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '80efac29382f20e5a131588ef75b055b') in 0.0149625 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000036 seconds.
+  path: Assets/Textures/shool chair textures/교실책상_normal.png
+  artifactKey: Guid(bdcbe17f4e8ff4949aa80c9b960408e5) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실책상_normal.png using Guid(bdcbe17f4e8ff4949aa80c9b960408e5) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter)[Licensing::Client] Successfully resolved entitlement details
+ -> (artifact id: '9ca50a9a7846ab37f72c5e610a4c1d91') in 0.0888512 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000027 seconds.
+  path: Assets/Class Room Assets lvl2/School Char and Desk.fbx
+  artifactKey: Guid(1777510afcff3074b970a991cd22c7c2) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Class Room Assets lvl2/School Char and Desk.fbx using Guid(1777510afcff3074b970a991cd22c7c2) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: 'a1cfd246e2f4686d9b837bc30c07d09a') in 0.0982417 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 20
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000035 seconds.
+  path: Assets/Textures/shool chair textures/교실의자_metallic.png
+  artifactKey: Guid(60a6e39227f541d4fb1ac017e8957904) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실의자_metallic.png using Guid(60a6e39227f541d4fb1ac017e8957904) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: 'b3dc5fb1508ef4a604df100777205ad7') in 0.0226329 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000050 seconds.
+  path: Assets/Textures/shool chair textures/교실책상_basecolor.png
+  artifactKey: Guid(8bb5d04c8db561e4298faf5669625c5e) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실책상_basecolor.png using Guid(8bb5d04c8db561e4298faf5669625c5e) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '8a6599fb4d33766afeae39372dfb33bf') in 0.0281217 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 6.389726 seconds.
+  path: Assets/Class Room Assets lvl2/Scripting
+  artifactKey: Guid(8e4c1e52fdacdbd4cb41bba4251b5d61) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
+Start importing Assets/Class Room Assets lvl2/Scripting using Guid(8e4c1e52fdacdbd4cb41bba4251b5d61) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'e9ae17a017e489ef2bbb45ee3622362e') in 0.0006557 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
 ========================================================================
 Received Import Request.
-  Time since last request: 10.022811 seconds.
-  path: Assets/_Recovery/0.unity
-  artifactKey: Guid(a1552bf2a38c8934d88df3f871f0dcb7) Importer(815301076,1909f56bfc062723c751e8b465ee728b)
-Start importing Assets/_Recovery/0.unity using Guid(a1552bf2a38c8934d88df3f871f0dcb7) Importer(815301076,1909f56bfc062723c751e8b465ee728b) (PreviewImporter) -> (artifact id: 'b7406430433ba905a2a4d2bbb15aff5d') in 0.0029868 seconds
-Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
+  Time since last request: 0.893312 seconds.
+  path: Assets/Class Room Assets lvl2/Scripting
+  artifactKey: Guid(8e4c1e52fdacdbd4cb41bba4251b5d61) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Class Room Assets lvl2/Scripting using Guid(8e4c1e52fdacdbd4cb41bba4251b5d61) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '0a06963e834c2abd1ef200df78e9c37c') in 0.0153214 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 

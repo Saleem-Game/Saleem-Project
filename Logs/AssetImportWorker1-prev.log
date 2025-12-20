@@ -2,8 +2,8 @@
 Built from '6000.2/staging' branch; Version is '6000.2.9f1 (e0c4e791ab71) revision 14730471'; Using compiler version '194234433'; Build Type 'Release'
 OS: 'Windows 10  (10.0.19045) 64bit CoreSingleLanguage' Language: 'en' Physical Memory: 16300 MB
 BatchMode: 1, IsHumanControllingUs: 0, StartBugReporterOnCrash: 0, Is64bit: 1
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib" at "2025-11-21T19:28:35.8126372Z"
-Date: 2025-11-21T19:28:35Z
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib" at "2025-12-06T10:27:57.7777745Z"
+Date: 2025-12-06T10:27:57Z
 
 COMMAND LINE ARGUMENTS:
 C:\Program Files\Unity\Hub\Editor\6000.2.9f1\Editor\Unity.exe
@@ -17,7 +17,7 @@ C:/Users/Abdalrahman Abotalib/Saleem/Saleem
 -logFile
 Logs/AssetImportWorker1.log
 -srvPort
-65293
+50396
 -licensingIpc
 LicenseClient-Abdalrahman Abotalib
 -job-worker-count
@@ -65,27 +65,27 @@ C:/Users/Abdalrahman Abotalib/Saleem/Saleem
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gi-baking-worker=262144"
     "memorysetup-temp-allocator-size-gfx=262144"
-Player connection [2708]  Target information:
+Player connection [10540]  Target information:
 
-Player connection [2708]  * "[IP] 192.168.100.35 [Port] 0 [Flags] 2 [Guid] 3190867404 [EditorId] 3190867404 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-F47SOVI) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
+Player connection [10540]  * "[IP] 192.168.8.118 [Port] 0 [Flags] 2 [Guid] 2995260092 [EditorId] 2995260092 [Version] 1048832 [Id] WindowsEditor(7,DESKTOP-F47SOVI) [Debug] 1 [PackageName] WindowsEditor [ProjectName] Editor" 
 
-Player connection [2708] Host joined multi-casting on [225.0.0.222:54997]...
-Player connection [2708] Host joined alternative multi-casting on [225.0.0.222:34997]...
+Player connection [10540] Host joined multi-casting on [225.0.0.222:54997]...
+Player connection [10540] Host joined alternative multi-casting on [225.0.0.222:34997]...
 JobSystem: Creating JobQueue using job-worker-count value 3
 Input System module state changed to: Initialized.
 [Physics::Module] Initialized fallback backend.
 [Physics::Module] Id: 0xdecafbad
-[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 7792, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
+[Licensing::Client] Code 10 while verifying Licensing Client signature (process Id: 13436, path: "C:/Program Files/Unity Hub/UnityLicensingClient_V1/Unity.Licensing.Client.exe")
 [Licensing::Module] LicensingClient has failed validation; ignoring
 [Licensing::Client] Handshaking with LicensingClient:
   Version:                 1.17.3+a4e98f1
-  Session Id:              d662b8348aea4c7f854162fcee5ee101
-  Correlation Id:          91ae0cf11340164b8774e88fe9e8665d
-  External correlation Id: 3273856814051927309
+  Session Id:              2477a4dc01764444b90a80e4b4ef1621
+  Correlation Id:          400d47dd307d57be05af1ef32dd4a7ca
+  External correlation Id: 2307858940474918160
   Machine Id:              0R0ztDuWr7Mzm+xArcdnNjCxaQc=
-[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Abdalrahman Abotalib" (connect: 0.00s, validation: 0.00s, handshake: 0.09s)
-[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib-notifications" at "2025-11-21T19:28:35.9077038Z"
-[Licensing::Module] Licensing Background thread has ended after 0.10s
+[Licensing::Module] Successfully connected to LicensingClient on channel: "LicenseClient-Abdalrahman Abotalib" (connect: 0.00s, validation: 0.00s, handshake: 0.08s)
+[Licensing::IpcConnector] Successfully connected to: "LicenseClient-Abdalrahman Abotalib-notifications" at "2025-12-06T10:27:57.8558045Z"
+[Licensing::Module] Licensing Background thread has ended after 0.08s
 Library Redirect Path: Library/
 [Physics::Module] Selected backend.
 [Physics::Module] Name: PhysX
@@ -93,7 +93,7 @@ Library Redirect Path: Library/
 [Physics::Module] SDK Version: 4.1.2
 [Physics::Module] Integration Version: 1.0.0
 [Physics::Module] Threading Mode: Multi-Threaded
-Refreshing native plugins compatible for Editor in 3.95 ms, found 3 plugins.
+Refreshing native plugins compatible for Editor in 4.32 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Initialize engine version: 6000.2.9f1 (e0c4e791ab71)
 [Subsystems] Discovering subsystems at path C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/Resources/UnitySubsystems
@@ -110,7 +110,7 @@ Initialize mono
 Mono path[0] = 'C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/Managed'
 Mono path[1] = 'C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32'
 Mono config path = 'C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/MonoBleedingEdge/etc'
-Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56100
+Using monoOptions --debugger-agent=transport=dt_socket,embedding=1,server=y,suspend=n,address=127.0.0.1:56692
 Begin MonoManager ReloadAssembly
 Registering precompiled unity dll's ...
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll
@@ -121,41 +121,41 @@ Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.2.9f1/E
   Type: Assigned
   Expiration: Unlimited
 Register platform support module: C:/Program Files/Unity/Hub/Editor/6000.2.9f1/Editor/Data/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll
-Registered in 0.026012 seconds.
-- Loaded All Assemblies, in  0.647 seconds
+Registered in 0.011531 seconds.
+- Loaded All Assemblies, in  0.790 seconds
 Native extension for Android target not found
-Android Extension - Scanning For ADB Devices 322 ms
+Android Extension - Scanning For ADB Devices 372 ms
 Native extension for WindowsStandalone target not found
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  0.920 seconds
-Domain Reload Profiling: 1564ms
-	BeginReloadAssembly (205ms)
+- Finished resetting the current domain, in  1.078 seconds
+Domain Reload Profiling: 1865ms
+	BeginReloadAssembly (266ms)
 		ExecutionOrderSort (0ms)
 		DisableScriptedObjects (0ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
 		CreateAndSetChildDomain (1ms)
-	RebuildCommonClasses (58ms)
-	RebuildNativeTypeToScriptingClass (19ms)
-	initialDomainReloadingComplete (98ms)
-	LoadAllAssembliesAndSetupDomain (264ms)
-		LoadAssemblies (202ms)
+	RebuildCommonClasses (82ms)
+	RebuildNativeTypeToScriptingClass (30ms)
+	initialDomainReloadingComplete (112ms)
+	LoadAllAssembliesAndSetupDomain (295ms)
+		LoadAssemblies (261ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (259ms)
-			TypeCache.Refresh (257ms)
-				TypeCache.ScanAssembly (234ms)
+		AnalyzeDomain (290ms)
+			TypeCache.Refresh (288ms)
+				TypeCache.ScanAssembly (266ms)
 			BuildScriptInfoCaches (0ms)
 			ResolveRequiredComponents (1ms)
-	FinalizeReload (920ms)
+	FinalizeReload (1079ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (852ms)
+		SetupLoadedEditorAssemblies (1017ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (452ms)
-			SetLoadedEditorAssemblies (5ms)
-			BeforeProcessingInitializeOnLoad (114ms)
-			ProcessInitializeOnLoadAttributes (188ms)
-			ProcessInitializeOnLoadMethodAttributes (93ms)
+			InitializePlatformSupportModulesInManaged (547ms)
+			SetLoadedEditorAssemblies (6ms)
+			BeforeProcessingInitializeOnLoad (118ms)
+			ProcessInitializeOnLoadAttributes (238ms)
+			ProcessInitializeOnLoadMethodAttributes (108ms)
 			AfterProcessingInitializeOnLoad (0ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
@@ -165,8 +165,8 @@ Worker process is ready to serve import requests
 Import Worker Mode flag is 0x00
 Begin MonoManager ReloadAssembly
 [Licensing::Client] Successfully resolved entitlement details
-- Loaded All Assemblies, in  1.294 seconds
-Refreshing native plugins compatible for Editor in 1.35 ms, found 3 plugins.
+- Loaded All Assemblies, in  1.394 seconds
+Refreshing native plugins compatible for Editor in 1.31 ms, found 3 plugins.
 Native extension for Android target not found
 Native extension for WindowsStandalone target not found
 Package Manager log level set to [2]
@@ -174,45 +174,102 @@ Package Manager log level set to [2]
 [Package Manager] Unable to send message (not connected to server process).
 [Package Manager] Cannot connect to Unity Package Manager local server
 Mono: successfully reloaded assembly
-- Finished resetting the current domain, in  1.652 seconds
-Domain Reload Profiling: 2939ms
-	BeginReloadAssembly (309ms)
+- Finished resetting the current domain, in  1.750 seconds
+Domain Reload Profiling: 3136ms
+	BeginReloadAssembly (339ms)
 		ExecutionOrderSort (0ms)
-		DisableScriptedObjects (14ms)
+		DisableScriptedObjects (17ms)
 		BackupInstance (0ms)
 		ReleaseScriptingObjects (0ms)
-		CreateAndSetChildDomain (46ms)
-	RebuildCommonClasses (58ms)
-	RebuildNativeTypeToScriptingClass (19ms)
-	initialDomainReloadingComplete (59ms)
-	LoadAllAssembliesAndSetupDomain (843ms)
-		LoadAssemblies (594ms)
+		CreateAndSetChildDomain (52ms)
+	RebuildCommonClasses (70ms)
+	RebuildNativeTypeToScriptingClass (24ms)
+	initialDomainReloadingComplete (69ms)
+	LoadAllAssembliesAndSetupDomain (883ms)
+		LoadAssemblies (623ms)
 		RebuildTransferFunctionScriptingTraits (0ms)
-		AnalyzeDomain (413ms)
-			TypeCache.Refresh (313ms)
-				TypeCache.ScanAssembly (285ms)
-			BuildScriptInfoCaches (75ms)
-			ResolveRequiredComponents (20ms)
-	FinalizeReload (1652ms)
+		AnalyzeDomain (446ms)
+			TypeCache.Refresh (335ms)
+				TypeCache.ScanAssembly (309ms)
+			BuildScriptInfoCaches (85ms)
+			ResolveRequiredComponents (19ms)
+	FinalizeReload (1751ms)
 		ReleaseScriptCaches (0ms)
 		RebuildScriptCaches (0ms)
-		SetupLoadedEditorAssemblies (1341ms)
+		SetupLoadedEditorAssemblies (1395ms)
 			LogAssemblyErrors (0ms)
-			InitializePlatformSupportModulesInManaged (18ms)
-			SetLoadedEditorAssemblies (6ms)
-			BeforeProcessingInitializeOnLoad (301ms)
-			ProcessInitializeOnLoadAttributes (917ms)
-			ProcessInitializeOnLoadMethodAttributes (87ms)
-			AfterProcessingInitializeOnLoad (11ms)
+			InitializePlatformSupportModulesInManaged (19ms)
+			SetLoadedEditorAssemblies (7ms)
+			BeforeProcessingInitializeOnLoad (275ms)
+			ProcessInitializeOnLoadAttributes (984ms)
+			ProcessInitializeOnLoadMethodAttributes (101ms)
+			AfterProcessingInitializeOnLoad (9ms)
 			EditorAssembliesLoaded (0ms)
 		ExecutionOrderSort2 (0ms)
-		AwakeInstancesAfterBackupRestoration (10ms)
+		AwakeInstancesAfterBackupRestoration (9ms)
 Shader Hidden/ProbeVolume/VoxelizeScene is not supported: GPU does not support conservative rasterization
-Launched and connected shader compiler UnityShaderCompiler.exe after 0.01 seconds
-Refreshing native plugins compatible for Editor in 1.73 ms, found 3 plugins.
+Launched and connected shader compiler UnityShaderCompiler.exe after 0.02 seconds
+Refreshing native plugins compatible for Editor in 1.58 ms, found 3 plugins.
 Preloading 0 native plugins for Editor in 0.00 ms.
 Unloading 14 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 6125 unused Assets / (4.6 MB). Loaded Objects now: 6821.
-Memory consumption went from 129.1 MB to 124.5 MB.
-Total: 14.760800 ms (FindLiveObjects: 0.959800 ms CreateObjectMapping: 1.751700 ms MarkObjects: 8.465600 ms  DeleteObjects: 3.582100 ms)
+Unloading 6125 unused Assets / (4.5 MB). Loaded Objects now: 6821.
+Memory consumption went from 129.1 MB to 124.6 MB.
+Total: 15.403400 ms (FindLiveObjects: 1.140300 ms CreateObjectMapping: 1.538900 ms MarkObjects: 9.231500 ms  DeleteObjects: 3.491100 ms)
+
+========================================================================
+Received Import Request.
+  Time since last request: 5599.850795 seconds.
+  path: Assets/Scenes/Play Ground Lvl1.unity
+  artifactKey: Guid(99c9720ab356a0642a771bea13969a05) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Scenes/Play Ground Lvl1.unity using Guid(99c9720ab356a0642a771bea13969a05) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '706c825624500c05c1fe0c6308de6bec') in 0.2234389 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Textures/shool chair textures/교실의자_normal.png
+  artifactKey: Guid(848d1c1ccae7fa24580d0d7993997a9b) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실의자_normal.png using Guid(848d1c1ccae7fa24580d0d7993997a9b) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter)[Licensing::Client] Successfully resolved entitlement details
+ -> (artifact id: '2ef630676268064c5368901bfb0d7a3e') in 0.1197914 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000030 seconds.
+  path: Assets/Textures/shool chair textures/교실책상_metallic.png
+  artifactKey: Guid(2badf24fb06e8434480af379c771a169) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실책상_metallic.png using Guid(2badf24fb06e8434480af379c771a169) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: 'ba104af06a106132662f89c398bb8e2d') in 0.0297699 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000023 seconds.
+  path: Assets/Textures/shool chair textures/교실책상_roughness.png
+  artifactKey: Guid(7ef220ab201801247b9748882da09d8c) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실책상_roughness.png using Guid(7ef220ab201801247b9748882da09d8c) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '2d3e24b72b7b9c99609b89629a5558b7') in 0.0245605 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000019 seconds.
+  path: Assets/Scenes/Class Room Lvl2.unity
+  artifactKey: Guid(196eae81ba3702f4b9f181a6fe811f29) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Scenes/Class Room Lvl2.unity using Guid(196eae81ba3702f4b9f181a6fe811f29) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '458881b79c1a2052db23050b1e652e99') in 0.0196352 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000023 seconds.
+  path: Assets/Textures/shool chair textures/교실의자_basecolor.png
+  artifactKey: Guid(309301bd6fbfd4548804b4f1aec5e66d) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실의자_basecolor.png using Guid(309301bd6fbfd4548804b4f1aec5e66d) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: 'b57ae78b0b6ae7c4e40379f594b947b9') in 0.0244197 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
+
+========================================================================
+Received Import Request.
+  Time since last request: 0.000029 seconds.
+  path: Assets/Textures/shool chair textures/교실의자_roughness.png
+  artifactKey: Guid(605e1a4e7992bed4a87527bc0a7ced04) Importer(2089858483,192608db42251d675da83286b1cce702)
+Start importing Assets/Textures/shool chair textures/교실의자_roughness.png using Guid(605e1a4e7992bed4a87527bc0a7ced04) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: '53d91d879e8d519f9f77be5020332fd3') in 0.0276056 seconds
+Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 1
 
