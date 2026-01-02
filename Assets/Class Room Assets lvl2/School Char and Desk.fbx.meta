@@ -1,14 +1,49 @@
 fileFormatVersion: 2
-guid: 13d4374fde523764cbd8b7e27b19015d
+guid: 1777510afcff3074b970a991cd22c7c2
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
   externalObjects:
   - first:
-      type: UnityEngine:Material
+      type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
-      name: Material.001
-    second: {fileID: 2100000, guid: c3d6297274feed5408d816319fe2bf00, type: 2}
+      name: "\uAD50\uC2E4\uC758\uC790_basecolor"
+    second: {fileID: 2800000, guid: 309301bd6fbfd4548804b4f1aec5e66d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: "\uAD50\uC2E4\uC758\uC790_metallic"
+    second: {fileID: 2800000, guid: 60a6e39227f541d4fb1ac017e8957904, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: "\uAD50\uC2E4\uC758\uC790_normal"
+    second: {fileID: 2800000, guid: 848d1c1ccae7fa24580d0d7993997a9b, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: "\uAD50\uC2E4\uC758\uC790_roughness"
+    second: {fileID: 2800000, guid: 605e1a4e7992bed4a87527bc0a7ced04, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: "\uAD50\uC2E4\uCC45\uC0C1_basecolor"
+    second: {fileID: 2800000, guid: 8bb5d04c8db561e4298faf5669625c5e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: "\uAD50\uC2E4\uCC45\uC0C1_metallic"
+    second: {fileID: 2800000, guid: 2badf24fb06e8434480af379c771a169, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: "\uAD50\uC2E4\uCC45\uC0C1_normal"
+    second: {fileID: 2800000, guid: bdcbe17f4e8ff4949aa80c9b960408e5, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: "\uAD50\uC2E4\uCC45\uC0C1_roughness"
+    second: {fileID: 2800000, guid: 7ef220ab201801247b9748882da09d8c, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
