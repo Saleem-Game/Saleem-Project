@@ -1836,7 +1836,7 @@ MonoBehaviour:
   - {fileID: 1151147639}
   - {fileID: 372983608}
   levelSceneNames:
-  - Play Ground Lvl1
+  - PlayGround-CutScene
   - Class Room Lvl2
 --- !u!1 &1064342334
 GameObject:

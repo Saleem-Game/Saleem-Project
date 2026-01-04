@@ -17,6 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Class Room Lvl2.unity
     guid: 196eae81ba3702f4b9f181a6fe811f29
+  - enabled: 1
+    path: Assets/Scenes/PlayGround-CutScene.unity
+    guid: f17df141dd9899549b0cecbe7b757ca9
+  - enabled: 1
+    path: Assets/Scenes/QuizScreen.unity
+    guid: 296a31531120bff449ce778c2dabee5a
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -4854,7 +4854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de44933536c647841885118722dc319b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  testSequenceMode: 1
+  testSequenceMode: 0
   level1Parent: {fileID: 1662635611}
   level1Questions:
   - {fileID: 1847711849}
@@ -4878,6 +4878,7 @@ MonoBehaviour:
   - {fileID: 138150112}
   correctImage: {fileID: 843522533}
   wrongImage: {fileID: 713647703}
+  maxWrongAnswers: 3
 --- !u!1 &828746616
 GameObject:
   m_ObjectHideFlags: 0
