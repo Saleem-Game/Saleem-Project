@@ -8,22 +8,22 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: HotFoodServingLine_basecolor
-    second: {fileID: 2800000, guid: 1265c4166b7254f438351319982e271e, type: 3}
+    second: {fileID: 2800000, guid: 5672dbe5a23bbaf47bd2380e24c555b7, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: HotFoodServingLine_metallic
-    second: {fileID: 2800000, guid: 408e6b2b9a5e10541808e9b1ecbc5481, type: 3}
+    second: {fileID: 2800000, guid: dbececdf5e1a7ff4ab7d17c4f0ebfc59, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: HotFoodServingLine_normal
-    second: {fileID: 2800000, guid: 63edf3e994d03dc4380aa3476bf44fc6, type: 3}
+    second: {fileID: 2800000, guid: 34d71cf161a97dc469f9e079f9c222b5, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: HotFoodServingLine_roughness
-    second: {fileID: 2800000, guid: 7c01865d129f2194e8cbaf4d02685531, type: 3}
+    second: {fileID: 2800000, guid: 2b0dd6173eab43143870afcabccfc379, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
