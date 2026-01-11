@@ -3,7 +3,27 @@ guid: 94c25421e204bb84b8b1e42d1c96ab06
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: cables_basecolor
+    second: {fileID: 2800000, guid: 096071298b49dd64a95c32ee284a287c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: cables_metallic
+    second: {fileID: 2800000, guid: fbad36da7af4e904798031151068044e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: cables_normal
+    second: {fileID: 2800000, guid: d69b1ef552dd43a4882901a874aa2ec4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: cables_roughness
+    second: {fileID: 2800000, guid: 6452bd9ef34946144bfc62b5201ef1b2, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

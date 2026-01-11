@@ -3,7 +3,27 @@ guid: cc4e39153f674ec4e9e36eb01d6a0e7f
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: switch_basecolor
+    second: {fileID: 2800000, guid: 16582116889fae64e9f48d3a508c263a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: switch_metallic
+    second: {fileID: 2800000, guid: 1ff242207e8e0e14ab2fd10ccdf4a6b9, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: switch_normal
+    second: {fileID: 2800000, guid: 09a63763802a57843b354ddd0bca3638, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: switch_roughness
+    second: {fileID: 2800000, guid: 91b847ea36d2e144990c1460d259b800, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

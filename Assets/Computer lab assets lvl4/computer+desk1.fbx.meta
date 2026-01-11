@@ -3,7 +3,27 @@ guid: 1bfc264d1214cde49985b621a04662c7
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: computerdesk1_basecolor
+    second: {fileID: 2800000, guid: 391de4e0e7116f44995689ed02999a38, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: computerdesk1_metallic
+    second: {fileID: 2800000, guid: 3baaf4df526275d498c865a0edaedce7, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: computerdesk1_normal
+    second: {fileID: 2800000, guid: c56cbd6dc484dfe43b1bd63f7111eb50, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: computerdesk1_roughness
+    second: {fileID: 2800000, guid: 6161772f28d20304c80a536092b1f361, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

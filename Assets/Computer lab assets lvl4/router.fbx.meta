@@ -3,7 +3,27 @@ guid: 26a5f3d9f300cf8479e585168b72e086
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: router_basecolor
+    second: {fileID: 2800000, guid: f091db56bf5c8c141b167b85ea0ea50a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: router_metallic
+    second: {fileID: 2800000, guid: fc07bec012024314fa59092bc8c2e1da, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: router_normal
+    second: {fileID: 2800000, guid: d3f3d5502841bf34d812a51e6aa3b995, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: router_roughness
+    second: {fileID: 2800000, guid: 965a30d8224386c48a807a5220293aa5, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
