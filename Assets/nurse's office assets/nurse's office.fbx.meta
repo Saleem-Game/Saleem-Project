@@ -1,0 +1,300 @@
+fileFormatVersion: 2
+guid: 5ac914f5ee0dc164485e04b2e86a9948
+ModelImporter:
+  serializedVersion: 24200
+  internalIDToNameTable: []
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_00f6a8e3
+    second: {fileID: 2100000, guid: 1aad25ce504ceaa4da75873bcf0ee3cb, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_11512e7f
+    second: {fileID: 2100000, guid: c760735ae300887459aeaf0441bb7dcd, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_333973c8
+    second: {fileID: 2100000, guid: 6f8b7c0f7edd65b4b9d8d95c001b16b8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_38afdd8d
+    second: {fileID: 2100000, guid: 306eaf9313691ed429cc84dcbdf6638e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_455ec69d
+    second: {fileID: 2100000, guid: 3bd87ab7c9ec4714e919f5cba4f8fad4, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_5721a53b
+    second: {fileID: 2100000, guid: c8032b14b9e4bdb4da28f05b486bccc7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_79c2314e
+    second: {fileID: 2100000, guid: 9327a249be0be7741a537f20b152929a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_cdb69dae
+    second: {fileID: 2100000, guid: 7633cd8099757964c8a7a720f1b7db9e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_ceea9286
+    second: {fileID: 2100000, guid: 74958efa78ccb4e4eaad68cbee4536aa, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: tripo_mat_d8af22ef
+    second: {fileID: 2100000, guid: ac503bdd2b0bf2f4e986ceb21bc428c5, type: 2}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 2chairs_basecolor
+    second: {fileID: 2800000, guid: bdca89fd4fc5a8740a6182b30ba782e1, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 2chairs_metallic
+    second: {fileID: 2800000, guid: 2c736efc3cfcad04692d7d6e9828dc9e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 2chairs_normal
+    second: {fileID: 2800000, guid: 979b1535d5fc4814cb14732fde33533d, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: 2chairs_roughness
+    second: {fileID: 2800000, guid: df94b4fd7f97e054fa87768b1bf595a6, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: ExaminationStool_basecolor
+    second: {fileID: 2800000, guid: 4581b31118c77dc42a4b05de4d603861, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: ExaminationStool_metallic
+    second: {fileID: 2800000, guid: f4986842d98e21c4abf8cc6404051e8a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: ExaminationStool_normal
+    second: {fileID: 2800000, guid: a7063bb5ddec86a44bb0997c520a05f7, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: ExaminationStool_roughness
+    second: {fileID: 2800000, guid: 884ebe9226c37a8449db904c1323e355, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EyeChart_basecolor
+    second: {fileID: 2800000, guid: 78d648b9154fe8444b4f1a0fde603ce6, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EyeChart_metallic
+    second: {fileID: 2800000, guid: 9c4106012409aec41b9c203031259ccb, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EyeChart_normal
+    second: {fileID: 2800000, guid: 30d4648da9a15a44cbece9c9fac9e0e4, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: EyeChart_roughness
+    second: {fileID: 2800000, guid: 4ff70ea0ca32e3048a09c4b1847964fa, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: bed_basecolor
+    second: {fileID: 2800000, guid: cf1e4c59436b55444ad4c2ac27fb5b71, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: cabnit_basecolor
+    second: {fileID: 2800000, guid: 1dd1741016319b54eaff761d70ce9b21, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: icepack_basecolor
+    second: {fileID: 2800000, guid: 93a480d1db432bc4484819796c079326, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: icepack_metallic
+    second: {fileID: 2800000, guid: 401f62efe41917042af88f9701e5a3db, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: icepack_normal
+    second: {fileID: 2800000, guid: a51880588c04b724ea0232a0aeb8e12c, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: icepack_roughness
+    second: {fileID: 2800000, guid: dd6e32fb21280d7469403ff61cd19ed8, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nursedesk_basecolor
+    second: {fileID: 2800000, guid: 31adfaae1faa22843bf25c9be3c3eaf5, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nursedesk_metallic
+    second: {fileID: 2800000, guid: 515915dc16706a449a5114255e6c07ac, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nursedesk_normal
+    second: {fileID: 2800000, guid: bd692be507a7d36429732cf2aaa6db47, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nursedesk_roughness
+    second: {fileID: 2800000, guid: bfad33e5823543e4e8e6e3f34a0d1c96, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nurseposters_basecolor
+    second: {fileID: 2800000, guid: 9ea0217ec80715748b2f5d39de71d0d1, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nurseposters_metallic
+    second: {fileID: 2800000, guid: 6d2fa386898247f48b01a25f8a3e7159, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nurseposters_normal
+    second: {fileID: 2800000, guid: 102494fea5d2bbc4aacf391fccfd73bd, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: nurseposters_roughness
+    second: {fileID: 2800000, guid: 7978ee93b5fe2ef49a257191ad15310e, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: privacyscreen_basecolor
+    second: {fileID: 2800000, guid: ba4155d9f17a3d849a152b0dbd04019a, type: 3}
+  - first:
+      type: UnityEngine:Texture2D
+      assembly: UnityEngine.CoreModule
+      name: scale_basecolor
+    second: {fileID: 2800000, guid: 27a1127ec4e71fa4ca3ed6757655167d, type: 3}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importPhysicalCameras: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    generateMeshLods: 0
+    meshLodGenerationFlags: 0
+    maximumMeshLod: -1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+    strictVertexDataChecks: 0
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  importBlendShapeDeformPercent: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
