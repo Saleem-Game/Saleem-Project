@@ -938,7 +938,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9a9e7d9b19941da48990e02ca2ba06af, type: 2}
+  - {fileID: 2100000, guid: bd44c4a68e2d0e340aeca06a5cde6c3c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2902,7 +2902,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9a9e7d9b19941da48990e02ca2ba06af, type: 2}
+  - {fileID: 2100000, guid: bd44c4a68e2d0e340aeca06a5cde6c3c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3852,6 +3852,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 216270271}
     m_Modifications:
+    - target: {fileID: 766798186684280956, guid: bf2b738d13dbb9a44933e9a4f86ac53a, type: 3}
+      propertyPath: m_Name
+      value: door
+      objectReference: {fileID: 0}
     - target: {fileID: 2366057531848946363, guid: bf2b738d13dbb9a44933e9a4f86ac53a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.253159
@@ -3896,6 +3900,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Rama's classroom
       objectReference: {fileID: 0}
+    - target: {fileID: 8658606097654573782, guid: bf2b738d13dbb9a44933e9a4f86ac53a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: b2afa13513bffe243b355b5e457b9899, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11312,7 +11320,7 @@ Transform:
   m_GameObject: {fileID: 1980632925813462303}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.51, y: 0, z: -7.878}
+  m_LocalPosition: {x: 8.473, y: 0, z: -7.956}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11555,7 +11563,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.709991
+      value: 8.912994
       objectReference: {fileID: 0}
     - target: {fileID: 8944336655422409503, guid: f6d148d888ffbf54b9afe9936dfaec1f, type: 3}
       propertyPath: m_LocalPosition.y
@@ -13201,6 +13209,30 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 216270271}
     m_Modifications:
+    - target: {fileID: 1439394156441637942, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74c5158d5356cf041a10527a26c8f2da, type: 2}
+    - target: {fileID: 2677280118815075143, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74c5158d5356cf041a10527a26c8f2da, type: 2}
+    - target: {fileID: 2900793596624744213, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: e1c17bfbbdc05804293426fd11bd8619, type: 2}
+    - target: {fileID: 3386615659372228034, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74c5158d5356cf041a10527a26c8f2da, type: 2}
+    - target: {fileID: 5923800488326264484, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.11
+      objectReference: {fileID: 0}
+    - target: {fileID: 7529170795431505514, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74c5158d5356cf041a10527a26c8f2da, type: 2}
     - target: {fileID: 7883814307535438540, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 28.58316
@@ -13246,7 +13278,8 @@ PrefabInstance:
       value: nurse's room
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 4580086223552581676, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7883814307535438540, guid: d6ecbfb482c655b40bfac8ca4c6448e7, type: 3}
       insertIndex: -1
@@ -13874,6 +13907,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 216270271}
     m_Modifications:
+    - target: {fileID: 4561148755637479063, guid: 5f7d5ee4ba241f44dbbdb4401cdb0046, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.02
+      objectReference: {fileID: 0}
     - target: {fileID: 7420125465373699389, guid: 5f7d5ee4ba241f44dbbdb4401cdb0046, type: 3}
       propertyPath: m_Name
       value: second classroom
@@ -13993,7 +14030,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 8.709991
+      value: 8.912994
       objectReference: {fileID: 0}
     - target: {fileID: 2070925441746177912, guid: a1a802ecaf6775746bb2a929fb554ad8, type: 3}
       propertyPath: m_LocalPosition.y
@@ -14157,7 +14194,7 @@ Transform:
   m_GameObject: {fileID: 6163884257798794308}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.375, z: 0}
+  m_LocalPosition: {x: 0.24, y: 1.375, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
