@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Playables;
 using System.Collections;
-using Unity.Cinemachine; // Unity 6 Namespace
+using Unity.Cinemachine;
 
 public class LabManager : MonoBehaviour
 {
@@ -16,35 +16,35 @@ public class LabManager : MonoBehaviour
     public Texture[] questionImages;
 
     [Header("3. Feedback Setup")]
-    public MeshRenderer feedbackCube;
+    // CHANGE: Use GameObject so we can hide the whole thing completely
+    public GameObject feedbackCube;
     public Texture correctTexture;
     public Texture wrongTexture;
 
     [Header("4. Rows Setup")]
     public GameObject[] answerRows;
 
-    // --- LOGIC FIX HERE ---
     private int currentQuestionIndex = 0;
-
-    // 0 = A, 1 = B, 2 = C
-    // Your Order: Q1 is A (0), Q2 is C (2), Q3 is B (1)
+    // Your Logic: Q1=A(0), Q2=C(2), Q3=B(1)
     private int[] correctAnswers = { 0, 2, 1 };
 
     void Start()
     {
-        // 1. FORCE CAMERAS: Ensure Player Cam is active, Cutscene is off
+        // 1. Force Cameras
         mainCam.Priority = 10;
         cutsceneCam.Priority = 0;
 
-        // 2. Hide Quiz Elements
-        feedbackCube.enabled = false;
+        // 2. HIDE FEEDBACK (This ensures it is GONE at the start)
+        if (feedbackCube != null)
+            feedbackCube.SetActive(false);
+
+        // 3. Hide all rows
         foreach (var row in answerRows) row.SetActive(false);
 
-        // 3. Show Start Button
+        // 4. Show Start Button
         startButton.SetActive(true);
     }
 
-    // --- PHASE 1: START CUTSCENE ---
     public void StartGameSequence()
     {
         startButton.SetActive(false);
@@ -53,36 +53,27 @@ public class LabManager : MonoBehaviour
 
     IEnumerator PlayCutsceneRoutine()
     {
-        // Switch to Cutscene Cam
         cutsceneCam.Priority = 20;
-
-        // Play Timeline
         timeline.Play();
-
-        // Wait for Timeline duration
         yield return new WaitForSeconds((float)timeline.duration);
-
-        // Switch back to Player Cam
         cutsceneCam.Priority = 0;
         mainCam.Priority = 10;
 
-        // START THE QUIZ
+        // Start the first question
         LoadQuestion(0);
     }
-
-    // --- PHASE 2: QUIZ LOGIC ---
 
     void LoadQuestion(int index)
     {
         currentQuestionIndex = index;
 
-        // Change Projector Image
+        // Update Projector
         if (index < questionImages.Length)
         {
             projectorScreen.material.mainTexture = questionImages[index];
         }
 
-        // Activate ONLY the current row
+        // Activate Answer Row
         for (int i = 0; i < answerRows.Length; i++)
         {
             if (i == index)
@@ -91,24 +82,21 @@ public class LabManager : MonoBehaviour
                 answerRows[i].SetActive(false);
         }
 
-        // Hide feedback while thinking
-        feedbackCube.enabled = false;
+        // HIDE FEEDBACK again (so it disappears between questions)
+        feedbackCube.SetActive(false);
     }
 
-    // This checks if the answer is Right or Wrong
     public void SubmitAnswer(int answerIndex)
     {
-        // Get the correct answer for THIS question
         int correctAnswer = correctAnswers[currentQuestionIndex];
-
-        // Compare
         bool isCorrect = (answerIndex == correctAnswer);
 
-        // Show Feedback (Green Check / Red X)
-        feedbackCube.enabled = true;
-        feedbackCube.material.mainTexture = isCorrect ? correctTexture : wrongTexture;
+        // SHOW FEEDBACK NOW
+        feedbackCube.SetActive(true);
 
-        // Wait 3 seconds, then move on
+        // Apply texture to the renderer inside the object
+        feedbackCube.GetComponent<Renderer>().material.mainTexture = isCorrect ? correctTexture : wrongTexture;
+
         StartCoroutine(NextQuestionDelay());
     }
 
@@ -116,20 +104,19 @@ public class LabManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
-        // Disable the old row
         answerRows[currentQuestionIndex].SetActive(false);
 
-        // Increment Question Index
-        int nextQ = currentQuestionIndex + 1;
+        // Hide feedback before next question
+        feedbackCube.SetActive(false);
 
+        int nextQ = currentQuestionIndex + 1;
         if (nextQ < questionImages.Length)
         {
             LoadQuestion(nextQ);
         }
         else
         {
-            Debug.Log("Game Over - You finished all questions!");
-            // Optional: Turn off projector or show "Well Done" image
+            Debug.Log("Quiz Finished!");
         }
     }
 }
