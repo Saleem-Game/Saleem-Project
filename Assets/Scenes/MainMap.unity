@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 19212390}
   - component: {fileID: 19212391}
   m_Layer: 0
-  m_Name: CinemachineCamera16 (3)
+  m_Name: CinemachineCamera19
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27136,7 +27136,7 @@ GameObject:
   - component: {fileID: 1814673474}
   - component: {fileID: 1814673475}
   m_Layer: 0
-  m_Name: CinemachineCamera16 (2)
+  m_Name: CinemachineCamera18
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -27572,7 +27572,7 @@ GameObject:
   - component: {fileID: 1865226104}
   - component: {fileID: 1865226105}
   m_Layer: 0
-  m_Name: CinemachineCamera16 (1)
+  m_Name: CinemachineCamera17
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -46689,7 +46689,7 @@ Transform:
   m_GameObject: {fileID: 6936530353194368595}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.3, y: 1.126, z: -15.58}
+  m_LocalPosition: {x: 7.3, y: 1.126, z: -15.82}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -54164,8 +54164,8 @@ Transform:
   m_GameObject: {fileID: 5677622298496831033}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 7.3347473, y: 1.3100001, z: -11.5}
-  m_LocalScale: {x: 6, y: 2.6, z: 0.10000002}
+  m_LocalPosition: {x: 7.3347, y: 1.3100001, z: -11.6314}
+  m_LocalScale: {x: 6.262508, y: 2.6, z: 0.10000002}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4879424549613907211}
@@ -56070,6 +56070,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4409603171609463227}
   - component: {fileID: 6936530353194368596}
+  - component: {fileID: 6936530353194368597}
   m_Layer: 0
   m_Name: DoorHinge
   m_TagString: Untagged
@@ -56089,11 +56090,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaab0ec937e31064babb296ff1f4404b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::openingDoor
-  saleemPlayer: {fileID: 1168490084316319653}
-  doorMesh: {fileID: 7839727317856162220}
-  activationDistance: 1.4
   openAngle: 90
   speed: 2
+--- !u!65 &6936530353194368597
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6936530353194368595}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 2.09, y: 2.18, z: 1.72}
+  m_Center: {x: 0.11, y: 0.18, z: 0.34}
 --- !u!33 &6941832800514846897
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -58729,8 +58748,8 @@ Transform:
   m_GameObject: {fileID: 374760900526752849}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0.05000162, y: 0.03400004, z: 0.3798628}
-  m_LocalScale: {x: 1.34, y: 2.2, z: 0.10000047}
+  m_LocalPosition: {x: 0.035, y: 0.03400004, z: 0.5121}
+  m_LocalScale: {x: 1.075886, y: 2.2, z: 0.08}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 712452188}
@@ -61969,7 +61988,7 @@ Transform:
   m_GameObject: {fileID: 9203530242065238264}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -0.119888306, y: 0.06, z: -15.32}
+  m_LocalPosition: {x: -0.119888306, y: 0.02, z: -15.32}
   m_LocalScale: {x: 15, y: 13.5, z: 0.099999994}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -62355,7 +62374,7 @@ Transform:
   m_GameObject: {fileID: 3669742413924664500}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 9.67, y: -0, z: 82.47}
+  m_LocalPosition: {x: 9.72, y: -0, z: 82.27}
   m_LocalScale: {x: 4.99, y: 11.8, z: 0.099999994}
   m_ConstrainProportionsScale: 0
   m_Children: []
