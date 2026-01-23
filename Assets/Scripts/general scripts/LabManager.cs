@@ -3,6 +3,7 @@ using UnityEngine.Playables;
 using System.Collections;
 using Unity.Cinemachine;
 using TMPro;
+using UnityEngine.EventSystems; 
 
 public class LabManager : MonoBehaviour
 {
@@ -35,47 +36,48 @@ public class LabManager : MonoBehaviour
     private int mistakeCount = 0;
     private int[] correctAnswers = { 0, 2, 1 };
 
+    private bool isGameRunning = false;
     void Start()
     {
+        // Force timeline to stop
+        if (timeline != null) { timeline.Stop(); timeline.time = 0; }
+
         mainCam.Priority = 10;
         cutsceneCam.Priority = 0;
 
         if (feedbackCube != null) feedbackCube.SetActive(false);
-
         if (successScreenObj != null) successScreenObj.SetActive(false);
         if (failScreenObj != null) failScreenObj.SetActive(false);
 
-        foreach (var obj in mistakeObjects)
-        {
-            if (obj != null) obj.SetActive(false);
-        }
+        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
+        foreach (var row in allButtonRows) foreach (var btn in row.buttons) if (btn != null) btn.SetActive(false);
 
-        // Hide ALL buttons in ALL rows at the start
-        foreach (var row in allButtonRows)
-        {
-            foreach (var btn in row.buttons)
-            {
-                if (btn != null) btn.SetActive(false);
-            }
-        }
-
-        if (startScreenTexture != null)
-            projectorScreen.material.mainTexture = startScreenTexture;
+        if (startScreenTexture != null) projectorScreen.material.mainTexture = startScreenTexture;
 
         startButton.SetActive(true);
+        isGameRunning = false; // Reset safety
     }
 
     public void StartGameSequence()
     {
+        // === THE FIX ===
+        // If the game is already running, IGNORE this click.
+        if (isGameRunning == true) return;
+
+        // If the timeline is already playing, IGNORE this click.
+        if (timeline.state == PlayState.Playing) return;
+
+        // Force Unity to forget the button was clicked
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+
+        // Lock the game so it can't start again
+        isGameRunning = true;
+
         mistakeCount = 0;
 
         if (successScreenObj != null) successScreenObj.SetActive(false);
         if (failScreenObj != null) failScreenObj.SetActive(false);
-
-        foreach (var obj in mistakeObjects)
-        {
-            if (obj != null) obj.SetActive(false);
-        }
+        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
 
         startButton.SetActive(false);
         StartCoroutine(PlayCutsceneRoutine());
@@ -86,45 +88,21 @@ public class LabManager : MonoBehaviour
         cutsceneCam.Priority = 20;
         timeline.Play();
 
-        // Debug Log to confirm it started
-        Debug.Log($"Cutscene Started. Duration is: {timeline.duration} seconds");
-
-        // Wait for the movie to finish
         yield return new WaitForSeconds((float)timeline.duration);
 
-        // Debug Log to confirm it finished waiting
-        Debug.Log("Cutscene Finished. Starting Cleanup...");
-
-        // 1. Kill the Timeline so it stops controlling things
         timeline.Stop();
         timeline.gameObject.SetActive(false);
 
-        // 2. THE CLEANUP CREW (Force Hide everything the timeline might have left ON)
+        // Cleanup
         if (successScreenObj != null) successScreenObj.SetActive(false);
         if (failScreenObj != null) failScreenObj.SetActive(false);
+        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
+        foreach (var row in allButtonRows) foreach (var btn in row.buttons) if (btn != null) btn.SetActive(false);
 
-        // Force Hide all mistake objects
-        foreach (var obj in mistakeObjects)
-        {
-            if (obj != null) obj.SetActive(false);
-        }
-
-        // Force Hide ALL button rows (just in case Row 3 was left on)
-        foreach (var row in allButtonRows)
-        {
-            foreach (var btn in row.buttons)
-            {
-                if (btn != null) btn.SetActive(false);
-            }
-        }
-
-        // 3. Make sure the Projector Screen is actually ON (in case timeline hid it)
         projectorScreen.gameObject.SetActive(true);
-
         cutsceneCam.Priority = 0;
         mainCam.Priority = 10;
 
-        // 4. NOW start the game
         LoadQuestion(0);
     }
 
