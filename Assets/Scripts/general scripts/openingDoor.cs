@@ -3,52 +3,84 @@ using UnityEngine;
 
 public class openingDoor : MonoBehaviour
 {
-    [Header("Who is the Player?")]
-    public Transform saleemPlayer; // Drag your PlayerArmature here
-
-    [Header("Where to Measure Distance?")]
-    public Transform doorMesh;     // Drag the visible Door (Child) here
-    public float activationDistance = 3.0f;
-
     [Header("Motion Settings")]
     public float openAngle = 90f;
     public float speed = 4f;
+    public float autoCloseDelay = 5f; // New setting for the timer
 
     private bool isOpen = false;
+    private bool isPlayerInRange = false;
+
     private Quaternion closedRot;
     private Quaternion openRot;
 
+    // We need this to keep track of the timer so we can cancel it if needed
+    private Coroutine closeTimerCoroutine;
+
     void Start()
     {
-        // We are rotating THIS object (the Hinge)
         closedRot = transform.rotation;
-        openRot = Quaternion.Euler(transform.eulerAngles + new Vector3(0, openAngle, 0));
+        openRot = Quaternion.Euler(transform.eulerAngles + new Vector3(0, -openAngle, 0));
     }
 
     void Update()
     {
-        // 1. Measure distance from the DOOR MESH (not the hinge)
-        // This way, the trigger zone moves when the door swings!
-        float currentDistance = Vector3.Distance(doorMesh.position, saleemPlayer.position);
-
-        // 2. Check Input
-        if (currentDistance < activationDistance && Input.GetKeyDown(KeyCode.E))
+        // 1. Check Input
+        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
         {
+            // Toggle the state
             isOpen = !isOpen;
+
+            // === NEW TIMER LOGIC ===
+            if (isOpen)
+            {
+                // If we just opened the door, start the countdown
+                // First, stop any old timers to be safe
+                if (closeTimerCoroutine != null) StopCoroutine(closeTimerCoroutine);
+
+                // Start the new timer
+                closeTimerCoroutine = StartCoroutine(AutoCloseRoutine());
+            }
+            else
+            {
+                // If we just closed the door MANUALLY, cancel the timer
+                // (so it doesn't try to close it again later)
+                if (closeTimerCoroutine != null) StopCoroutine(closeTimerCoroutine);
+            }
         }
 
-        // 3. Rotate the Hinge
+        // 2. Rotate the Door
         Quaternion target = isOpen ? openRot : closedRot;
         transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * speed);
     }
 
-    // Visualize the zone moving with the door
-    void OnDrawGizmos()
+    // === NEW COROUTINE ===
+    IEnumerator AutoCloseRoutine()
     {
-        if (doorMesh != null)
+        // Wait for 5 seconds
+        yield return new WaitForSeconds(autoCloseDelay);
+
+        // If the door is still open, close it
+        if (isOpen)
         {
-            Gizmos.color = Color.yellow;
-            Gizmos.DrawWireSphere(doorMesh.position, activationDistance);
+            isOpen = false;
+            Debug.Log("Door closed automatically.");
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInRange = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            isPlayerInRange = false;
         }
     }
 }
