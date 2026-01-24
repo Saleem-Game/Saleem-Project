@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.Playables;
 using System.Collections;
 using Unity.Cinemachine;
+using TMPro;
+using UnityEngine.EventSystems; 
 
 public class LabManager : MonoBehaviour
 {
@@ -13,40 +15,70 @@ public class LabManager : MonoBehaviour
 
     [Header("2. Projector Setup")]
     public MeshRenderer projectorScreen;
+    public Texture startScreenTexture;
     public Texture[] questionImages;
 
-    [Header("3. Feedback Setup")]
-    // CHANGE: Use GameObject so we can hide the whole thing completely
+    [Header("3. End Game Setup")]
+    public GameObject successScreenObj;
+    public GameObject failScreenObj;
+    public GameObject[] mistakeObjects;
+
+    [Header("4. Feedback Setup")]
     public GameObject feedbackCube;
     public Texture correctTexture;
     public Texture wrongTexture;
 
-    [Header("4. Rows Setup")]
-    public GameObject[] answerRows;
+    [Header("5. Buttons Setup (The New System)")]
+    // This replaces the old "Answer Rows"
+    public ButtonRow[] allButtonRows;
 
     private int currentQuestionIndex = 0;
-    // Your Logic: Q1=A(0), Q2=C(2), Q3=B(1)
+    private int mistakeCount = 0;
     private int[] correctAnswers = { 0, 2, 1 };
 
+    private bool isGameRunning = false;
     void Start()
     {
-        // 1. Force Cameras
+        // Force timeline to stop
+        if (timeline != null) { timeline.Stop(); timeline.time = 0; }
+
         mainCam.Priority = 10;
         cutsceneCam.Priority = 0;
 
-        // 2. HIDE FEEDBACK (This ensures it is GONE at the start)
-        if (feedbackCube != null)
-            feedbackCube.SetActive(false);
+        if (feedbackCube != null) feedbackCube.SetActive(false);
+        if (successScreenObj != null) successScreenObj.SetActive(false);
+        if (failScreenObj != null) failScreenObj.SetActive(false);
 
-        // 3. Hide all rows
-        foreach (var row in answerRows) row.SetActive(false);
+        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
+        foreach (var row in allButtonRows) foreach (var btn in row.buttons) if (btn != null) btn.SetActive(false);
 
-        // 4. Show Start Button
+        if (startScreenTexture != null) projectorScreen.material.mainTexture = startScreenTexture;
+
         startButton.SetActive(true);
+        isGameRunning = false; // Reset safety
     }
 
     public void StartGameSequence()
     {
+        // === THE FIX ===
+        // If the game is already running, IGNORE this click.
+        if (isGameRunning == true) return;
+
+        // If the timeline is already playing, IGNORE this click.
+        if (timeline.state == PlayState.Playing) return;
+
+        // Force Unity to forget the button was clicked
+        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
+
+        // Lock the game so it can't start again
+        isGameRunning = true;
+
+        mistakeCount = 0;
+
+        if (successScreenObj != null) successScreenObj.SetActive(false);
+        if (failScreenObj != null) failScreenObj.SetActive(false);
+        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
+
         startButton.SetActive(false);
         StartCoroutine(PlayCutsceneRoutine());
     }
@@ -55,11 +87,22 @@ public class LabManager : MonoBehaviour
     {
         cutsceneCam.Priority = 20;
         timeline.Play();
+
         yield return new WaitForSeconds((float)timeline.duration);
+
+        timeline.Stop();
+        timeline.gameObject.SetActive(false);
+
+        // Cleanup
+        if (successScreenObj != null) successScreenObj.SetActive(false);
+        if (failScreenObj != null) failScreenObj.SetActive(false);
+        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
+        foreach (var row in allButtonRows) foreach (var btn in row.buttons) if (btn != null) btn.SetActive(false);
+
+        projectorScreen.gameObject.SetActive(true);
         cutsceneCam.Priority = 0;
         mainCam.Priority = 10;
 
-        // Start the first question
         LoadQuestion(0);
     }
 
@@ -67,22 +110,24 @@ public class LabManager : MonoBehaviour
     {
         currentQuestionIndex = index;
 
-        // Update Projector
+        // 1. Projector Logic
         if (index < questionImages.Length)
         {
+            projectorScreen.gameObject.SetActive(true);
             projectorScreen.material.mainTexture = questionImages[index];
         }
 
-        // Activate Answer Row
-        for (int i = 0; i < answerRows.Length; i++)
+        // 2. Button Logic (Force the correct row ON)
+        for (int i = 0; i < allButtonRows.Length; i++)
         {
-            if (i == index)
-                answerRows[i].SetActive(true);
-            else
-                answerRows[i].SetActive(false);
+            bool shouldRowBeActive = (i == index);
+
+            foreach (GameObject btn in allButtonRows[i].buttons)
+            {
+                if (btn != null) btn.SetActive(shouldRowBeActive);
+            }
         }
 
-        // HIDE FEEDBACK again (so it disappears between questions)
         feedbackCube.SetActive(false);
     }
 
@@ -91,10 +136,12 @@ public class LabManager : MonoBehaviour
         int correctAnswer = correctAnswers[currentQuestionIndex];
         bool isCorrect = (answerIndex == correctAnswer);
 
-        // SHOW FEEDBACK NOW
-        feedbackCube.SetActive(true);
+        if (!isCorrect)
+        {
+            mistakeCount++;
+        }
 
-        // Apply texture to the renderer inside the object
+        feedbackCube.SetActive(true);
         feedbackCube.GetComponent<Renderer>().material.mainTexture = isCorrect ? correctTexture : wrongTexture;
 
         StartCoroutine(NextQuestionDelay());
@@ -104,19 +151,68 @@ public class LabManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
-        answerRows[currentQuestionIndex].SetActive(false);
+        // Hide the current buttons
+        foreach (GameObject btn in allButtonRows[currentQuestionIndex].buttons)
+        {
+            if (btn != null) btn.SetActive(false);
+        }
 
-        // Hide feedback before next question
         feedbackCube.SetActive(false);
 
         int nextQ = currentQuestionIndex + 1;
+
         if (nextQ < questionImages.Length)
         {
             LoadQuestion(nextQ);
         }
         else
         {
-            Debug.Log("Quiz Finished!");
+            // === GAME FINISHED ===
+            projectorScreen.gameObject.SetActive(false);
+
+            if (mistakeCount == 0)
+            {
+                if (successScreenObj != null) successScreenObj.SetActive(true);
+            }
+            else
+            {
+                if (failScreenObj != null) failScreenObj.SetActive(true);
+
+                int indexToActivate = mistakeCount - 1;
+                if (indexToActivate >= 0 && indexToActivate < mistakeObjects.Length)
+                {
+                    if (mistakeObjects[indexToActivate] != null)
+                        mistakeObjects[indexToActivate].SetActive(true);
+                }
+            }
+
+            yield return new WaitForSeconds(5f);
+
+            // === RESET ===
+            if (successScreenObj != null) successScreenObj.SetActive(false);
+            if (failScreenObj != null) failScreenObj.SetActive(false);
+
+            foreach (var obj in mistakeObjects)
+            {
+                if (obj != null) obj.SetActive(false);
+            }
+
+            projectorScreen.gameObject.SetActive(true);
+            if (startScreenTexture != null) projectorScreen.material.mainTexture = startScreenTexture;
+
+            // Turn on Timeline Object again so it's ready for next play
+            timeline.gameObject.SetActive(true);
+
+            startButton.SetActive(true);
+            mainCam.Priority = 10;
         }
     }
+}
+
+// === THIS IS THE NEW HELPER ===
+[System.Serializable]
+public class ButtonRow
+{
+    public string name;          // Optional: Name it "Row 1" so you don't get confused
+    public GameObject[] buttons; // Drag the 3 buttons here
 }
