@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: b06bdbffe394b914d92cc1aaf74347d5
+guid: e5b6101829b840c4cb8a675ea3a454cf
 ModelImporter:
   serializedVersion: 24200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Texture2D
-      assembly: UnityEngine.CoreModule
-      name: tripo_mat_127d39fa_Diffuse
-    second: {fileID: 2800000, guid: 34f13bae03f788241ab6a2080c65ecdf, type: 3}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
