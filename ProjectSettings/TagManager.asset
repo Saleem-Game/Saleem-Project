@@ -5,6 +5,17 @@ TagManager:
   serializedVersion: 3
   tags:
   - CinemachineTarget
+  - OxyWater
+  - BandAidRoll
+  - Cotton
+  - Alcohol
+  - Scissor
+  - Sheets
+  - Biiotics3
+  - polySurface39
+  - Scissor1
+  - SpecialBarbiturics
+  - Cold Pack
   layers:
   - Default
   - TransparentFX
@@ -12,9 +23,9 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Draggable
+  - Target
+  - DragSurface
   - 
   - 
   - 
