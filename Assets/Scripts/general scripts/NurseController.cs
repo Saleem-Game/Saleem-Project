@@ -1,51 +1,73 @@
 using UnityEngine;
-using UnityEngine.AI; // Make sure your Nurse has a NavMeshAgent!
 
 public class NurseController : MonoBehaviour
 {
     public BurnLevelManager manager;
-    private NavMeshAgent agent;
-    private Transform targetPlayer;
-    private bool isFollowing = false;
+    public Animator anim; // Drag Animator here
 
-    void Start()
+    [Header("Settings")]
+    public float moveSpeed = 4f;
+    public float stopDistance = 1.5f;
+
+    private Transform target;
+    private bool isFollowing = false;
+    private bool isSitting = false;
+
+    // Called when Player presses E
+    public void StartFollowing(Transform player)
     {
-        agent = GetComponent<NavMeshAgent>();
+        isFollowing = true;
+        target = player;
+        if (anim) anim.SetBool("isWalking", true);
+    }
+
+    // Called when Player reaches Teacher
+    public void GoToChairAndSit(Transform chairLocation)
+    {
+        isFollowing = false;
+        target = chairLocation;
     }
 
     void Update()
     {
-        // 1. Follow Player
-        if (isFollowing && targetPlayer != null)
-        {
-            agent.SetDestination(targetPlayer.position);
+        if (isSitting) return;
 
-            // 2. Check Win Condition (Distance to destination)
-            // We assume the destination is set in the manager
-            float distToFinal = Vector3.Distance(transform.position, manager.finalDestination.position);
-            if (distToFinal < 3.0f) // If close to the injured kid
+        if (isFollowing && target != null)
+        {
+            // Move to a point BEHIND the player
+            Vector3 destination = target.position - (target.forward * 1.5f);
+            destination.y = transform.position.y; // Keep on ground
+
+            float dist = Vector3.Distance(transform.position, destination);
+
+            if (dist > stopDistance)
             {
-                isFollowing = false;
-                agent.isStopped = true;
-                manager.MissionComplete();
+                transform.position = Vector3.MoveTowards(transform.position, destination, moveSpeed * Time.deltaTime);
+                transform.LookAt(new Vector3(target.position.x, transform.position.y, target.position.z));
+                if (anim) anim.SetBool("isWalking", true);
+            }
+            else
+            {
+                if (anim) anim.SetBool("isWalking", false);
             }
         }
-
-        // 3. Interact Check (Player presses E near Nurse)
-        if (!isFollowing && Input.GetKeyDown(KeyCode.E))
+        else if (!isFollowing && target != null) // Moving to Chair mode
         {
-            // Simple distance check to player
-            float dist = Vector3.Distance(transform.position, manager.saleemPlayer.transform.position);
-            if (dist < 3.0f)
+            // Move directly to chair
+            transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
+            transform.LookAt(target.position);
+
+            if (Vector3.Distance(transform.position, target.position) < 0.1f)
             {
-                manager.NurseFound();
+                // SIT DOWN
+                isSitting = true;
+                if (anim)
+                {
+                    anim.SetBool("isWalking", false);
+                    anim.SetTrigger("Sit");
+                }
+                manager.LevelComplete(); // Tell manager we won!
             }
         }
-    }
-
-    public void StartFollowing(Transform player)
-    {
-        targetPlayer = player;
-        isFollowing = true;
     }
 }
