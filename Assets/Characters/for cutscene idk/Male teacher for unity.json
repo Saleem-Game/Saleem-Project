@@ -1,13 +1,13 @@
 {
-    "TeachRamaUnity": {
+    "Male teacher for unity": {
         "Version": "1.10.1822.1",
         "Scene": {
             "Name": true,
             "SupportShaderSelect": true
         },
-        "Export Directory": "C:/Users/dell/Desktop/Capstone/Assets/Level 3/3d/v3 (rigged)/Unity Models",
+        "Export Directory": "C:/Users/dell/Desktop/Capstone/Assets/extra/teachers/male teacher",
         "Object": {
-            "TeachRamaUnity": {
+            "Male teacher for unity": {
                 "Generation": "AccuRig",
                 "Physics": {
                     "Collision Shapes": {
@@ -112,7 +112,7 @@
                         "CC_Base_R_Breast": {},
                         "CC_Base_L_RibsTwist": {},
                         "CC_Base_L_Breast": {},
-                        "tripo_mesh_44458741": {}
+                        "tripo_mesh_c180a44b": {}
                     }
                 },
                 "ExpressionSet": "4",
@@ -393,10 +393,10 @@
                 },
                 "Constraint": {},
                 "Meshes": {
-                    "tripo_mesh_44458741": {
+                    "tripo_mesh_c180a44b": {
                         "SubD Level": 0,
                         "Materials": {
-                            "tripo_mat_44458741_Pbr": {
+                            "tripo_mat_c180a44b_Pbr": {
                                 "Material Type": "Pbr",
                                 "MultiUV Index": 0,
                                 "Two Side": true,
@@ -419,7 +419,7 @@
                                 "Self Illumination": 0.0,
                                 "Textures": {
                                     "Base Color": {
-                                        "Texture Path": "tripo_mat_44458741_Pbr_Diffuse.png",
+                                        "Texture Path": "tripo_mat_c180a44b_Pbr_Diffuse.png",
                                         "Strength": 100.0,
                                         "Offset": [
                                             0.0,
