@@ -5,12 +5,11 @@ public class DraggableTool : MonoBehaviour
     private Vector3 startPos;
     private bool isDragging = false;
     private Camera cam;
-    public BurnLevelManager manager; // Drag [BurnLevelManager] here manually!
+    public BurnLevelManager manager; // Drag [BurnLevelManager] here
 
     void Start()
     {
         startPos = transform.position;
-        // We find the camera automatically to save you work
         if (manager != null) cam = manager.treatmentCam;
     }
 
@@ -19,28 +18,30 @@ public class DraggableTool : MonoBehaviour
         if (manager.isTreatmentActive)
         {
             isDragging = true;
-            transform.localScale *= 1.1f; // Make slightly bigger
+            transform.localScale *= 1.2f; // Visual feedback
         }
     }
 
     void OnMouseUp()
     {
         isDragging = false;
-        transform.localScale /= 1.1f; // Reset size
+        transform.localScale /= 1.2f; // Reset size
 
-        // Check if we hit the Drop Zone
-        Collider[] hits = Physics.OverlapSphere(transform.position, 0.3f);
-        foreach (var hit in hits)
+        // NEW LOGIC: DISTANCE CHECK
+        // If the tool is close to the 'DropZone' object in the manager
+        if (manager != null && manager.dropZoneObj != null)
         {
-            if (hit.CompareTag("DropZone"))
+            float dist = Vector3.Distance(transform.position, manager.dropZoneObj.transform.position);
+
+            // If we are within 1 meter of the injury
+            if (dist < 1.0f)
             {
-                // Send MY tag to the manager
+                Debug.Log("Tool Dropped on Injury: " + gameObject.tag); // Debug Check
                 manager.CheckToolDrop(gameObject.tag);
-                break;
             }
         }
 
-        // Always return to table
+        // Return to table
         transform.position = startPos;
     }
 
@@ -48,8 +49,9 @@ public class DraggableTool : MonoBehaviour
     {
         if (isDragging && cam != null)
         {
+            // Follow Mouse
             Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 1.2f; // Distance from camera
+            mousePos.z = 1.0f; // Distance from camera
             transform.position = cam.ScreenToWorldPoint(mousePos);
         }
     }
