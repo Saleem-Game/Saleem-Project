@@ -2,23 +2,24 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
 using TMPro;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class BurnLevelManager : MonoBehaviour
 {
     [Header("--- 0. CHARACTERS ---")]
     public GameObject[] backgroundCharacters;
-    public GameObject[] cutsceneOnlyCharacters;
+    public GameObject[] cutsceneOnlyCharacters; // Fake Teacher, Cup, Tray
 
-    public GameObject teacherCharacter;
+    public GameObject teacherCharacter; // Real Teacher
     public Transform teacherTreatmentSpot;
     public Transform teacherChairSpot;
     public Animator teacherAnim;
 
     [Header("--- 1. PLAYER & CAMS ---")]
     public GameObject saleemPlayer;
-    public MonoBehaviour playerScript; // FirstPersonController
-    public Transform exitSpawnPoint;   // DRAG AN EMPTY OBJECT OUTSIDE THE ROOM HERE
+    public MonoBehaviour playerScript;
+    public Transform exitSpawnPoint;
     public Camera mainCam;
     public Camera treatmentCam;
     public GameObject generalUI;
@@ -34,25 +35,21 @@ public class BurnLevelManager : MonoBehaviour
     public Texture bandagedTex;
     public GameObject dropZoneObj;
 
-    [Header("--- 4. UI: INSTRUCTIONS ---")]
+    [Header("--- 4. UI PANELS ---")]
     public GameObject[] instructionCards;
-
-    [Header("--- 5. UI: STRIKES ---")]
     public GameObject strikePanelParent;
     public GameObject[] strikeXs;
-
-    [Header("--- 6. UI: WIN/FAIL ---")]
     public GameObject failScreen;
     public GameObject winScreen;
     public GameObject[] winStars;
 
-    [Header("--- 7. NURSE MISSION ---")]
+    [Header("--- 5. NURSE MISSION ---")]
     public GameObject nurseMissionPanel;
     public TextMeshProUGUI timerText;
     public NurseAI nurseScript;
     public GameObject arrowObj;
 
-    [Header("--- 8. FINAL RESULTS ---")]
+    [Header("--- 6. FINAL RESULTS ---")]
     public GameObject goodJobPanel;
     public GameObject wompWompPanel;
 
@@ -62,39 +59,40 @@ public class BurnLevelManager : MonoBehaviour
     private int strikes = 0;
     private int clicksOnWound = 0;
     private bool nurseMissionActive = false;
-    private float timer = 20f;
+    private float timer = 40f; // 40 SECONDS
 
-    // SAVED POSITIONS FOR RESET
+    // SAVED POSITIONS
     private Vector3 nurseStartPos;
     private Quaternion nurseStartRot;
 
     void Start()
     {
-        // Save Nurse's Office location so we can send her back later
         if (nurseScript)
         {
             nurseStartPos = nurseScript.transform.position;
             nurseStartRot = nurseScript.transform.rotation;
         }
-
         ResetLevelState();
     }
 
-    // THIS FUNCTION RESETS EVERYTHING TO DEFAULT
     void ResetLevelState()
     {
-        // 1. Reset Characters
-        if (teacherCharacter) teacherCharacter.SetActive(false); // Hide Real Teacher
-        foreach (var c in cutsceneOnlyCharacters) if (c) c.SetActive(true); // Show Fake Teacher
+        // 1. Force Fake Objects OFF (Timeline will turn them ON later)
+        foreach (var c in cutsceneOnlyCharacters) if (c) c.SetActive(false);
+
+        // 2. Force Background ON
         foreach (var c in backgroundCharacters) if (c) c.SetActive(true);
 
-        // 2. Reset Objects
-        spinningCross.SetActive(true); // SHOW CROSS AGAIN
+        // 3. Force Real Teacher OFF
+        if (teacherCharacter) teacherCharacter.SetActive(false);
+
+        // 4. Reset Objects
+        spinningCross.SetActive(true);
         treatmentCam.gameObject.SetActive(false);
         medicalKitRoot.SetActive(false);
         dropZoneObj.SetActive(false);
 
-        // 3. Reset UI
+        // 5. Reset UI
         foreach (var c in instructionCards) c.SetActive(false);
         strikePanelParent.SetActive(false);
         foreach (var x in strikeXs) x.SetActive(false);
@@ -107,18 +105,15 @@ public class BurnLevelManager : MonoBehaviour
         wompWompPanel.SetActive(false);
         arrowObj.SetActive(false);
 
-        // 4. Reset Texture
         if (armRenderer) armRenderer.material.mainTexture = burnedTex;
 
-        // 5. Reset Variables
         isTreatmentActive = false;
         nurseMissionActive = false;
         currentStep = 0;
         strikes = 0;
-        timer = 20f;
+        timer = 40f;
     }
 
-    // --- GAMEPLAY START ---
     public void StartLevelSequence()
     {
         StartCoroutine(CutsceneRoutine());
@@ -131,25 +126,43 @@ public class BurnLevelManager : MonoBehaviour
         if (playerScript) playerScript.enabled = false;
         Cursor.visible = false;
 
+        // Ensure Extras are ON for the movie
+        foreach (var c in cutsceneOnlyCharacters) if (c) c.SetActive(true);
+
         if (cutscene)
         {
             cutscene.Play();
             yield return new WaitForSeconds((float)cutscene.duration);
+
+            // CRITICAL FIX: Stop timeline to release control of objects
+            cutscene.Stop();
         }
 
+        // --- CUTSCENE DONE ---
+
+        // 1. Hide Extras
         foreach (var c in cutsceneOnlyCharacters) if (c) c.SetActive(false);
 
+        // 2. Ensure Background people stay
+        foreach (var c in backgroundCharacters) if (c) c.SetActive(true);
+
+        // 3. Activate Real Teacher
         if (teacherCharacter)
         {
             teacherCharacter.SetActive(true);
+
+            // Teleport
             if (teacherTreatmentSpot)
             {
                 teacherCharacter.transform.position = teacherTreatmentSpot.position;
                 teacherCharacter.transform.rotation = teacherTreatmentSpot.rotation;
             }
+
+            // Force Pose
             if (teacherAnim)
             {
                 teacherAnim.enabled = true;
+                teacherAnim.Rebind(); // Reset animator
                 teacherAnim.Play("ArmOut");
             }
         }
@@ -174,7 +187,6 @@ public class BurnLevelManager : MonoBehaviour
         UpdateInstructionUI();
     }
 
-    // --- TOOL LOGIC ---
     public void CheckToolDrop(string tag)
     {
         if (!isTreatmentActive) return;
@@ -242,15 +254,15 @@ public class BurnLevelManager : MonoBehaviour
         if (playerScript) playerScript.enabled = true;
 
         nurseMissionActive = true;
-        timer = 20f;
+        timer = 40f; // 40 SECONDS START
         nurseMissionPanel.SetActive(true);
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
     }
 
     void Update()
     {
-        // Force Mouse during Treatment
         if (isTreatmentActive) { if (Cursor.lockState != CursorLockMode.None) { Cursor.visible = true; Cursor.lockState = CursorLockMode.None; } return; }
 
         if (nurseMissionActive)
@@ -274,13 +286,14 @@ public class BurnLevelManager : MonoBehaviour
                 nurseScript.GoSit(teacherChairSpot);
             }
 
+            // --- TIME UP ---
             if (timer <= 0)
             {
                 nurseMissionActive = false;
                 nurseMissionPanel.SetActive(false);
                 Cursor.visible = true;
                 Cursor.lockState = CursorLockMode.None;
-                wompWompPanel.SetActive(true);
+                wompWompPanel.SetActive(true); // Show Time's Up Panel
             }
         }
     }
@@ -292,13 +305,11 @@ public class BurnLevelManager : MonoBehaviour
         goodJobPanel.SetActive(true);
     }
 
-    // --- FINAL RESET FUNCTION (LINK TO 'GOOD JOB' & 'WOMP WOMP' BUTTONS) ---
+    // --- EXIT FUNCTION ---
     public void ExitAndResetLevel()
     {
-        // 1. Teleport Player Out
         if (exitSpawnPoint)
         {
-            // Disable CharacterController briefly to allow teleport
             CharacterController cc = saleemPlayer.GetComponent<CharacterController>();
             if (cc) cc.enabled = false;
 
@@ -308,19 +319,17 @@ public class BurnLevelManager : MonoBehaviour
             if (cc) cc.enabled = true;
         }
 
-        // 2. Reset Nurse Position
         if (nurseScript)
         {
             nurseScript.transform.position = nurseStartPos;
             nurseScript.transform.rotation = nurseStartRot;
-            // You might need a function in NurseAI to stop following/reset animation
-            // nurseScript.ResetAI(); (Optional, if you add it to NurseAI script)
+            // Force reset any nurse animation states if needed
+            Animator nAnim = nurseScript.GetComponent<Animator>();
+            if (nAnim) nAnim.Rebind();
         }
 
-        // 3. Reset Game State
-        ResetLevelState();
+        ResetLevelState(); // Reset entire level
 
-        // 4. Ensure Player Control is ON
         if (playerScript) playerScript.enabled = true;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;

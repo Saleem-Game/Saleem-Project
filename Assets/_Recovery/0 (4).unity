@@ -730,7 +730,7 @@ MonoBehaviour:
   - {fileID: 0}
   cutsceneOnlyCharacters:
   - {fileID: 4875183318240368663}
-  - {fileID: 1328788467143209363}
+  - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   teacherCharacter: {fileID: 640790272}
@@ -32803,9 +32803,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5e172a1b62d26204f8ce78947b9d4f76, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1841606378}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 5e172a1b62d26204f8ce78947b9d4f76, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1841606380}
   m_SourcePrefab: {fileID: 100100000, guid: 5e172a1b62d26204f8ce78947b9d4f76, type: 3}
 --- !u!1 &1841606376 stripped
 GameObject:
@@ -32853,33 +32850,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!54 &1841606380
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1841606376}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 0
 --- !u!1 &1847101325
 GameObject:
   m_ObjectHideFlags: 0
@@ -51049,7 +51019,7 @@ Transform:
   m_GameObject: {fileID: 8836901263491424677}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.5836571, z: -0, w: 0.8120003}
-  m_LocalPosition: {x: -116.8, y: 0.13, z: -82.1}
+  m_LocalPosition: {x: -156.4, y: 0.13, z: -80.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

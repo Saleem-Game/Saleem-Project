@@ -3,7 +3,7 @@ using UnityEngine;
 public class NurseAI : MonoBehaviour
 {
     public BurnLevelManager manager;
-    public Animator anim; // Drag the Animator component here
+    public Animator anim;
 
     public float moveSpeed = 4f;
     public float stopDist = 1.5f;
@@ -11,6 +11,25 @@ public class NurseAI : MonoBehaviour
     private Transform target;
     private bool following = false;
     private bool sitting = false;
+
+    void Start()
+    {
+        // 1. PHYSICS FIX:
+        // Force the Rigidbody to be kinematic so she doesn't fall over.
+        Rigidbody rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.useGravity = false;
+        }
+    }
+
+    // 2. ANIMATION ERROR FIX:
+    // This function "catches" the event from the animation so the error stops.
+    public void OnFootstep()
+    {
+        // You can add audio here later if you want, otherwise leave empty.
+    }
 
     // Manager calls this when you press E
     public void StartFollowing(Transform player)
@@ -42,7 +61,12 @@ public class NurseAI : MonoBehaviour
             if (Vector3.Distance(transform.position, dest) > stopDist)
             {
                 transform.position = Vector3.MoveTowards(transform.position, dest, moveSpeed * Time.deltaTime);
-                transform.LookAt(target.position);
+
+                // Fix LookAt to stay level (so she doesn't tilt up/down)
+                Vector3 lookPos = target.position;
+                lookPos.y = transform.position.y;
+                transform.LookAt(lookPos);
+
                 if (anim) anim.SetBool("isWalking", true);
             }
             else
@@ -54,7 +78,11 @@ public class NurseAI : MonoBehaviour
         else
         {
             transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
-            transform.LookAt(target.position);
+
+            // Fix LookAt
+            Vector3 lookPos = target.position;
+            lookPos.y = transform.position.y;
+            transform.LookAt(lookPos);
 
             if (Vector3.Distance(transform.position, target.position) < 0.1f)
             {
