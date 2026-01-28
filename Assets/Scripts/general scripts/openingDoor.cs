@@ -1,86 +1,39 @@
-using System.Collections;
 using UnityEngine;
 
 public class openingDoor : MonoBehaviour
 {
-    [Header("Motion Settings")]
-    public float openAngle = 90f;
-    public float speed = 4f;
-    public float autoCloseDelay = 5f; // New setting for the timer
-
-    private bool isOpen = false;
-    private bool isPlayerInRange = false;
+    public float speed = 2f;
+    public Animator playerAnimator;
+    public string pushBoolName = "isPushing";
 
     private Quaternion closedRot;
-    private Quaternion openRot;
-
-    // We need this to keep track of the timer so we can cancel it if needed
-    private Coroutine closeTimerCoroutine;
+    private Quaternion targetRot;
 
     void Start()
     {
         closedRot = transform.rotation;
-        openRot = Quaternion.Euler(transform.eulerAngles + new Vector3(0, -openAngle, 0));
+        targetRot = closedRot; // Start closed
     }
 
     void Update()
     {
-        // 1. Check Input
-        if (isPlayerInRange && Input.GetKeyDown(KeyCode.E))
-        {
-            // Toggle the state
-            isOpen = !isOpen;
-
-            // === NEW TIMER LOGIC ===
-            if (isOpen)
-            {
-                // If we just opened the door, start the countdown
-                // First, stop any old timers to be safe
-                if (closeTimerCoroutine != null) StopCoroutine(closeTimerCoroutine);
-
-                // Start the new timer
-                closeTimerCoroutine = StartCoroutine(AutoCloseRoutine());
-            }
-            else
-            {
-                // If we just closed the door MANUALLY, cancel the timer
-                // (so it doesn't try to close it again later)
-                if (closeTimerCoroutine != null) StopCoroutine(closeTimerCoroutine);
-            }
-        }
-
-        // 2. Rotate the Door
-        Quaternion target = isOpen ? openRot : closedRot;
-        transform.rotation = Quaternion.Slerp(transform.rotation, target, Time.deltaTime * speed);
+        // Smoothly rotate to whatever the current target is
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime * speed);
     }
 
-    // === NEW COROUTINE ===
-    IEnumerator AutoCloseRoutine()
+    // This function is called by the triggers
+    public void OpenDoor(float angle)
     {
-        // Wait for 5 seconds
-        yield return new WaitForSeconds(autoCloseDelay);
+        // Create the new rotation based on the specific angle sent by the trigger
+        targetRot = Quaternion.Euler(closedRot.eulerAngles + new Vector3(0, angle, 0));
 
-        // If the door is still open, close it
-        if (isOpen)
-        {
-            isOpen = false;
-            Debug.Log("Door closed automatically.");
-        }
+        if (playerAnimator != null) playerAnimator.SetBool(pushBoolName, true);
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void CloseDoor()
     {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInRange = true;
-        }
-    }
+        targetRot = closedRot; // Go back to start
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInRange = false;
-        }
+        if (playerAnimator != null) playerAnimator.SetBool(pushBoolName, false);
     }
 }
