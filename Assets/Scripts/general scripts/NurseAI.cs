@@ -1,100 +1,63 @@
 using UnityEngine;
+using UnityEngine.AI;
 
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Rigidbody))]
 public class NurseAI : MonoBehaviour
 {
-    public BurnLevelManager manager;
     public Animator anim;
+    private NavMeshAgent _agent;
+    private Transform _target;
+    private bool _isFollowing = false;
 
-    public float moveSpeed = 4f;
-    public float stopDist = 1.5f;
-
-    private Transform target;
-    private bool following = false;
-    private bool sitting = false;
-
-    void Start()
+    void Awake()
     {
-        // 1. PHYSICS FIX:
-        // Force the Rigidbody to be kinematic so she doesn't fall over.
+        _agent = GetComponent<NavMeshAgent>();
+
+        // Physics Setup (Logic maintained)
         Rigidbody rb = GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            rb.isKinematic = true;
-            rb.useGravity = false;
-        }
+        rb.isKinematic = true;
+        rb.useGravity = false;
     }
 
-    // 2. ANIMATION ERROR FIX:
-    // This function "catches" the event from the animation so the error stops.
-    public void OnFootstep()
-    {
-        // You can add audio here later if you want, otherwise leave empty.
-    }
-
-    // Manager calls this when you press E
     public void StartFollowing(Transform player)
     {
-        following = true;
-        target = player;
-        if (anim) anim.SetBool("isWalking", true);
+        _isFollowing = true;
+        _target = player;
+        anim.SetBool("isWalking", true);
     }
 
-    // Manager calls this when you arrive at teacher
-    public void GoSit(Transform chairPos)
+    public void GoSit(Transform chair)
     {
-        following = false;
-        target = chairPos;
-        // Keep walking animation on while moving to chair
-        if (anim) anim.SetBool("isWalking", true);
+        _isFollowing = false;
+        _target = null;
+        _agent.enabled = false; // Disable NavMesh to snap position
+
+        transform.position = chair.position;
+        transform.rotation = chair.rotation;
+
+        anim.SetBool("isWalking", false);
+        anim.SetTrigger("Sit");
     }
 
     void Update()
     {
-        if (sitting || target == null) return;
-
-        // Mode 1: Following Player (Stay behind)
-        if (following)
+        if (_isFollowing && _target != null)
         {
-            Vector3 dest = target.position - (target.forward * 1.5f);
-            dest.y = transform.position.y; // Keep feet on ground
+            _agent.SetDestination(_target.position);
 
-            if (Vector3.Distance(transform.position, dest) > stopDist)
+            // Optional: Manual distance check if NavMesh stopping distance isn't enough
+            if (_agent.remainingDistance <= _agent.stoppingDistance)
             {
-                transform.position = Vector3.MoveTowards(transform.position, dest, moveSpeed * Time.deltaTime);
-
-                // Fix LookAt to stay level (so she doesn't tilt up/down)
-                Vector3 lookPos = target.position;
-                lookPos.y = transform.position.y;
-                transform.LookAt(lookPos);
-
-                if (anim) anim.SetBool("isWalking", true);
+                anim.SetBool("isWalking", false);
             }
             else
             {
-                if (anim) anim.SetBool("isWalking", false);
-            }
-        }
-        // Mode 2: Going to Chair
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position, target.position, moveSpeed * Time.deltaTime);
-
-            // Fix LookAt
-            Vector3 lookPos = target.position;
-            lookPos.y = transform.position.y;
-            transform.LookAt(lookPos);
-
-            if (Vector3.Distance(transform.position, target.position) < 0.1f)
-            {
-                sitting = true;
-                if (anim)
-                {
-                    anim.SetBool("isWalking", false);
-                    anim.SetTrigger("Sit");
-                }
-                // Tell manager the level is DONE
-                manager.LevelComplete();
+                anim.SetBool("isWalking", true);
             }
         }
     }
+
+    // Event Handler
+    public void OnFootstep() { }
 }
