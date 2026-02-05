@@ -650,7 +650,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5912396154355143839}
   - {fileID: 717086817}
   - {fileID: 1703475671}
   m_Father: {fileID: 0}
@@ -901,7 +900,6 @@ Transform:
   - {fileID: 3690892911987627625}
   - {fileID: 7462813379007642908}
   - {fileID: 6727857962576848260}
-  - {fileID: 1377938669081245626}
   - {fileID: 6273262330462438945}
   - {fileID: 4265868827745425740}
   - {fileID: 1532990777704397139}
@@ -1644,7 +1642,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cameras
   m_TagString: Untagged
-  m_Icon: {fileID: 0}
+  m_Icon: {fileID: 2800000, guid: 0274750faa3d7894c83c220253f1afe1, type: 3}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1657,7 +1655,7 @@ Transform:
   m_GameObject: {fileID: 1514628047}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -120.41294, y: 0, z: -59.92416}
+  m_LocalPosition: {x: -150.818, y: 0, z: -68.973}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14834,12 +14832,12 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0.09937616, z: -0, w: 0.99505}
   m_LocalPosition: {x: 5.401001, y: -0.771, z: 1.507}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.5000004, y: 1.5, z: 1.5000004}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2956439055386950702}
   - {fileID: 1484482044710559196}
-  m_Father: {fileID: 717086817}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -11.407, z: 0}
 --- !u!4 &1384344719199243371
 Transform:
@@ -18722,12 +18720,7 @@ Animator:
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
-  m_WarningMessage: "\nBinding warning: Some generic clip(s) animate transforms that
-    are already bound by a Humanoid avatar. These transforms can only be changed
-    by Humanoid clips.\n\tTransform 'CC_Base_R_Mid1'\n\tTransform 'CC_Base_NeckTwist01'\n\tTransform
-    'CC_Base_R_Thumb1'\n\tTransform 'CC_Base_L_Calf'\n\tTransform 'CC_Base_Waist'\n\tTransform
-    'CC_Base_L_ToeBase'\n\tTransform 'root'\n\tTransform 'CC_Base_Head'\n\tTransform
-    'CC_Base_L_Mid1'\n\tTransform 'CC_Base_R_Upperarm'\n\tand more ..."
+  m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
@@ -19440,8 +19433,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1206585123715484303}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -111.98401, y: 0, z: -77.42766}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -142.41, y: 0, z: -86.5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -57688,12 +57681,12 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.6815346, z: -0, w: 0.7317859}
   m_LocalPosition: {x: 0.847, y: -0.746, z: 0.158}
-  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_LocalScale: {x: 1.5000004, y: 1.5, z: 1.5000004}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7499908146816343819}
   - {fileID: 3956217157220402775}
-  m_Father: {fileID: 515462829}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 85.927, z: 0}
 --- !u!1 &5912889286462510496
 GameObject:
@@ -89094,5 +89087,7 @@ SceneRoots:
   - {fileID: 2246437109184013219}
   - {fileID: 8609326517459127538}
   - {fileID: 1514628048}
+  - {fileID: 5912396154355143839}
+  - {fileID: 1377938669081245626}
   - {fileID: 1206731391}
   - {fileID: 1187135531}
