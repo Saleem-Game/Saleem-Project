@@ -16,6 +16,9 @@ TagManager:
   - Scissor1
   - SpecialBarbiturics
   - Cold Pack
+  - WrongTool
+  - Bandage
+  - BurnCream
   layers:
   - Default
   - TransparentFX
