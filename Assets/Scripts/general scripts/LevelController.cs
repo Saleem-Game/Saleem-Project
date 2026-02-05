@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Playables;
+using System.Collections;
 
 public abstract class LevelController : MonoBehaviour
 {
@@ -8,12 +9,11 @@ public abstract class LevelController : MonoBehaviour
     public PlayableDirector levelCutscene;
 
     [Header("Room Control (Multiple Doors)")]
-    // Drag ALL door colliders for this room here (e.g., Door 1 AND Door 2)
     public Collider[] roomBarriers;
 
     protected bool isLevelActive = false;
 
-    // These MUST be in every child script
+    // Abstract methods children must implement
     public abstract void StartLevel();
     public abstract void ResetLevel();
 
@@ -21,7 +21,6 @@ public abstract class LevelController : MonoBehaviour
 
     protected void LockRoom()
     {
-        // Enable ALL barriers to block the player
         foreach (var barrier in roomBarriers)
         {
             if (barrier) barrier.enabled = true;
@@ -30,7 +29,6 @@ public abstract class LevelController : MonoBehaviour
 
     protected void UnlockRoom()
     {
-        // Disable ALL barriers to let player out
         foreach (var barrier in roomBarriers)
         {
             if (barrier) barrier.enabled = false;
@@ -50,6 +48,7 @@ public abstract class LevelController : MonoBehaviour
     {
         if (levelCutscene != null)
         {
+            levelCutscene.gameObject.SetActive(true); // Ensure it's on to play
             levelCutscene.Play();
             StartCoroutine(WaitForCutscene());
         }
@@ -59,11 +58,17 @@ public abstract class LevelController : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator WaitForCutscene()
+    private IEnumerator WaitForCutscene()
     {
+        // Wait for the exact duration of the timeline
         yield return new WaitForSeconds((float)levelCutscene.duration);
+
+        // --- CRITICAL FIX ---
+        // We must STOP the timeline and DISABLE the object.
+        // This releases the "hold" on the Projector Screen so scripts can change it.
         levelCutscene.Stop();
         levelCutscene.gameObject.SetActive(false);
+
         OnCutsceneFinished();
     }
 

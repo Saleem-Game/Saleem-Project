@@ -2,20 +2,33 @@ using UnityEngine;
 
 public class CoinBehavior : MonoBehaviour
 {
-    public float spinSpeed = 100f;
-    public int value = 1;
+    [Header("Settings")]
+    [SerializeField] private float _spinSpeed = 100f;
+    [SerializeField] private int _value = 1;
+    [SerializeField] private AudioClip _pickupSound; // Drag your 'Ping' sound here
 
     void Update()
     {
-        transform.Rotate(0, 0, spinSpeed * Time.deltaTime);
+        transform.Rotate(0, 0, _spinSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            // Use the Global Game Manager
-            GameManager.Instance.AddCoins(value);
+            // 1. Tell the Global Bank to add money
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddCoins(_value);
+            }
+
+            // 2. Play Sound (Creates a temporary sound object)
+            if (_pickupSound != null)
+            {
+                AudioSource.PlayClipAtPoint(_pickupSound, transform.position);
+            }
+
+            // 3. Destroy this coin
             Destroy(gameObject);
         }
     }
