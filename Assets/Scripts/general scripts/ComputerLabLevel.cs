@@ -10,28 +10,39 @@ public class ComputerLabLevel : LevelController
     public CinemachineCamera cutsceneCam;
     public GameObject startButton;
 
-    [Header("2. Projector Setup")]
-    public MeshRenderer projectorScreen;
-    public Texture startScreenTexture;
-    public Texture[] questionImages;
+    [Header("2. Projector Objects (Hierarchy)")]
+    public GameObject projectorParent;
+    public GameObject startSlideObj;
+    public GameObject[] questionSlideObjects;
+
+    // Drag 'success' here
+    public GameObject successSlideObj;
+    // Drag 'wompwomp' here
+    public GameObject failSlideObj;
 
     [Header("3. Feedback Setup")]
     public GameObject feedbackCube;
     public Texture correctTexture;
     public Texture wrongTexture;
 
+    // Drag your Audio Clips here
+    public AudioClip correctSound;
+    public AudioClip wrongSound;
+
     [Header("4. Answer Buttons")]
     public QuizButtonRow[] allButtonRows;
 
-    [Header("5. End Game UI")]
-    public GameObject successScreenObj;
-    public GameObject failScreenObj;
-    public GameObject[] mistakeObjects;
+    [Header("5. Mistakes Visuals")]
+    public GameObject[] mistakeObjects; // 0=1mistake, 1=2mistakes, etc.
+
+    [Header("6. Exit Barrier Setup")]
+    public GameObject exitConfirmationUI;
+    public Collider[] exitTriggers;
 
     // Internal State
     private int currentQuestionIndex = 0;
     private int mistakeCount = 0;
-    private int[] correctAnswers = { 0, 2, 1 }; // A=0, C=2, B=1
+    private int[] correctAnswers = { 1, 0, 1 };
 
     private void Start()
     {
@@ -42,13 +53,14 @@ public class ComputerLabLevel : LevelController
     {
         if (isLevelActive) return;
 
-        LockRoom();
+        ToggleDoorZones(false);
+        ToggleExitWarningTriggers(true);
+
         isLevelActive = true;
 
         if (startButton) startButton.SetActive(false);
         if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
 
-        // Camera Switch
         if (mainCam) mainCam.Priority = 0;
         if (cutsceneCam) cutsceneCam.Priority = 20;
 
@@ -57,21 +69,10 @@ public class ComputerLabLevel : LevelController
 
     protected override void OnCutsceneFinished()
     {
-        Debug.Log("Cutscene Finished. Starting Quiz...");
-
-        // 1. Reset Cameras
         if (mainCam) mainCam.Priority = 10;
         if (cutsceneCam) cutsceneCam.Priority = 0;
 
-        // 2. FORCE CLEANUP
-        if (successScreenObj) successScreenObj.SetActive(false);
-        if (failScreenObj) failScreenObj.SetActive(false);
-
-        // 3. Force Projector ON
-        if (projectorScreen)
-        {
-            projectorScreen.gameObject.SetActive(true);
-        }
+        if (projectorParent) projectorParent.SetActive(true);
 
         LoadQuestion(0);
     }
@@ -81,33 +82,77 @@ public class ComputerLabLevel : LevelController
         isLevelActive = false;
         mistakeCount = 0;
 
-        if (feedbackCube) feedbackCube.SetActive(false);
-        if (successScreenObj) successScreenObj.SetActive(false);
-        if (failScreenObj) failScreenObj.SetActive(false);
-        if (startButton) startButton.SetActive(true);
+        ToggleDoorZones(true);
+        ToggleExitWarningTriggers(false);
 
+        if (feedbackCube) feedbackCube.SetActive(false);
+        if (startButton) startButton.SetActive(true);
+        if (exitConfirmationUI) exitConfirmationUI.SetActive(false);
+
+        // Hide ALL Results
+        if (successSlideObj) successSlideObj.SetActive(false);
+        if (failSlideObj) failSlideObj.SetActive(false);
         foreach (var obj in mistakeObjects) if (obj) obj.SetActive(false);
 
+        // Hide Questions
+        foreach (var q in questionSlideObjects) if (q) q.SetActive(false);
+
+        // Hide Buttons
         foreach (var row in allButtonRows)
             foreach (var btn in row.buttons)
                 if (btn) btn.SetActive(false);
 
-        if (projectorScreen && startScreenTexture)
-        {
-            projectorScreen.material.mainTexture = startScreenTexture;
-            // FIX: Reset Scale to normal
-            projectorScreen.material.mainTextureScale = Vector2.one;
-            projectorScreen.material.mainTextureOffset = Vector2.zero;
-        }
+        // Show Start Screen
+        if (projectorParent) projectorParent.SetActive(true);
+        if (startSlideObj) startSlideObj.SetActive(true);
 
-        // Reset Timeline Object
         if (levelCutscene)
         {
             levelCutscene.Stop();
             levelCutscene.gameObject.SetActive(true);
         }
+    }
 
-        UnlockRoom();
+    // --- BARRIERS ---
+    private void ToggleDoorZones(bool enableDoors)
+    {
+        foreach (var barrier in roomBarriers)
+        {
+            if (barrier) barrier.enabled = enableDoors;
+        }
+    }
+
+    private void ToggleExitWarningTriggers(bool isActive)
+    {
+        foreach (var trigger in exitTriggers)
+        {
+            if (trigger) trigger.enabled = isActive;
+        }
+    }
+
+    public void PlayerTriedToExit()
+    {
+        if (!isLevelActive) return;
+
+        if (exitConfirmationUI)
+        {
+            exitConfirmationUI.SetActive(true);
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            if (GameManager.Instance) GameManager.Instance.SetMenuStatus(true);
+        }
+    }
+
+    public void Button_ConfirmExit()
+    {
+        if (GameManager.Instance) GameManager.Instance.SetMenuStatus(false);
+        ResetLevel();
+    }
+
+    public void Button_CancelExit()
+    {
+        if (GameManager.Instance) GameManager.Instance.SetMenuStatus(false);
+        if (exitConfirmationUI) exitConfirmationUI.SetActive(false);
     }
 
     // --- QUIZ LOGIC ---
@@ -116,19 +161,14 @@ public class ComputerLabLevel : LevelController
     {
         currentQuestionIndex = index;
 
-        // 1. Update Screen with FIX
-        if (projectorScreen && index < questionImages.Length)
-        {
-            projectorScreen.material.mainTexture = questionImages[index];
+        if (startSlideObj) startSlideObj.SetActive(false);
 
-            // === THE FIX FOR MESSED UP SCREEN ===
-            // This forces the texture to stretch 1:1 across the mesh
-            projectorScreen.material.mainTextureScale = Vector2.one;
-            projectorScreen.material.mainTextureOffset = Vector2.zero;
-            // ====================================
+        for (int i = 0; i < questionSlideObjects.Length; i++)
+        {
+            if (questionSlideObjects[i] != null)
+                questionSlideObjects[i].SetActive(i == index);
         }
 
-        // 2. Activate Buttons for THIS question only
         for (int i = 0; i < allButtonRows.Length; i++)
         {
             bool isActive = (i == index);
@@ -155,19 +195,30 @@ public class ComputerLabLevel : LevelController
         {
             feedbackCube.SetActive(true);
             feedbackCube.GetComponent<Renderer>().material.mainTexture = isCorrect ? correctTexture : wrongTexture;
+
+            AudioClip clipToPlay = isCorrect ? correctSound : wrongSound;
+
+            // Use AudioSource on the cube for better control
+            AudioSource source = feedbackCube.GetComponent<AudioSource>();
+            if (source == null) source = feedbackCube.AddComponent<AudioSource>(); // Safety add
+
+            if (clipToPlay != null)
+            {
+                source.clip = clipToPlay;
+                source.Play();
+            }
         }
 
         yield return new WaitForSeconds(2f);
 
         if (feedbackCube) feedbackCube.SetActive(false);
 
-        // Hide previous buttons
         foreach (var btn in allButtonRows[currentQuestionIndex].buttons)
         {
             if (btn) btn.SetActive(false);
         }
 
-        if (currentQuestionIndex < questionImages.Length - 1)
+        if (currentQuestionIndex < questionSlideObjects.Length - 1)
         {
             LoadQuestion(currentQuestionIndex + 1);
         }
@@ -177,26 +228,41 @@ public class ComputerLabLevel : LevelController
         }
     }
 
+    // --- FINAL LOGIC FIX HERE ---
     void FinishQuiz()
     {
-        if (projectorScreen) projectorScreen.gameObject.SetActive(false);
+        // 1. Hide all questions
+        foreach (var q in questionSlideObjects) if (q) q.SetActive(false);
 
+        // 2. Logic Split
         if (mistakeCount == 0)
         {
-            if (successScreenObj) successScreenObj.SetActive(true);
+            // === SUCCESS PATH ===
+            if (successSlideObj) successSlideObj.SetActive(true);
+            if (failSlideObj) failSlideObj.SetActive(false); // Make sure Fail is OFF
+
+            // Hide any mistake counters
+            foreach (var obj in mistakeObjects) if (obj) obj.SetActive(false);
+
+            // Give Rewards
             MarkLevelComplete();
         }
         else
         {
-            if (failScreenObj) failScreenObj.SetActive(true);
+            // === FAIL PATH ===
+            if (successSlideObj) successSlideObj.SetActive(false); // Make sure Success is OFF
+            if (failSlideObj) failSlideObj.SetActive(true);        // Show "WompWomp"
 
+            // Show the number of mistakes
+            // (1 mistake = index 0, 2 mistakes = index 1)
             int index = mistakeCount - 1;
+
             if (index >= 0 && index < mistakeObjects.Length)
             {
                 if (mistakeObjects[index]) mistakeObjects[index].SetActive(true);
             }
 
-            UnlockRoom();
+            // NOTE: We do NOT call MarkLevelComplete() here. Task remains unchecked.
         }
 
         StartCoroutine(AutoResetDelay());
@@ -209,7 +275,6 @@ public class ComputerLabLevel : LevelController
     }
 }
 
-// Helper Class at bottom
 [System.Serializable]
 public class QuizButtonRow
 {
