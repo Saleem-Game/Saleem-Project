@@ -6,24 +6,24 @@ public class UIManager : MonoBehaviour
 {
     public static UIManager Instance;
 
-    [Header("--- 1. Main Screens ---")]
-    public GameObject generalHUDPanel;
-    public TextMeshProUGUI coinText; // <--- Drag "Text_Value" here!
+    [Header("--- 1. HUD Elements (General UI) ---")]
+    public GameObject tasksPopup;
+    public TextMeshProUGUI coinText;
 
-    [Header("--- 2. Pop-up Panels ---")]
-    public GameObject tasksPanel;
+    [Header("--- 2. Main Panels (MapCanvas) ---")]
     public GameObject settingsPanel;
     public GameObject shopPanel;
-    public GameObject stickersPanel;
     public GameObject mapPanel;
-    public GameObject creditsPanel;
+    public GameObject stickersPanel;
 
-    [Header("--- 3. Game State UI ---")]
+    [Header("--- 3. Task System ---")]
+    public GameObject[] taskCheckmarks;
+
+    [Header("--- 4. Game State UI (Win/Fail) ---")]
     public GameObject winScreen;
     public GameObject failScreen;
     public GameObject[] winStars;
     public GameObject[] strikeXs;
-    public GameObject[] taskTicks;
 
     private void Awake()
     {
@@ -34,37 +34,31 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         CloseAllPopups();
-        if (generalHUDPanel) generalHUDPanel.SetActive(true);
     }
 
-    // --- COIN UPDATE FUNCTION ---
-    public void UpdateCoinDisplay(int newAmount)
-    {
-        if (coinText != null)
-        {
-            coinText.text = newAmount.ToString();
-        }
-    }
+    // --- MAIN TOGGLE LOGIC (UPDATED) ---
 
-    // --- PANEL CONTROL ---
-    public void CloseAllPopups()
+    public void TogglePanel(GameObject panelToOpen)
     {
-        if (tasksPanel) tasksPanel.SetActive(false);
-        if (settingsPanel) settingsPanel.SetActive(false);
-        if (shopPanel) shopPanel.SetActive(false);
-        if (stickersPanel) stickersPanel.SetActive(false);
-        if (mapPanel) mapPanel.SetActive(false);
-        if (creditsPanel) creditsPanel.SetActive(false);
-    }
+        bool wasActive = panelToOpen.activeSelf;
 
-    public void TogglePanel(GameObject panelToToggle)
-    {
-        bool isActive = panelToToggle.activeSelf;
+        // 1. Close everything first
         CloseAllPopups();
 
-        if (!isActive)
+        // 2. If it was NOT active, we open it now
+        if (!wasActive)
         {
-            panelToToggle.SetActive(true);
+            panelToOpen.SetActive(true);
+
+            // === THE FIX ===
+            // Check if this panel uses your friend's animation script
+            UIPanelController anim = panelToOpen.GetComponent<UIPanelController>();
+            if (anim != null)
+            {
+                anim.Open(); // Trigger the DOTween animation!
+            }
+            // ===============
+
             if (GameManager.Instance) GameManager.Instance.SetMenuStatus(true);
         }
         else
@@ -73,28 +67,89 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void Button_ToggleTasks() { TogglePanel(tasksPanel); }
-    public void Button_ToggleSettings() { TogglePanel(settingsPanel); }
-    public void Button_ToggleShop() { TogglePanel(shopPanel); }
-    public void Button_ToggleCredits() { TogglePanel(creditsPanel); }
-
-    public void Button_CloseAll()
+    public void CloseAllPopups()
     {
-        CloseAllPopups();
+        ClosePanelHelper(tasksPopup);
+        ClosePanelHelper(settingsPanel);
+        ClosePanelHelper(shopPanel);
+        ClosePanelHelper(mapPanel);
+        ClosePanelHelper(stickersPanel);
+
+        if (winScreen) winScreen.SetActive(false);
+        if (failScreen) failScreen.SetActive(false);
+
         if (GameManager.Instance) GameManager.Instance.SetMenuStatus(false);
     }
 
-    public void TickTask(int taskID)
+    // Helper to close panels cleanly
+    private void ClosePanelHelper(GameObject panel)
     {
-        int index = taskID - 1;
-        if (index >= 0 && index < taskTicks.Length)
+        if (panel != null && panel.activeSelf)
         {
-            if (taskTicks[index]) taskTicks[index].SetActive(true);
+            // If it has the friend's script, use his Close() for animation
+            UIPanelController anim = panel.GetComponent<UIPanelController>();
+            if (anim != null)
+            {
+                // Note: His Close() handles SetActive(false) automatically after animation
+                anim.Close();
+            }
+            else
+            {
+                // Normal close
+                panel.SetActive(false);
+            }
         }
     }
 
-    // Win/Fail Logic (Simplified for space)
-    public void ShowWinScreen(int stars) { if (winScreen) winScreen.SetActive(true); }
-    public void ShowFailScreen() { if (failScreen) failScreen.SetActive(true); }
-    public void ShowStrike(int count) { /* Logic */ }
+    // --- BUTTON FUNCTIONS ---
+    public void Button_Tasks() { TogglePanel(tasksPopup); }
+    public void Button_Settings() { TogglePanel(settingsPanel); }
+    public void Button_Shop() { TogglePanel(shopPanel); }
+    public void Button_Map() { TogglePanel(mapPanel); }
+    public void Button_Stickers() { TogglePanel(stickersPanel); }
+
+    // --- GAME STATE ---
+    public void ShowWinScreen(int starCount)
+    {
+        CloseAllPopups();
+        if (winScreen)
+        {
+            winScreen.SetActive(true);
+            for (int i = 0; i < winStars.Length; i++)
+            {
+                if (winStars[i]) winStars[i].SetActive(i < starCount);
+            }
+        }
+        if (GameManager.Instance) GameManager.Instance.SetMenuStatus(true);
+    }
+
+    public void ShowFailScreen()
+    {
+        CloseAllPopups();
+        if (failScreen) failScreen.SetActive(true);
+        if (GameManager.Instance) GameManager.Instance.SetMenuStatus(true);
+    }
+
+    public void ShowStrike(int strikeIndex)
+    {
+        int arrayIndex = strikeIndex - 1;
+        if (arrayIndex >= 0 && arrayIndex < strikeXs.Length)
+        {
+            if (strikeXs[arrayIndex]) strikeXs[arrayIndex].SetActive(true);
+        }
+    }
+
+    // --- TASK & ECONOMY ---
+    public void TickTask(int taskID)
+    {
+        if (taskID >= 0 && taskID < taskCheckmarks.Length)
+        {
+            if (taskCheckmarks[taskID]) taskCheckmarks[taskID].SetActive(true);
+        }
+    }
+
+    public void UpdateCoinDisplay(int newAmount)
+    {
+        if (coinText) coinText.text = newAmount.ToString();
+    }
 }

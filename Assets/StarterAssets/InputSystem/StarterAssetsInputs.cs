@@ -17,7 +17,7 @@ namespace StarterAssets
         public bool analogMovement;
 
         [Header("Mouse Cursor Settings")]
-        public bool cursorLocked = true;
+        public bool cursorLocked = false; // Set to FALSE by default
         public bool cursorInputForLook = true;
 
 #if ENABLE_INPUT_SYSTEM
@@ -28,13 +28,6 @@ namespace StarterAssets
 
         public void OnLook(InputValue value)
         {
-            // FIX 1: If menu is open, DO NOT move the camera
-            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen)
-            {
-                look = Vector2.zero;
-                return;
-            }
-
             if (cursorInputForLook)
             {
                 LookInput(value.Get<Vector2>());
@@ -74,25 +67,16 @@ namespace StarterAssets
 
         private void OnApplicationFocus(bool hasFocus)
         {
-            // When you click, Unity calls this. We pass it to SetCursorState to handle the logic.
-            SetCursorState(cursorLocked);
+            // WE DELETED THE LOCKING CODE HERE.
+            // Now the cursor will never disappear when you click back into the game.
+            SetCursorState(false);
         }
 
         private void SetCursorState(bool newState)
         {
-            // === THE FINAL FIX ===
-            // If the Game Manager says the menu is open, WE REFUSE TO LOCK THE CURSOR.
-            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-                return; // Stop here. Do not let the code below run.
-            }
-            // =====================
-
-            Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
-            // We also ensure visibility matches the lock state
-            Cursor.visible = !newState;
+            // Always force unlocked and visible
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
         }
     }
 }

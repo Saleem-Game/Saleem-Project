@@ -1,15 +1,18 @@
 using UnityEngine;
+using StarterAssets;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
     public Transform playerTransform;
 
+    // True = Menu Open (Stop Camera). False = Gameplay (Move Camera).
+    public bool IsMenuOpen { get; private set; } = false;
+
     // --- ECONOMY DATA ---
     public int coinCount { get; private set; } = 0;
 
-    // --- MENU STATE ---
-    public bool IsMenuOpen { get; private set; } = false;
+    private StarterAssetsInputs _playerInputs;
 
     private void Awake()
     {
@@ -24,74 +27,53 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    // ---------------------------------------------------------
-    // === NEW: ECONOMY LOGIC (Ready for Shop) ===
-    // ---------------------------------------------------------
-
-    public void AddCoins(int amount)
+    private void Update()
     {
-        coinCount += amount;
-
-        // Update UI immediately
-        if (UIManager.Instance != null)
+        // 1. Keep finding the player script if we lost it
+        if (_playerInputs == null && playerTransform != null)
         {
-            UIManager.Instance.UpdateCoinDisplay(coinCount);
+            _playerInputs = playerTransform.GetComponent<StarterAssetsInputs>();
+        }
+
+        // 2. FORCE MOUSE VISIBLE ALWAYS
+        // We do this every frame to fight Unity's default behavior
+        if (Cursor.visible == false || Cursor.lockState != CursorLockMode.None)
+        {
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 
-    // Call this from the Shop button later!
-    // Usage: if (GameManager.Instance.TrySpendCoins(50)) { // Give Item }
+    public void SetMenuStatus(bool isOpen)
+    {
+        IsMenuOpen = isOpen;
+
+        // If Menu is OPEN -> Stop Camera Look
+        // If Menu is CLOSED -> Allow Camera Look
+        if (_playerInputs != null)
+        {
+            _playerInputs.cursorInputForLook = !isOpen;
+        }
+    }
+
+    // --- ECONOMY LOGIC ---
+    public void AddCoins(int amount)
+    {
+        coinCount += amount;
+        if (UIManager.Instance != null) UIManager.Instance.UpdateCoinDisplay(coinCount);
+    }
+
     public bool TrySpendCoins(int cost)
     {
         if (coinCount >= cost)
         {
             coinCount -= cost;
-
-            // Update UI
-            if (UIManager.Instance != null)
-                UIManager.Instance.UpdateCoinDisplay(coinCount);
-
-            return true; // Purchase Successful
+            if (UIManager.Instance != null) UIManager.Instance.UpdateCoinDisplay(coinCount);
+            return true;
         }
-        else
-        {
-            Debug.Log("Not enough coins!");
-            return false; // Purchase Failed
-        }
+        return false;
     }
 
-    // ---------------------------------------------------------
-
-    // --- MOUSE & CURSOR LOGIC ---
-    public void SetMenuStatus(bool isOpen)
-    {
-        IsMenuOpen = isOpen;
-        if (isOpen)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-    }
-
-    private void LateUpdate()
-    {
-        // Force Cursor Visible if Menu is Open
-        if (IsMenuOpen || Input.GetKey(KeyCode.LeftAlt))
-        {
-            if (!Cursor.visible)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-        }
-    }
-
-    // --- TASKS ---
     public void CompleteTask(int taskID)
     {
         if (UIManager.Instance) UIManager.Instance.TickTask(taskID);
