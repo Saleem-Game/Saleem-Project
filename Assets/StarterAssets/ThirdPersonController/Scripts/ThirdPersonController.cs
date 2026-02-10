@@ -1,15 +1,16 @@
-﻿using UnityEngine;
-#if ENABLE_INPUT_SYSTEM 
+﻿using Unity.VisualScripting;
+using UnityEngine;
+#if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
 
 namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
-#if ENABLE_INPUT_SYSTEM 
-    [RequireComponent(typeof(PlayerInput))]
+#if ENABLE_INPUT_SYSTEM 
+    [RequireComponent(typeof(PlayerInput))]
 #endif
-    public class ThirdPersonController : MonoBehaviour
+    public class ThirdPersonController : MonoBehaviour
     {
         [Header("Player")]
         public float MoveSpeed = 2.0f;
@@ -42,33 +43,34 @@ namespace StarterAssets
         public float CameraAngleOverride = 0.0f;
         public bool LockCameraPosition = false;
 
-        // cinemachine
-        private float _cinemachineTargetYaw;
+        // cinemachine
+        private float _cinemachineTargetYaw;
         private float _cinemachineTargetPitch;
+        public float CameraSensitivity = 1.0f;
 
-        // player
-        private float _speed;
+        // player
+        private float _speed;
         private float _animationBlend;
         private float _targetRotation = 0.0f;
         private float _rotationVelocity;
         private float _verticalVelocity;
         private float _terminalVelocity = 53.0f;
 
-        // timeout deltatime
-        private float _jumpTimeoutDelta;
+        // timeout deltatime
+        private float _jumpTimeoutDelta;
         private float _fallTimeoutDelta;
 
-        // animation IDs
-        private int _animIDSpeed;
+        // animation IDs
+        private int _animIDSpeed;
         private int _animIDGrounded;
         private int _animIDJump;
         private int _animIDFreeFall;
         private int _animIDMotionSpeed;
 
-#if ENABLE_INPUT_SYSTEM 
-        private PlayerInput _playerInput;
+#if ENABLE_INPUT_SYSTEM 
+        private PlayerInput _playerInput;
 #endif
-        private Animator _animator;
+        private Animator _animator;
         private CharacterController _controller;
         private StarterAssetsInputs _input;
         private GameObject _mainCamera;
@@ -81,11 +83,11 @@ namespace StarterAssets
             get
             {
 #if ENABLE_INPUT_SYSTEM
-                return _playerInput.currentControlScheme == "KeyboardMouse";
+                return _playerInput.currentControlScheme == "KeyboardMouse";
 #else
 				return false;
 #endif
-            }
+            }
         }
 
         private void Awake()
@@ -103,13 +105,13 @@ namespace StarterAssets
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM 
-            _playerInput = GetComponent<PlayerInput>();
+#if ENABLE_INPUT_SYSTEM 
+            _playerInput = GetComponent<PlayerInput>();
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies.");
 #endif
 
-            AssignAnimationIDs();
+            AssignAnimationIDs();
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
         }
@@ -120,11 +122,11 @@ namespace StarterAssets
             JumpAndGravity();
             GroundedCheck();
 
-            // --- CURSOR FIX START ---
-            HandleCursorLock();
-            // --- CURSOR FIX END ---
+            // --- CURSOR FIX START ---
+            HandleCursorLock();
+            // --- CURSOR FIX END ---
 
-            Move();
+            Move();
         }
 
         private void LateUpdate()
@@ -132,40 +134,40 @@ namespace StarterAssets
             CameraRotation();
         }
 
-        // --- NEW FUNCTION: FORCE THE INPUT SYSTEM TO BEHAVE ---
-        private void HandleCursorLock()
+        // --- NEW FUNCTION: FORCE THE INPUT SYSTEM TO BEHAVE ---
+        private void HandleCursorLock()
         {
             bool isMenuOpen = false;
 
-            // Check GameManager
-            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen)
+            // Check GameManager
+            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen)
             {
                 isMenuOpen = true;
             }
 
-            // Manual Override with Left Alt
-            if (Input.GetKey(KeyCode.LeftAlt))
+            // Manual Override with Left Alt
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
                 isMenuOpen = true;
             }
 
             if (isMenuOpen)
             {
-                // 1. Tell Unity to show the cursor
-                Cursor.lockState = CursorLockMode.None;
+                // 1. Tell Unity to show the cursor
+                Cursor.lockState = CursorLockMode.None;
                 Cursor.visible = true;
 
-                // 2. Tell the StarterAssets script to STOP locking it back
-                if (_input != null)
+                // 2. Tell the StarterAssets script to STOP locking it back
+                if (_input != null)
                 {
-                    _input.cursorLocked = false;       // Standard variable in StarterAssetsInputs
-                    _input.cursorInputForLook = false; // Stop camera from spinning
-                }
+                    _input.cursorLocked = false;       // Standard variable in StarterAssetsInputs
+                    _input.cursorInputForLook = false; // Stop camera from spinning
+                }
             }
             else
             {
-                // Only lock if we aren't clicking something else
-                if (Cursor.lockState == CursorLockMode.None && Input.GetMouseButtonDown(0))
+                // Only lock if we aren't clicking something else
+                if (Cursor.lockState == CursorLockMode.None && Input.GetMouseButtonDown(0))
                 {
                     Cursor.lockState = CursorLockMode.Locked;
                     Cursor.visible = false;
@@ -191,9 +193,9 @@ namespace StarterAssets
         private void GroundedCheck()
         {
             Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
-                transform.position.z);
+              transform.position.z);
             Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
-                QueryTriggerInteraction.Ignore);
+              QueryTriggerInteraction.Ignore);
 
             if (_hasAnimator)
             {
@@ -203,23 +205,23 @@ namespace StarterAssets
 
         private void CameraRotation()
         {
-            // If Menu Open, Don't Rotate
-            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen) return;
+            // If Menu Open, Don't Rotate
+            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen) return;
             if (Input.GetKey(KeyCode.LeftAlt)) return;
 
             if (_input.look.sqrMagnitude >= _threshold && !LockCameraPosition)
             {
                 float deltaTimeMultiplier = IsCurrentDeviceMouse ? 1.0f : Time.deltaTime;
 
-                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier;
-                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier;
+                _cinemachineTargetYaw += _input.look.x * deltaTimeMultiplier * CameraSensitivity;
+                _cinemachineTargetPitch += _input.look.y * deltaTimeMultiplier * CameraSensitivity;
             }
 
             _cinemachineTargetYaw = ClampAngle(_cinemachineTargetYaw, float.MinValue, float.MaxValue);
             _cinemachineTargetPitch = ClampAngle(_cinemachineTargetPitch, BottomClamp, TopClamp);
 
             CinemachineCameraTarget.transform.rotation = Quaternion.Euler(_cinemachineTargetPitch + CameraAngleOverride,
-                _cinemachineTargetYaw, 0.0f);
+              _cinemachineTargetYaw, 0.0f);
         }
 
         private void Move()
@@ -234,10 +236,10 @@ namespace StarterAssets
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
 
             if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-                currentHorizontalSpeed > targetSpeed + speedOffset)
+              currentHorizontalSpeed > targetSpeed + speedOffset)
             {
                 _speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude,
-                    Time.deltaTime * SpeedChangeRate);
+                  Time.deltaTime * SpeedChangeRate);
                 _speed = Mathf.Round(_speed * 1000f) / 1000f;
             }
             else
@@ -253,16 +255,16 @@ namespace StarterAssets
             if (_input.move != Vector2.zero)
             {
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                  _mainCamera.transform.eulerAngles.y;
+                         _mainCamera.transform.eulerAngles.y;
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
-                    RotationSmoothTime);
+                  RotationSmoothTime);
                 transform.rotation = Quaternion.Euler(0.0f, rotation, 0.0f);
             }
 
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
             _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+                    new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 
             if (_hasAnimator)
             {
@@ -343,8 +345,8 @@ namespace StarterAssets
             else Gizmos.color = transparentRed;
 
             Gizmos.DrawSphere(
-                new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
-                GroundedRadius);
+              new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z),
+              GroundedRadius);
         }
 
         private void OnFootstep(AnimationEvent animationEvent)
