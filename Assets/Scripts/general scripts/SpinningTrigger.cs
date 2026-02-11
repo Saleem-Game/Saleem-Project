@@ -2,48 +2,29 @@ using UnityEngine;
 
 public class SpinningTrigger : MonoBehaviour
 {
+    // Drag the [BurnLevelManager] object here in the Inspector
     public BurnLevelManager manager;
-    private bool playerInRange = false;
 
-    // We will find the visual center of the object automatically
-    private Vector3 visualCenter;
-    private Renderer objRenderer;
-
-    void Start()
-    {
-        objRenderer = GetComponent<Renderer>();
-        // If there is no renderer on this object, this fix won't work well
-        if (objRenderer == null)
-            objRenderer = GetComponentInChildren<Renderer>();
-    }
+    // Speed of rotation
+    public float spinSpeed = 50f;
 
     void Update()
     {
-        // SOLUTION: RotateAround uses a specific point in space to spin.
-        // We use 'objRenderer.bounds.center' to find the visual middle of your mesh.
-        if (objRenderer != null)
-        {
-            transform.RotateAround(objRenderer.bounds.center, Vector3.up, 100 * Time.deltaTime);
-        }
-        else
-        {
-            // Fallback if no renderer found
-            transform.Rotate(0, 100 * Time.deltaTime, 0);
-        }
+        // 1. Make it spin
+        transform.Rotate(0, spinSpeed * Time.deltaTime, 0);
 
-        if (playerInRange && Input.GetKeyDown(KeyCode.E))
+        // 2. Check for Interaction
+        // We calculate distance to the player (Drag player into manager to make this work)
+        if (manager != null && manager.saleemPlayer != null)
         {
-            manager.StartMiniGameSequence();
+            float distance = Vector3.Distance(transform.position, manager.saleemPlayer.transform.position);
+
+            // If close (3 meters) and Player presses E
+            if (distance < 3.0f && Input.GetKeyDown(KeyCode.E))
+            {
+                // Call the function in the manager to start the Cutscene
+                manager.StartLevelSequence();
+            }
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Player")) playerInRange = true;
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.CompareTag("Player")) playerInRange = false;
     }
 }

@@ -2,127 +2,169 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Playables;
 using TMPro;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class BurnLevelManager : MonoBehaviour
 {
-    [Header("--- 1. SCENE REFS ---")]
+    [Header("--- 0. CHARACTERS ---")]
+    public GameObject[] backgroundCharacters;
+    public GameObject[] cutsceneOnlyCharacters; // Fake Teacher, Cup, Tray
+
+    public GameObject teacherCharacter; // Real Teacher
+    public Transform teacherTreatmentSpot;
+    public Transform teacherChairSpot;
+    public Animator teacherAnim;
+
+    [Header("--- 1. PLAYER & CAMS ---")]
     public GameObject saleemPlayer;
-    public Camera mainPlayerCam;
+    public MonoBehaviour playerScript;
+    public Transform exitSpawnPoint;
+    public Camera mainCam;
     public Camera treatmentCam;
-    public GameObject spinningTriggerObj;
+    public GameObject generalUI;
 
-    [Header("--- 2. MEDICAL ASSETS ---")]
-    public PlayableDirector cutsceneDirector;
+    [Header("--- 2. START TRIGGER ---")]
+    public GameObject spinningCross;
+    public PlayableDirector cutscene;
+
+    [Header("--- 3. TREATMENT ASSETS ---")]
+    public GameObject medicalKitRoot;
     public Renderer armRenderer;
-    public Texture burnedTexture;
-    public Texture bandagedTexture;
+    public Texture burnedTex;
+    public Texture bandagedTex;
+    public GameObject dropZoneObj;
 
-    [Header("--- 3. AUDIO ---")]
-    public AudioSource audioSource;
-    public AudioClip sfxCorrectPing;
-    public AudioClip sfxWrongBong;
-    public AudioClip sfxNurseHurry;
-
-    [Header("--- 4. UI: INSTRUCTIONS ---")]
-    // Drag 'Instructions Cafeteria' here
-    public GameObject instructionPanel;
-    // Drag the 'instruction' text object (inside popup/content) here
-    public TextMeshProUGUI instructionText;
-
-    [Header("--- 5. UI: STRIKES (Mistakes) ---")]
-    // Drag 'strike Cafeteria' here
-    public GameObject strikePanel;
-    // Drag 'Mistake text' (inside header) here
-    public TextMeshProUGUI mistakeHeaderText;
-    // Drag '1st strike', '2nd strike', '3rd strike' here
-    public GameObject[] strikeCrosses;
-
-    [Header("--- 6. UI: END GAME ---")]
-    // Drag 'Win screen Cafeteria' here
-    public GameObject winScreenPanel;
-    // Drag 'Star L', 'Star M', 'Star R' here
+    [Header("--- 4. UI PANELS ---")]
+    public GameObject[] instructionCards;
+    public GameObject strikePanelParent;
+    public GameObject[] strikeXs;
+    public GameObject failScreen;
+    public GameObject winScreen;
     public GameObject[] winStars;
-    // Drag 'Fail screen Cafeteria' here
-    public GameObject loseScreenPanel;
 
-    [Header("--- 7. NURSE MISSION ---")]
-    public GameObject nurseNPC;
-    public Transform finalDestination;      // The empty object near the injured kid
-    public float missionTime = 15f;
+    [Header("--- 5. NURSE MISSION ---")]
+    public GameObject nurseMissionPanel;
+    public TextMeshProUGUI timerText;
+    public NurseAI nurseScript;
+    public GameObject arrowObj;
 
-    // INTERNAL STATE
+    [Header("--- 6. FINAL RESULTS ---")]
+    public GameObject goodJobPanel;
+    public GameObject wompWompPanel;
+
+    // STATE
+    public bool isTreatmentActive = false;
     private int currentStep = 0;
-    private int mistakes = 0;
-    private bool isTreating = false;
-    private bool isRunningForNurse = false;
-    private float timerCount;
+    private int strikes = 0;
     private int clicksOnWound = 0;
-    private NurseController nurseScript;
+    private bool nurseMissionActive = false;
+    private float timer = 40f; // 40 SECONDS
+
+    // SAVED POSITIONS
+    private Vector3 nurseStartPos;
+    private Quaternion nurseStartRot;
 
     void Start()
     {
-        // Setup Start State
-        mainPlayerCam.gameObject.SetActive(true);
+        if (nurseScript)
+        {
+            nurseStartPos = nurseScript.transform.position;
+            nurseStartRot = nurseScript.transform.rotation;
+        }
+        ResetLevelState();
+    }
+
+    void ResetLevelState()
+    {
+        // 1. Force Fake Objects OFF (Timeline will turn them ON later)
+        foreach (var c in cutsceneOnlyCharacters) if (c) c.SetActive(false);
+
+        // 2. Force Background ON
+        foreach (var c in backgroundCharacters) if (c) c.SetActive(true);
+
+        // 3. Force Real Teacher OFF
+        if (teacherCharacter) teacherCharacter.SetActive(false);
+
+        // 4. Reset Objects
+        spinningCross.SetActive(true);
         treatmentCam.gameObject.SetActive(false);
+        medicalKitRoot.SetActive(false);
+        dropZoneObj.SetActive(false);
 
-        // Hide all custom UI panels at start
-        instructionPanel.SetActive(false);
-        strikePanel.SetActive(false);
-        winScreenPanel.SetActive(false);
-        loseScreenPanel.SetActive(false);
+        // 5. Reset UI
+        foreach (var c in instructionCards) c.SetActive(false);
+        strikePanelParent.SetActive(false);
+        foreach (var x in strikeXs) x.SetActive(false);
+        foreach (var s in winStars) s.SetActive(false);
 
-        // Reset Arm
-        if (armRenderer) armRenderer.material.mainTexture = burnedTexture;
+        failScreen.SetActive(false);
+        winScreen.SetActive(false);
+        nurseMissionPanel.SetActive(false);
+        goodJobPanel.SetActive(false);
+        wompWompPanel.SetActive(false);
+        arrowObj.SetActive(false);
 
-        // Setup Nurse
-        if (nurseNPC) nurseScript = nurseNPC.GetComponent<NurseController>();
+        if (armRenderer) armRenderer.material.mainTexture = burnedTex;
 
-        // Spin Trigger
-        if (spinningTriggerObj) StartCoroutine(SpinTriggerRoutine());
+        isTreatmentActive = false;
+        nurseMissionActive = false;
+        currentStep = 0;
+        strikes = 0;
+        timer = 40f;
     }
 
-    void Update()
+    public void StartLevelSequence()
     {
-        // === TIMER LOGIC (NURSE PHASE) ===
-        if (isRunningForNurse)
-        {
-            timerCount -= Time.deltaTime;
-            // Update the instruction text to show the timer
-            instructionText.text = "HURRY! Find the Nurse!\nTime: " + Mathf.Ceil(timerCount).ToString();
-
-            if (timerCount <= 0)
-            {
-                TriggerGameOver();
-            }
-        }
-    }
-
-    // Called by the Trigger Object
-    public void StartMiniGameSequence()
-    {
-        spinningTriggerObj.SetActive(false);
         StartCoroutine(CutsceneRoutine());
-    }
-
-    IEnumerator SpinTriggerRoutine()
-    {
-        while (spinningTriggerObj != null && spinningTriggerObj.activeSelf)
-        {
-            spinningTriggerObj.transform.Rotate(0, 50 * Time.deltaTime, 0);
-            yield return null;
-        }
     }
 
     IEnumerator CutsceneRoutine()
     {
-        Cursor.lockState = CursorLockMode.None;
+        spinningCross.SetActive(false);
+        generalUI.SetActive(false);
+        if (playerScript) playerScript.enabled = false;
         Cursor.visible = false;
 
-        if (cutsceneDirector != null)
+        // Ensure Extras are ON for the movie
+        foreach (var c in cutsceneOnlyCharacters) if (c) c.SetActive(true);
+
+        if (cutscene)
         {
-            cutsceneDirector.Play();
-            yield return new WaitForSeconds((float)cutsceneDirector.duration);
+            cutscene.Play();
+            yield return new WaitForSeconds((float)cutscene.duration);
+
+            // CRITICAL FIX: Stop timeline to release control of objects
+            cutscene.Stop();
+        }
+
+        // --- CUTSCENE DONE ---
+
+        // 1. Hide Extras
+        foreach (var c in cutsceneOnlyCharacters) if (c) c.SetActive(false);
+
+        // 2. Ensure Background people stay
+        foreach (var c in backgroundCharacters) if (c) c.SetActive(true);
+
+        // 3. Activate Real Teacher
+        if (teacherCharacter)
+        {
+            teacherCharacter.SetActive(true);
+
+            // Teleport
+            if (teacherTreatmentSpot)
+            {
+                teacherCharacter.transform.position = teacherTreatmentSpot.position;
+                teacherCharacter.transform.rotation = teacherTreatmentSpot.rotation;
+            }
+
+            // Force Pose
+            if (teacherAnim)
+            {
+                teacherAnim.enabled = true;
+                teacherAnim.Rebind(); // Reset animator
+                teacherAnim.Play("ArmOut");
+            }
         }
 
         StartTreatment();
@@ -130,185 +172,169 @@ public class BurnLevelManager : MonoBehaviour
 
     void StartTreatment()
     {
-        isTreating = true;
-        mainPlayerCam.gameObject.SetActive(false);
+        mainCam.gameObject.SetActive(false);
         treatmentCam.gameObject.SetActive(true);
+        medicalKitRoot.SetActive(true);
+        dropZoneObj.SetActive(true);
 
-        // Show Instructions Panel
-        instructionPanel.SetActive(true);
+        isTreatmentActive = true;
+        currentStep = 0;
+        strikes = 0;
 
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
 
-        UpdateInstructionText("Step 1:\nClean and Cool the wound using OxyWater");
-
-        currentStep = 0;
-        mistakes = 0;
-        clicksOnWound = 0;
-
-        // Reset Strikes UI (Hide all Xs)
-        foreach (var cross in strikeCrosses) cross.SetActive(false);
+        UpdateInstructionUI();
     }
 
-    public void OnToolUsed(string toolName)
+    public void CheckToolDrop(string tag)
     {
-        if (!isTreating) return;
+        if (!isTreatmentActive) return;
 
-        bool stepSuccess = false;
+        bool correct = false;
+        if (currentStep == 0 && tag == "OxyWater") correct = true;
+        else if (currentStep == 1 && tag == "BurnCream") correct = true;
+        else if (currentStep == 2 && tag == "Bandage") correct = true;
 
-        // CHECK LOGIC
-        if (currentStep == 0 && toolName == "OxyWater") stepSuccess = true;
-        else if (currentStep == 1 && toolName == "BurnCream") stepSuccess = true;
-        else if (currentStep == 2 && toolName == "BandAidRoll") stepSuccess = true;
-
-        if (toolName == "Alcohol")
-        {
-            RegisterMistake("Do not use Alcohol!");
-            return;
-        }
-
-        if (stepSuccess)
-        {
-            audioSource.PlayOneShot(sfxCorrectPing);
-            currentStep++;
-
-            if (currentStep == 1) UpdateInstructionText("Step 2:\nApply BurnCream to soothe the skin");
-            if (currentStep == 2) UpdateInstructionText("Step 3:\nProtect the wound with a Bandage");
-            if (currentStep == 3) FinishTreatment();
-        }
-        else
-        {
-            RegisterMistake("Wrong Tool!");
-        }
+        if (correct) { currentStep++; if (currentStep == 3) FinishTreatment(); else UpdateInstructionUI(); }
+        else { GiveStrike(); }
     }
 
-    public void OnWoundClicked()
+    public void ClickedWound() { clicksOnWound++; if (clicksOnWound > 3) { GiveStrike(); clicksOnWound = 0; } }
+
+    void GiveStrike()
     {
-        if (!isTreating) return;
-
-        clicksOnWound++;
-        if (clicksOnWound > 3)
-        {
-            RegisterMistake("Don't touch the wound!");
-            clicksOnWound = 0;
-        }
+        strikes++;
+        strikePanelParent.SetActive(true);
+        if (strikes <= strikeXs.Length) strikeXs[strikes - 1].SetActive(true);
+        if (strikes >= 3) Invoke("ShowFail", 2f);
+        else Invoke("HideStrikePanel", 2f);
     }
 
-    void RegisterMistake(string reason)
-    {
-        mistakes++;
-        audioSource.PlayOneShot(sfxWrongBong);
-
-        // 1. Show the Strike Panel
-        strikePanel.SetActive(true);
-        mistakeHeaderText.text = reason; // Set the error text
-
-        // 2. Turn on the X mark (1st, 2nd, or 3rd)
-        if (mistakes <= strikeCrosses.Length)
-        {
-            strikeCrosses[mistakes - 1].SetActive(true);
-        }
-
-        // 3. Hide panel after 2 seconds
-        StopCoroutine("HideStrikePanel");
-        StartCoroutine("HideStrikePanel");
-
-        if (mistakes >= 3)
-        {
-            TriggerGameOver();
-        }
-    }
-
-    IEnumerator HideStrikePanel()
-    {
-        yield return new WaitForSeconds(2f);
-        strikePanel.SetActive(false);
-    }
-
-    void UpdateInstructionText(string message)
-    {
-        // Supports Arabic text if your font supports it
-        instructionText.text = message;
-    }
+    void HideStrikePanel() { strikePanelParent.SetActive(false); }
+    void ShowFail() { strikePanelParent.SetActive(false); isTreatmentActive = false; failScreen.SetActive(true); }
+    void UpdateInstructionUI() { for (int i = 0; i < instructionCards.Length; i++) if (instructionCards[i] != null) instructionCards[i].SetActive(i == currentStep); }
 
     void FinishTreatment()
     {
-        isTreating = false;
-
-        armRenderer.material.mainTexture = bandagedTexture;
-        audioSource.PlayOneShot(sfxCorrectPing);
-
-        instructionPanel.SetActive(false); // Hide instructions for a moment
-
-        StartNurseRunPhase();
+        isTreatmentActive = false;
+        if (armRenderer) armRenderer.material.mainTexture = bandagedTex;
+        medicalKitRoot.SetActive(false);
+        dropZoneObj.SetActive(false);
+        foreach (var c in instructionCards) c.SetActive(false);
+        ShowWinScreen();
     }
 
-    void StartNurseRunPhase()
+    void ShowWinScreen()
     {
-        isRunningForNurse = true;
-        timerCount = missionTime;
+        winScreen.SetActive(true);
+        int starCount = 3 - strikes;
+        if (starCount < 1) starCount = 1;
+        if (starCount >= 1) winStars[1].SetActive(true);
+        if (starCount >= 2) winStars[0].SetActive(true);
+        if (starCount >= 3) winStars[2].SetActive(true);
+    }
+
+    // --- NURSE MISSION ---
+    public void StartNurseMission()
+    {
+        winScreen.SetActive(false);
+
+        if (teacherCharacter && teacherChairSpot)
+        {
+            teacherCharacter.transform.position = teacherChairSpot.position;
+            teacherCharacter.transform.rotation = teacherChairSpot.rotation;
+            if (teacherAnim) teacherAnim.Play("Sitting");
+        }
 
         treatmentCam.gameObject.SetActive(false);
-        mainPlayerCam.gameObject.SetActive(true);
+        mainCam.gameObject.SetActive(true);
+        generalUI.SetActive(true);
+
+        if (playerScript) playerScript.enabled = true;
+
+        nurseMissionActive = true;
+        timer = 40f; // 40 SECONDS START
+        nurseMissionPanel.SetActive(true);
 
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-        // Show Instructions again for the timer
-        instructionPanel.SetActive(true);
-
-        if (sfxNurseHurry) audioSource.PlayOneShot(sfxNurseHurry);
     }
 
-    public void NurseFound()
+    void Update()
     {
-        if (!isRunningForNurse) return;
-        nurseScript.StartFollowing(saleemPlayer.transform);
+        if (isTreatmentActive) { if (Cursor.lockState != CursorLockMode.None) { Cursor.visible = true; Cursor.lockState = CursorLockMode.None; } return; }
+
+        if (nurseMissionActive)
+        {
+            timer -= Time.deltaTime;
+            if (timerText) timerText.text = Mathf.Ceil(timer).ToString();
+
+            float distToNurse = Vector3.Distance(saleemPlayer.transform.position, nurseScript.transform.position);
+            if (distToNurse < 3f && Input.GetKeyDown(KeyCode.E))
+            {
+                nurseScript.StartFollowing(saleemPlayer.transform);
+                arrowObj.SetActive(true);
+            }
+
+            float distToTeacher = Vector3.Distance(saleemPlayer.transform.position, teacherChairSpot.position);
+            if (distToTeacher < 3f && arrowObj.activeSelf)
+            {
+                nurseMissionActive = false;
+                arrowObj.SetActive(false);
+                nurseMissionPanel.SetActive(false);
+                nurseScript.GoSit(teacherChairSpot);
+            }
+
+            // --- TIME UP ---
+            if (timer <= 0)
+            {
+                nurseMissionActive = false;
+                nurseMissionPanel.SetActive(false);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                wompWompPanel.SetActive(true); // Show Time's Up Panel
+            }
+        }
     }
 
-    public void MissionComplete()
-    {
-        isRunningForNurse = false;
-        instructionPanel.SetActive(false); // Hide instructions/timer
-
-        // Calculate Stars Logic
-        // 0 Mistakes = 3 Stars
-        // 1 Mistake = 2 Stars
-        // 2 Mistakes = 1 Star
-        int starsEarned = 3 - mistakes;
-        if (starsEarned < 0) starsEarned = 0;
-
-        ShowWinScreen(starsEarned);
-    }
-
-    void ShowWinScreen(int stars)
+    public void LevelComplete()
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-
-        winScreenPanel.SetActive(true);
-
-        // Hide all stars first
-        foreach (var star in winStars) star.SetActive(false);
-
-        // Logic for your specific hierarchy (Star L, Star M, Star R)
-        // Assuming array order in Inspector is: Element 0 = Left, Element 1 = Middle, Element 2 = Right
-
-        if (stars >= 1) winStars[1].SetActive(true); // Middle Star (usually the first one needed)
-        if (stars >= 2) winStars[0].SetActive(true); // Left Star
-        if (stars >= 3) winStars[2].SetActive(true); // Right Star
+        goodJobPanel.SetActive(true);
     }
 
-    void TriggerGameOver()
+    // --- EXIT FUNCTION ---
+    public void ExitAndResetLevel()
     {
-        isTreating = false;
-        isRunningForNurse = false;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        if (exitSpawnPoint)
+        {
+            CharacterController cc = saleemPlayer.GetComponent<CharacterController>();
+            if (cc) cc.enabled = false;
 
-        instructionPanel.SetActive(false);
-        strikePanel.SetActive(false);
+            saleemPlayer.transform.position = exitSpawnPoint.position;
+            saleemPlayer.transform.rotation = exitSpawnPoint.rotation;
 
-        loseScreenPanel.SetActive(true);
+            if (cc) cc.enabled = true;
+        }
+
+        if (nurseScript)
+        {
+            nurseScript.transform.position = nurseStartPos;
+            nurseScript.transform.rotation = nurseStartRot;
+            // Force reset any nurse animation states if needed
+            Animator nAnim = nurseScript.GetComponent<Animator>();
+            if (nAnim) nAnim.Rebind();
+        }
+
+        ResetLevelState(); // Reset entire level
+
+        if (playerScript) playerScript.enabled = true;
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        generalUI.SetActive(true);
     }
+
+    public void Button_Retry_Fail() { failScreen.SetActive(false); StartTreatment(); }
 }

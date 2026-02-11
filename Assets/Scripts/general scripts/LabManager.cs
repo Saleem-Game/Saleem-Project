@@ -3,7 +3,7 @@ using UnityEngine.Playables;
 using System.Collections;
 using Unity.Cinemachine;
 using TMPro;
-using UnityEngine.EventSystems; 
+using UnityEngine.EventSystems;
 
 public class LabManager : MonoBehaviour
 {
@@ -28,81 +28,60 @@ public class LabManager : MonoBehaviour
     public Texture correctTexture;
     public Texture wrongTexture;
 
-    [Header("5. Buttons Setup (The New System)")]
-    // This replaces the old "Answer Rows"
+    [Header("5. Buttons Setup")]
     public ButtonRow[] allButtonRows;
 
     private int currentQuestionIndex = 0;
     private int mistakeCount = 0;
     private int[] correctAnswers = { 0, 2, 1 };
-
     private bool isGameRunning = false;
+
     void Start()
     {
-        // Force timeline to stop
+        // Safety Reset on Start
+        isGameRunning = false;
         if (timeline != null) { timeline.Stop(); timeline.time = 0; }
 
         mainCam.Priority = 10;
         cutsceneCam.Priority = 0;
 
-        if (feedbackCube != null) feedbackCube.SetActive(false);
-        if (successScreenObj != null) successScreenObj.SetActive(false);
-        if (failScreenObj != null) failScreenObj.SetActive(false);
+        ResetAllUI();
 
-        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
-        foreach (var row in allButtonRows) foreach (var btn in row.buttons) if (btn != null) btn.SetActive(false);
-
-        if (startScreenTexture != null) projectorScreen.material.mainTexture = startScreenTexture;
-
-        startButton.SetActive(true);
-        isGameRunning = false; // Reset safety
+        if (startScreenTexture != null) UpdateProjector(startScreenTexture);
+        if (startButton) startButton.SetActive(true);
     }
 
     public void StartGameSequence()
     {
-        // === THE FIX ===
-        // If the game is already running, IGNORE this click.
-        if (isGameRunning == true) return;
-
-        // If the timeline is already playing, IGNORE this click.
+        if (isGameRunning) return;
         if (timeline.state == PlayState.Playing) return;
 
-        // Force Unity to forget the button was clicked
-        if (EventSystem.current != null) EventSystem.current.SetSelectedGameObject(null);
-
-        // Lock the game so it can't start again
         isGameRunning = true;
-
         mistakeCount = 0;
 
-        if (successScreenObj != null) successScreenObj.SetActive(false);
-        if (failScreenObj != null) failScreenObj.SetActive(false);
-        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
+        if (startButton) startButton.SetActive(false);
+        if (EventSystem.current) EventSystem.current.SetSelectedGameObject(null);
 
-        startButton.SetActive(false);
         StartCoroutine(PlayCutsceneRoutine());
     }
 
     IEnumerator PlayCutsceneRoutine()
     {
         cutsceneCam.Priority = 20;
+        timeline.gameObject.SetActive(true);
         timeline.Play();
 
         yield return new WaitForSeconds((float)timeline.duration);
 
+        // --- HARD STOP ---
         timeline.Stop();
-        timeline.gameObject.SetActive(false);
+        timeline.gameObject.SetActive(false); // Disable timeline object to free the screen
 
-        // Cleanup
-        if (successScreenObj != null) successScreenObj.SetActive(false);
-        if (failScreenObj != null) failScreenObj.SetActive(false);
-        foreach (var obj in mistakeObjects) if (obj != null) obj.SetActive(false);
-        foreach (var row in allButtonRows) foreach (var btn in row.buttons) if (btn != null) btn.SetActive(false);
-
-        projectorScreen.gameObject.SetActive(true);
         cutsceneCam.Priority = 0;
         mainCam.Priority = 10;
 
+        // Ensure screen is visible and ready
+        projectorScreen.gameObject.SetActive(true);
         LoadQuestion(0);
     }
 
@@ -110,39 +89,53 @@ public class LabManager : MonoBehaviour
     {
         currentQuestionIndex = index;
 
-        // 1. Projector Logic
+        // 1. Update Screen
         if (index < questionImages.Length)
         {
-            projectorScreen.gameObject.SetActive(true);
-            projectorScreen.material.mainTexture = questionImages[index];
+            UpdateProjector(questionImages[index]);
         }
 
-        // 2. Button Logic (Force the correct row ON)
+        // 2. Activate ONLY the buttons for this row
         for (int i = 0; i < allButtonRows.Length; i++)
         {
-            bool shouldRowBeActive = (i == index);
-
+            bool isActive = (i == index);
             foreach (GameObject btn in allButtonRows[i].buttons)
             {
-                if (btn != null) btn.SetActive(shouldRowBeActive);
+                if (btn) btn.SetActive(isActive);
             }
         }
 
-        feedbackCube.SetActive(false);
+        if (feedbackCube) feedbackCube.SetActive(false);
+    }
+
+    // Helper to fix "Messed Up" textures
+    void UpdateProjector(Texture newTexture)
+    {
+        if (projectorScreen != null && newTexture != null)
+        {
+            projectorScreen.gameObject.SetActive(true);
+            projectorScreen.material.mainTexture = newTexture;
+
+            // FIX: Reset Texture Scale/Offset in case they got weird
+            projectorScreen.material.mainTextureScale = new Vector2(1, 1);
+            projectorScreen.material.mainTextureOffset = new Vector2(0, 0);
+        }
     }
 
     public void SubmitAnswer(int answerIndex)
     {
-        int correctAnswer = correctAnswers[currentQuestionIndex];
-        bool isCorrect = (answerIndex == correctAnswer);
+        // Safety check
+        if (!isGameRunning) return;
 
-        if (!isCorrect)
+        bool isCorrect = (answerIndex == correctAnswers[currentQuestionIndex]);
+        if (!isCorrect) mistakeCount++;
+
+        // Show Feedback
+        if (feedbackCube)
         {
-            mistakeCount++;
+            feedbackCube.SetActive(true);
+            feedbackCube.GetComponent<Renderer>().material.mainTexture = isCorrect ? correctTexture : wrongTexture;
         }
-
-        feedbackCube.SetActive(true);
-        feedbackCube.GetComponent<Renderer>().material.mainTexture = isCorrect ? correctTexture : wrongTexture;
 
         StartCoroutine(NextQuestionDelay());
     }
@@ -151,68 +144,74 @@ public class LabManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
-        // Hide the current buttons
+        // Hide current buttons
         foreach (GameObject btn in allButtonRows[currentQuestionIndex].buttons)
         {
-            if (btn != null) btn.SetActive(false);
+            if (btn) btn.SetActive(false);
         }
 
-        feedbackCube.SetActive(false);
+        if (feedbackCube) feedbackCube.SetActive(false);
 
         int nextQ = currentQuestionIndex + 1;
-
         if (nextQ < questionImages.Length)
         {
             LoadQuestion(nextQ);
         }
         else
         {
-            // === GAME FINISHED ===
-            projectorScreen.gameObject.SetActive(false);
-
-            if (mistakeCount == 0)
-            {
-                if (successScreenObj != null) successScreenObj.SetActive(true);
-            }
-            else
-            {
-                if (failScreenObj != null) failScreenObj.SetActive(true);
-
-                int indexToActivate = mistakeCount - 1;
-                if (indexToActivate >= 0 && indexToActivate < mistakeObjects.Length)
-                {
-                    if (mistakeObjects[indexToActivate] != null)
-                        mistakeObjects[indexToActivate].SetActive(true);
-                }
-            }
-
-            yield return new WaitForSeconds(5f);
-
-            // === RESET ===
-            if (successScreenObj != null) successScreenObj.SetActive(false);
-            if (failScreenObj != null) failScreenObj.SetActive(false);
-
-            foreach (var obj in mistakeObjects)
-            {
-                if (obj != null) obj.SetActive(false);
-            }
-
-            projectorScreen.gameObject.SetActive(true);
-            if (startScreenTexture != null) projectorScreen.material.mainTexture = startScreenTexture;
-
-            // Turn on Timeline Object again so it's ready for next play
-            timeline.gameObject.SetActive(true);
-
-            startButton.SetActive(true);
-            mainCam.Priority = 10;
+            FinishGame();
         }
+    }
+
+    void FinishGame()
+    {
+        projectorScreen.gameObject.SetActive(false);
+
+        if (mistakeCount == 0)
+        {
+            if (successScreenObj) successScreenObj.SetActive(true);
+        }
+        else
+        {
+            if (failScreenObj) failScreenObj.SetActive(true);
+            int idx = mistakeCount - 1;
+            if (idx >= 0 && idx < mistakeObjects.Length && mistakeObjects[idx])
+                mistakeObjects[idx].SetActive(true);
+        }
+
+        StartCoroutine(ResetGameDelay());
+    }
+
+    IEnumerator ResetGameDelay()
+    {
+        yield return new WaitForSeconds(5f);
+
+        ResetAllUI();
+        isGameRunning = false;
+
+        // Reset Screen to Start
+        if (startScreenTexture) UpdateProjector(startScreenTexture);
+
+        // Re-enable Timeline Object (ready for next play)
+        if (timeline) timeline.gameObject.SetActive(true);
+
+        if (startButton) startButton.SetActive(true);
+    }
+
+    void ResetAllUI()
+    {
+        if (successScreenObj) successScreenObj.SetActive(false);
+        if (failScreenObj) failScreenObj.SetActive(false);
+        if (feedbackCube) feedbackCube.SetActive(false);
+
+        foreach (var obj in mistakeObjects) if (obj) obj.SetActive(false);
+        foreach (var row in allButtonRows) foreach (var btn in row.buttons) if (btn) btn.SetActive(false);
     }
 }
 
-// === THIS IS THE NEW HELPER ===
 [System.Serializable]
 public class ButtonRow
 {
-    public string name;          // Optional: Name it "Row 1" so you don't get confused
-    public GameObject[] buttons; // Drag the 3 buttons here
+    public string name;
+    public GameObject[] buttons;
 }

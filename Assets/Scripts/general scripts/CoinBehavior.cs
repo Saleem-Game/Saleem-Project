@@ -2,31 +2,34 @@ using UnityEngine;
 
 public class CoinBehavior : MonoBehaviour
 {
+    [Header("Settings")]
     [SerializeField] private float _spinSpeed = 100f;
+    [SerializeField] private int _value = 1;
+    [SerializeField] private AudioClip _pickupSound; // Drag your 'Ping' sound here
 
     void Update()
     {
-        // 1. Keep the coin spinning
         transform.Rotate(0, 0, _spinSpeed * Time.deltaTime);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        // 2. Check if it was the Player who touched it
         if (other.CompareTag("Player"))
         {
-            // 3. Find the Manager on the PARENT object
-            CoinManager manager = GetComponentInParent<CoinManager>();
+            // 1. Tell the Global Bank to add money
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.AddCoins(_value);
+            }
 
-            if (manager != null)
+            // 2. Play Sound (Creates a temporary sound object)
+            if (_pickupSound != null)
             {
-                manager.AddScore(); // Tell manager to add score & play sound
-                Destroy(gameObject); // Make coin disappear
+                AudioSource.PlayClipAtPoint(_pickupSound, transform.position);
             }
-            else
-            {
-                Debug.LogWarning("Coin cannot find CoinManager! Is the coin a child of the Manager object?");
-            }
+
+            // 3. Destroy this coin
+            Destroy(gameObject);
         }
     }
 }
