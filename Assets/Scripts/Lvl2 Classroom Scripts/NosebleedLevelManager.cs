@@ -45,6 +45,14 @@ public class NosebleedLevelManager : MonoBehaviour
     [Header("Wrong Sound")]
     public AudioClip wrongClip;         // أي غلط
 
+    [Header("UI (Controller)")]
+    public NosebleedUIController ui;
+
+    [Header("Step Texts")]
+    [TextArea(2, 4)] public string headForwardText = "علّيك بإمالة رأس المصاب إلى الأمام.";
+    [TextArea(2, 4)] public string pinchHoldText = "اضغط على الأنف لمدة 10 ثواني بدون ما تترك.";
+    [TextArea(2, 4)] public string sheetsText = "استخدم الشاش (Sheets) لتنظيف الدم من الأنف.";
+    [TextArea(2, 4)] public string bandAidText = "استخدم BandAidRoll (القطعة/المنديل) بشكل صحيح.";
     void Start()
     {
         Debug.Log($"[LEVEL] Start. Stage={currentStage}, Mistakes={mistakes}/{maxMistakes}");
@@ -66,6 +74,42 @@ public class NosebleedLevelManager : MonoBehaviour
 
         if (girlRenderer != null && matNosebleed != null)
             girlRenderer.material = matNosebleed;
+
+        UpdateUIForStage();
+    }
+    void SetStage(Stage s)
+    {
+        currentStage = s;
+        UpdateUIForStage();
+        Debug.Log($"[LEVEL] Stage -> {currentStage}");
+    }
+
+    void UpdateUIForStage()
+    {
+        if (ui == null) return;
+
+        ui.SetTitle("التعليمات");
+
+        bool playing = (currentStage != Stage.Completed && currentStage != Stage.Failed);
+        ui.ShowInstructions(playing);
+        ui.ShowWin(currentStage == Stage.Completed);
+        ui.ShowLose(currentStage == Stage.Failed);
+        if (currentStage == Stage.Completed)
+        {
+            ui.SetWinStars(mistakes);
+        }
+
+        switch (currentStage)
+        {
+            case Stage.HeadForward: ui.SetInstruction(headForwardText); break;
+            case Stage.PinchHold: ui.SetInstruction(pinchHoldText); break;
+            case Stage.Sheets: ui.SetInstruction(sheetsText); break;
+            case Stage.BandAidRoll: ui.SetInstruction(bandAidText); break;
+            case Stage.Completed: ui.SetInstruction("أحسنت! خلّصت الإسعاف صح ✅"); break;
+            case Stage.Failed: ui.SetInstruction("حاول مرة ثانية. ركّز على الخطوات بالترتيب ❌"); break;
+        }
+
+        ui.SetStrikes(mistakes);
     }
 
     void PlaySfx(AudioClip clip)
@@ -74,26 +118,30 @@ public class NosebleedLevelManager : MonoBehaviour
         sfxSource.PlayOneShot(clip, sfxVolume);
     }
 
+
+    //SETP1//
     public void MarkHeadForwardDone()
     {
         if (currentStage != Stage.HeadForward) return;
 
         PlaySfx(headForwardClip);
 
-        currentStage = Stage.PinchHold;
+        SetStage(Stage.PinchHold);
         Debug.Log($"[LEVEL] Stage -> {currentStage}");
     }
-
+    //STEP2//
     public void MarkPinchHoldDone()
     {
         if (currentStage != Stage.PinchHold) return;
 
         PlaySfx(pinchHoldClip);
 
-        currentStage = Stage.Sheets;
+        SetStage(Stage.Sheets);
+
         Debug.Log($"[LEVEL] Stage -> {currentStage}");
     }
 
+    // ---- Drag-drop items to target ----
     public void OnItemDroppedOnTarget(GameObject item, DraggableItem drag)
     {
         if (item == null) return;
@@ -112,41 +160,41 @@ public class NosebleedLevelManager : MonoBehaviour
             return;
         }
 
+        // ✅ Correct: Sheets
         if (currentStage == Stage.Sheets)
         {
-            // بعد الشيت: يصير الأنف نظيف
             if (girlRenderer != null && matCleanNose != null)
                 girlRenderer.material = matCleanNose;
 
-            // صوت خطوة الشيت
             PlaySfx(sheetsClip);
 
-            // اختفاء الشيت
+            // hide tool after correct
             item.SetActive(false);
 
-            currentStage = Stage.BandAidRoll;
-            Debug.Log($"[LEVEL] Correct SHEETS ✅ Stage -> {currentStage}");
+            SetStage(Stage.BandAidRoll);
+            Debug.Log("[LEVEL] Correct SHEETS ✅");
             return;
         }
 
+        // ✅ Correct: BandAidRoll
         if (currentStage == Stage.BandAidRoll)
         {
-            // بعد bandAidRoll: يظهر tissueV2
             if (girlRenderer != null && matTissueV2 != null)
                 girlRenderer.material = matTissueV2;
 
-            // صوت خطوة الباندج
             PlaySfx(bandAidClip);
 
-            // اختفاء الباندج
             item.SetActive(false);
 
-            currentStage = Stage.Completed;
+            if (coldPack != null) coldPack.SetActive(true);
 
-            // صوت الفوز
+           
+
             PlaySfx(winClip);
+            SetStage(Stage.Completed);
 
-            Debug.Log("[LEVEL] WIN 🎉 Stage -> Completed");
+            //SetStage(Stage.Completed);
+            Debug.Log("[LEVEL] WIN 🎉");
             return;
         }
     }
@@ -155,8 +203,10 @@ public class NosebleedLevelManager : MonoBehaviour
     {
         mistakes++;
 
-        // صوت الغلط
         PlaySfx(wrongClip);
+
+        // ✅ تحديث السترايك فورًا (بدون انتظار ستاج)
+        if (ui != null) ui.SetStrikes(mistakes);
 
         Debug.Log($"[LEVEL] Mistake {mistakes}/{maxMistakes} ❌ Reason: {reason}");
 
@@ -164,10 +214,11 @@ public class NosebleedLevelManager : MonoBehaviour
 
         if (mistakes >= maxMistakes)
         {
-            currentStage = Stage.Failed;
-            Debug.Log("[LEVEL] LOSE ❌ Stage -> Failed");
+            SetStage(Stage.Failed);
+            Debug.Log("[LEVEL] LOSE ❌");
         }
     }
 
-  
+
+
 }
