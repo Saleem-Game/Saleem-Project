@@ -1,22 +1,57 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class DropDown : MonoBehaviour
 {
-    // Drag the 'Content' object here
-    public GameObject contentObject;
+    [Header("References")]
+    public RectTransform menuContainer;
+    public CanvasGroup menuCanvasGroup;
 
-    void Start()
+    [Header("Settings")]
+    public float duration = 0.4f;
+    public Ease openEase = Ease.OutBack;
+
+    private Vector2 openedPosition;
+    private Vector2 closedPosition;
+    private bool isOpen = false;
+
+    // 1. Create variables to hold the active animations
+    private Tween moveTween;
+    private Tween fadeTween;
+
+    void Awake()
     {
-        // Ensure the menu is closed when the game starts
-        if (contentObject) contentObject.SetActive(false);
+        openedPosition = menuContainer.anchoredPosition;
+        closedPosition = new Vector2(openedPosition.x, 0);
+
+        menuContainer.anchoredPosition = closedPosition;
+        menuCanvasGroup.alpha = 0;
+        menuCanvasGroup.blocksRaycasts = false;
+        gameObject.SetActive(true);
     }
 
     public void ToggleMenu()
     {
-        // If it's ON, turn it OFF. If it's OFF, turn it ON.
-        if (contentObject)
+        isOpen = !isOpen;
+
+        // 2. Kill ONLY the specific tweens if they are currently running
+        moveTween?.Kill();
+        fadeTween?.Kill();
+
+        if (isOpen)
         {
-            contentObject.SetActive(!contentObject.activeSelf);
+            // 3. Assign the new animation to the variable so we can control it later
+            moveTween = menuContainer.DOAnchorPos(openedPosition, duration).SetEase(openEase);
+            fadeTween = menuCanvasGroup.DOFade(1, duration);
+
+            menuCanvasGroup.blocksRaycasts = true;
+        }
+        else
+        {
+            moveTween = menuContainer.DOAnchorPos(closedPosition, duration).SetEase(Ease.InQuad);
+            fadeTween = menuCanvasGroup.DOFade(0, duration);
+
+            menuCanvasGroup.blocksRaycasts = false;
         }
     }
 }
