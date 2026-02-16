@@ -8,27 +8,30 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/WelcomeScreen.unity
     guid: ff4100450c70c1649924d17010e73807
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/MapScreen.unity
     guid: ea14cb0f395d9a942a222c752f13cb33
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Play Ground Lvl1.unity
     guid: 99c9720ab356a0642a771bea13969a05
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Class Room Lvl2.unity
     guid: 42990b3f027f58549b242095681f219f
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Cutscenes/PlayGround-CutScene.unity
     guid: f17df141dd9899549b0cecbe7b757ca9
   - enabled: 0
     path: Assets/Scenes/QuizScreen.unity
     guid: 296a31531120bff449ce778c2dabee5a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Welcome.unity
     guid: ca9c3ce47b3020847b66fbd07c98db6a
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Lili main.unity
     guid: a66128209befade4f9b16cada6bd552a
+  - enabled: 1
+    path: Assets/Scenes/MainMap.unity
+    guid: fbbfb87a82051204a83fffcaab010514
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
