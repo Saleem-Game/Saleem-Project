@@ -8,17 +8,19 @@ public abstract class LevelController : MonoBehaviour
     public int taskID;
     public PlayableDirector levelCutscene;
 
+    [Tooltip("Drag NestedParentArmature_Unpack here")]
+    public GameObject playerRoot;
+
     [Header("Room Control (Multiple Doors)")]
+    // RESTORED: This fixes the CS0103 errors in your other scripts
     public Collider[] roomBarriers;
 
     protected bool isLevelActive = false;
 
-    // Abstract methods children must implement
     public abstract void StartLevel();
     public abstract void ResetLevel();
 
-    // --- SHARED LOGIC ---
-
+    // RESTORED: Necessary methods for ComputerLab, Chemistry, and Cafeteria
     protected void LockRoom()
     {
         foreach (var barrier in roomBarriers)
@@ -35,20 +37,18 @@ public abstract class LevelController : MonoBehaviour
         }
     }
 
-    protected void MarkLevelComplete()
+    protected void TogglePlayer(bool state)
     {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.CompleteTask(taskID);
-        }
-        UnlockRoom();
+        if (playerRoot != null) playerRoot.SetActive(state);
     }
 
     protected void PlayCutscene()
     {
+        TogglePlayer(false); // Disables player and MainCamera during cutscene
+
         if (levelCutscene != null)
         {
-            levelCutscene.gameObject.SetActive(true); // Ensure it's on to play
+            levelCutscene.gameObject.SetActive(true);
             levelCutscene.Play();
             StartCoroutine(WaitForCutscene());
         }
@@ -60,16 +60,19 @@ public abstract class LevelController : MonoBehaviour
 
     private IEnumerator WaitForCutscene()
     {
-        // Wait for the exact duration of the timeline
         yield return new WaitForSeconds((float)levelCutscene.duration);
-
-        // --- CRITICAL FIX ---
-        // We must STOP the timeline and DISABLE the object.
-        // This releases the "hold" on the Projector Screen so scripts can change it.
         levelCutscene.Stop();
         levelCutscene.gameObject.SetActive(false);
 
+        // Child classes decide when to reactivate the player
         OnCutsceneFinished();
+    }
+
+    protected void MarkLevelComplete()
+    {
+        if (GameManager.Instance != null) GameManager.Instance.CompleteTask(taskID);
+        UnlockRoom();
+        TogglePlayer(true);
     }
 
     protected virtual void OnCutsceneFinished() { }

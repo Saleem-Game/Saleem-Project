@@ -4,9 +4,9 @@ using UnityEngine;
 public class DraggableItem : MonoBehaviour
 {
     [Header("Drag Settings")]
-    public LayerMask dragSurfaceMask;   // Layer  »⁄ «·”ÿÕ (Desk / Ground)
-    public float followSpeed = 25f;     // ”„ÊÀ «·Õ—ﬂ…
-    public float returnSpeed = 20f;     // ”—⁄… «·—ÃÊ⁄
+    public LayerMask dragSurfaceMask;   // Layer for the Surface (Desk / Ground)
+    public float followSpeed = 25f;
+    public float returnSpeed = 20f;
 
     private Camera cam;
     private bool dragging;
@@ -21,21 +21,57 @@ public class DraggableItem : MonoBehaviour
 
     void Start()
     {
+        // Cache the camera once, or Update will handle the switch
         cam = Camera.main;
-        CacheStart();
+        // IMPORTANT: Cache the start position ONLY at the start, not every frame
+        CacheInitialTransform();
     }
 
-    void CacheStart()
+    void CacheInitialTransform()
     {
         startPos = transform.position;
         startRot = transform.rotation;
     }
 
+    void Update()
+    {
+        // 1. Ensure 'cam' always points to the currently active camera (LevelCam)
+        if (cam == null || !cam.isActiveAndEnabled)
+        {
+            cam = Camera.main;
+        }
+
+        // 2. Handle the returning logic
+        if (returning)
+        {
+            transform.position = Vector3.Lerp(
+                transform.position,
+                startPos,
+                Time.deltaTime * returnSpeed
+            );
+
+            transform.rotation = Quaternion.Slerp(
+                transform.rotation,
+                startRot,
+                Time.deltaTime * returnSpeed
+            );
+
+            if (Vector3.Distance(transform.position, startPos) < 0.01f)
+            {
+                transform.position = startPos;
+                transform.rotation = startRot;
+                returning = false;
+            }
+        }
+    }
+
     void OnMouseDown()
     {
+        // If we want to grab it from where it currently is in the kit
+        CacheInitialTransform();
+
         dragging = true;
         returning = false;
-        CacheStart();
 
         if (RayToSurface(out Vector3 hit))
             grabOffset = transform.position - hit;
@@ -47,7 +83,7 @@ public class DraggableItem : MonoBehaviour
 
     void OnMouseDrag()
     {
-        if (!dragging) return;
+        if (!dragging || cam == null) return;
 
         if (RayToSurface(out Vector3 hit))
         {
@@ -71,7 +107,6 @@ public class DraggableItem : MonoBehaviour
 
             Debug.Log($"[DRAG] Dropped ON TARGET: {name}");
 
-            // ≈‘⁄«— „œÌ— «··Ì›·
             HeadTargetTrigger target = FindObjectOfType<HeadTargetTrigger>();
             if (target != null)
                 target.NotifyDrop(gameObject);
@@ -83,51 +118,26 @@ public class DraggableItem : MonoBehaviour
         }
     }
 
-    void Update()
-    {
-        if (!returning) return;
-
-        transform.position = Vector3.Lerp(
-            transform.position,
-            startPos,
-            Time.deltaTime * returnSpeed
-        );
-
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            startRot,
-            Time.deltaTime * returnSpeed
-        );
-
-        if (Vector3.Distance(transform.position, startPos) < 0.01f)
-        {
-            transform.position = startPos;
-            transform.rotation = startRot;
-            returning = false;
-        }
-    }
-
     bool RayToSurface(out Vector3 hitPoint)
     {
+        hitPoint = default;
+        if (cam == null) return false;
+
         Ray ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out RaycastHit hit, 200f, dragSurfaceMask))
         {
             hitPoint = hit.point;
             return true;
         }
-
-        hitPoint = default;
         return false;
     }
 
-    // ====== Ì‰«œÌÂ„ HeadTargetTrigger ======
     public void SetOverTarget(bool isOver, Transform targetSnap)
     {
         overTarget = isOver;
         snapPoint = targetSnap;
     }
 
-    // ====== Ì‰«œÌÂ« LevelManager ⁄‰œ «·Œÿ√ ======
     public void ForceReturn()
     {
         dragging = false;

@@ -2,53 +2,50 @@ using UnityEngine;
 
 public class DraggableTool : MonoBehaviour
 {
-    public TreatmentSystem system; // Drag 'TreatmentMinigame' object here
+    public TreatmentSystem system;
     private Vector3 startPos;
-    private Camera cam;
-    private bool isDragging = false;
+    private Vector3 mOffset;
+    private float mZCoord;
 
     void Start()
     {
         startPos = transform.position;
-        cam = Camera.main;
-
-        // Auto-find if you forgot to drag it
-        if (system == null)
-            system = FindFirstObjectByType<TreatmentSystem>();
+        if (system == null) system = FindFirstObjectByType<TreatmentSystem>();
     }
 
     void OnMouseDown()
     {
-        isDragging = true;
+        // Calculate distance from camera to object
+        mZCoord = Camera.main.WorldToScreenPoint(gameObject.transform.position).z;
+        // Calculate offset so the object doesn't snap to the center of the mouse
+        mOffset = gameObject.transform.position - GetMouseAsWorldPoint();
+    }
+
+    private Vector3 GetMouseAsWorldPoint()
+    {
+        Vector3 mousePoint = Input.mousePosition;
+        mousePoint.z = mZCoord;
+        return Camera.main.ScreenToWorldPoint(mousePoint);
+    }
+
+    void OnMouseDrag()
+    {
+        // Move the object exactly where the mouse goes in 3D space
+        transform.position = GetMouseAsWorldPoint() + mOffset;
     }
 
     void OnMouseUp()
     {
-        isDragging = false;
-
-        // Check if close enough to injury
         if (system != null && system.injuryDropZone != null)
         {
             float dist = Vector3.Distance(transform.position, system.injuryDropZone.position);
 
             if (dist < system.dropDistance)
             {
-                // Send this tool to the system to check
                 system.CheckToolDrop(gameObject.tag, gameObject);
             }
         }
-
-        // Snap back to table
+        // Snap back to table regardless of right/wrong (if wrong, it stays. if right, TreatmentSystem hides it)
         transform.position = startPos;
-    }
-
-    void Update()
-    {
-        if (isDragging && cam != null)
-        {
-            Vector3 mousePos = Input.mousePosition;
-            mousePos.z = 1.0f; // Distance from camera
-            transform.position = cam.ScreenToWorldPoint(mousePos);
-        }
     }
 }
