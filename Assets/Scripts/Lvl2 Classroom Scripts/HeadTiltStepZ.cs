@@ -97,8 +97,7 @@ public class HeadTiltStepZ : MonoBehaviour
             // إذا بدك تسحب لتحت ويزيد Z (60 -> 75):
             targetZ -= mouseY * speed * Time.deltaTime;
 
-            // لو طلع معك بالعكس، اعكس الإشارة:
-            // targetZ -= mouseY * speed * Time.deltaTime;
+            
 
             targetZ = Mathf.Clamp(targetZ, minWrongZ, maxCorrectZ);
         }
