@@ -132966,10 +132966,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e34435ec05c738b479709e38676e8eb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  menuContainer: {fileID: 1501617687}
-  menuCanvasGroup: {fileID: 1501617685}
-  duration: 0.4
-  openEase: 6
+  contentObject: {fileID: 0}
 --- !u!1 &1360830996
 GameObject:
   m_ObjectHideFlags: 0
