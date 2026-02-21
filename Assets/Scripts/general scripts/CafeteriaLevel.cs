@@ -192,5 +192,4 @@ public class CafeteriaLevel : LevelController
 
         // 3. Mark the quest as done!
         MarkLevelComplete();
-    }
-}
+    } }

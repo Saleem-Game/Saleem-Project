@@ -28,21 +28,16 @@ public class NosebleedLevelManager : MonoBehaviour
     public AudioSource bgSource;
     public AudioSource sfxSource;
     [Range(0f, 1f)] public float sfxVolume = 1f;
-    public AudioClip headForwardClip, pinchHoldClip, sheetsClip, bandAidClip, winClip, wrongClip;
 
-<<<<<<< HEAD
-    // This is called by the LevelController when the cutscene ends
-    public void StartMinigame()
-=======
-    [Header("Step Sounds (different for each step)")]
-    public AudioClip headForwardClip;   // بعد ما ينجح ميلان الرأس
-    public AudioClip pinchHoldClip;     // بعد ما يكمل 10 ثواني
-    public AudioClip sheetsClip;        // بعد ما يحط الشيت صح
-    public AudioClip bandAidClip;       // بعد ما يحط BandAidRoll صح
-    public AudioClip winClip;           // عند الفوز
+    [Header("Step Sounds")]
+    public AudioClip headForwardClip;
+    public AudioClip pinchHoldClip;
+    public AudioClip sheetsClip;
+    public AudioClip bandAidClip;
+    public AudioClip winClip;
 
     [Header("Wrong Sound")]
-    public AudioClip wrongClip;         // أي غلط
+    public AudioClip wrongClip;
 
     [Header("UI (Controller)")]
     public NosebleedUIController ui;
@@ -52,21 +47,37 @@ public class NosebleedLevelManager : MonoBehaviour
     [TextArea(2, 4)] public string pinchHoldText = "اضغط على الأنف لمدة 10 ثواني بدون ما تترك.";
     [TextArea(2, 4)] public string sheetsText = "استخدم الشاش (Sheets) لتنظيف الدم من الأنف.";
     [TextArea(2, 4)] public string bandAidText = "استخدم BandAidRoll (القطعة/المنديل) بشكل صحيح.";
-    void Start()
->>>>>>> 1dad29ed1e5bb7b7a7b0ce70f230da4309c2d334
+
+    [Header("Extras")]
+    public GameObject coldPack;
+
+    // This is called by the LevelController when the cutscene ends
+    public void StartMinigame()
     {
         currentStage = Stage.HeadForward;
         mistakes = 0;
         if (girlRenderer != null && matNosebleed != null)
             girlRenderer.material = matNosebleed;
-<<<<<<< HEAD
 
         if (bgSource != null && !bgSource.isPlaying) bgSource.Play();
         Debug.Log("[MINIGAME] Logic Started.");
-=======
 
         UpdateUIForStage();
     }
+
+    void Start()
+    {
+        //currentStage = Stage.HeadForward;
+        //mistakes = 0;
+        //if (girlRenderer != null && matNosebleed != null)
+        //    girlRenderer.material = matNosebleed;
+
+        //if (bgSource != null && !bgSource.isPlaying) bgSource.Play();
+        //Debug.Log("[MINIGAME] Logic Started.");
+
+        //UpdateUIForStage();
+    }
+
     void SetStage(Stage s)
     {
         currentStage = s;
@@ -108,31 +119,20 @@ public class NosebleedLevelManager : MonoBehaviour
         sfxSource.PlayOneShot(clip, sfxVolume);
     }
 
-
-    //SETP1//
     public void MarkHeadForwardDone()
     {
         if (currentStage != Stage.HeadForward) return;
-
         PlaySfx(headForwardClip);
-
         SetStage(Stage.PinchHold);
-        Debug.Log($"[LEVEL] Stage -> {currentStage}");
     }
-    //STEP2//
+
     public void MarkPinchHoldDone()
     {
         if (currentStage != Stage.PinchHold) return;
-
         PlaySfx(pinchHoldClip);
-
         SetStage(Stage.Sheets);
-
-        Debug.Log($"[LEVEL] Stage -> {currentStage}");
->>>>>>> 1dad29ed1e5bb7b7a7b0ce70f230da4309c2d334
     }
 
-    // ---- Drag-drop items to target ----
     public void OnItemDroppedOnTarget(GameObject item, DraggableItem drag)
     {
         if (currentStage == Stage.Completed || currentStage == Stage.Failed) return;
@@ -150,25 +150,10 @@ public class NosebleedLevelManager : MonoBehaviour
         // ✅ Correct: Sheets
         if (currentStage == Stage.Sheets)
         {
-<<<<<<< HEAD
-            if (girlRenderer != null && matCleanNose != null) girlRenderer.material = matCleanNose;
-            PlaySfx(sheetsClip);
-            item.SetActive(false);
-            currentStage = Stage.BandAidRoll;
-        }
-        else if (currentStage == Stage.BandAidRoll)
-        {
-            if (girlRenderer != null && matTissueV2 != null) girlRenderer.material = matTissueV2;
-            PlaySfx(bandAidClip);
-            item.SetActive(false);
-            currentStage = Stage.Completed;
-=======
             if (girlRenderer != null && matCleanNose != null)
                 girlRenderer.material = matCleanNose;
 
             PlaySfx(sheetsClip);
-
-            // hide tool after correct
             item.SetActive(false);
 
             SetStage(Stage.BandAidRoll);
@@ -183,64 +168,33 @@ public class NosebleedLevelManager : MonoBehaviour
                 girlRenderer.material = matTissueV2;
 
             PlaySfx(bandAidClip);
-
             item.SetActive(false);
 
             if (coldPack != null) coldPack.SetActive(true);
 
-           
-
->>>>>>> 1dad29ed1e5bb7b7a7b0ce70f230da4309c2d334
             PlaySfx(winClip);
             SetStage(Stage.Completed);
 
-<<<<<<< HEAD
-            // --- THE WIN TRIGGER ---
             if (controller != null) controller.OnMinigameWin();
-=======
-            //SetStage(Stage.Completed);
             Debug.Log("[LEVEL] WIN 🎉");
             return;
->>>>>>> 1dad29ed1e5bb7b7a7b0ce70f230da4309c2d334
         }
     }
-
-    public void MarkHeadForwardDone() { PlaySfx(headForwardClip); currentStage = Stage.PinchHold; }
-    public void MarkPinchHoldDone() { PlaySfx(pinchHoldClip); currentStage = Stage.Sheets; }
 
     public void RegisterMistake(DraggableItem drag, string reason)
     {
         mistakes++;
-<<<<<<< HEAD
-        PlaySfx(wrongClip);
-=======
-
         PlaySfx(wrongClip);
 
-        // ✅ تحديث السترايك فورًا (بدون انتظار ستاج)
         if (ui != null) ui.SetStrikes(mistakes);
 
         Debug.Log($"[LEVEL] Mistake {mistakes}/{maxMistakes} ❌ Reason: {reason}");
 
->>>>>>> 1dad29ed1e5bb7b7a7b0ce70f230da4309c2d334
         if (drag != null) drag.ForceReturn();
         if (mistakes >= maxMistakes)
         {
-<<<<<<< HEAD
-            currentStage = Stage.Failed;
-            // Optional: Call controller.ResetLevel() or show a lose UI
-        }
-    }
-
-    void PlaySfx(AudioClip clip) { if (sfxSource && clip) sfxSource.PlayOneShot(clip, sfxVolume); }
-}
-=======
             SetStage(Stage.Failed);
             Debug.Log("[LEVEL] LOSE ❌");
         }
     }
-
-
-
 }
->>>>>>> 1dad29ed1e5bb7b7a7b0ce70f230da4309c2d334
