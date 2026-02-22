@@ -134,49 +134,43 @@ namespace StarterAssets
             CameraRotation();
         }
 
-        // --- NEW FUNCTION: FORCE THE INPUT SYSTEM TO BEHAVE ---
-        private void HandleCursorLock()
+        // --- NEW FUNCTION: FORCE THE INPUT SYSTEM TO BEHAVE ---
+        private void HandleCursorLock()
         {
             bool isMenuOpen = false;
 
-            // Check GameManager
-            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen)
+            // Check GameManager
+            if (GameManager.Instance != null && GameManager.Instance.IsMenuOpen)
             {
                 isMenuOpen = true;
             }
 
-            // Manual Override with Left Alt
-            if (Input.GetKey(KeyCode.LeftAlt))
+            // Manual Override with Left Alt
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
                 isMenuOpen = true;
             }
+
+            // 1. ALWAYS force the cursor to stay visible and unlocked!
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
 
             if (isMenuOpen)
             {
-                // 1. Tell Unity to show the cursor
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-
-                // 2. Tell the StarterAssets script to STOP locking it back
-                if (_input != null)
+                // 2. Stop camera from spinning when menu is open or Alt is held
+                if (_input != null)
                 {
-                    _input.cursorLocked = false;       // Standard variable in StarterAssetsInputs
-                    _input.cursorInputForLook = false; // Stop camera from spinning
-                }
+                    _input.cursorLocked = false;
+                    _input.cursorInputForLook = false;
+                }
             }
             else
             {
-                // Only lock if we aren't clicking something else
-                if (Cursor.lockState == CursorLockMode.None && Input.GetMouseButtonDown(0))
-                {
-                    Cursor.lockState = CursorLockMode.Locked;
-                    Cursor.visible = false;
-                }
-
+                // 3. Allow camera to spin when moving the mouse normally, but keep cursor free!
                 if (_input != null)
                 {
-                    _input.cursorLocked = true;
-                    _input.cursorInputForLook = true;
+                    _input.cursorLocked = false; // Tell the input system the cursor is officially free
+                    _input.cursorInputForLook = true; // But keep reading mouse movement for the camera
                 }
             }
         }

@@ -67,4 +67,45 @@ public class LevelLoader : MonoBehaviour
         fadeTween = canvasGroup.DOFade(0, fadeDuration).SetDelay(0.3f);
         canvasGroup.blocksRaycasts = false;
     }
+
+    // --- ADD THESE NEW METHODS ---
+    public void LoadLevelByNameWithDelay(string sceneName)
+    {
+        fadeTween?.Kill(); // Cleanly stop previous fades
+
+        canvasGroup.blocksRaycasts = true; // Stop clicks during transition
+
+        // Fade to black/loading screen
+        fadeTween = canvasGroup.DOFade(1, fadeDuration).OnComplete(() =>
+        {
+            // Wait for your "stayOnDuration" (3 seconds), then load
+            DOVirtual.DelayedCall(stayOnDuration, () =>
+            {
+                StartCoroutine(LoadAsyncByName(sceneName));
+            });
+        });
+    }
+
+    private System.Collections.IEnumerator LoadAsyncByName(string sceneName)
+    {
+        AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+
+        // Prevent the scene from showing until we are completely ready
+        op.allowSceneActivation = false;
+
+        while (op.progress < 0.9f)
+        {
+            yield return null;
+        }
+
+        // Scene is loaded in RAM, now activate it
+        op.allowSceneActivation = true;
+
+        // Wait for the next frame so the new scene is definitely active
+        yield return new WaitForEndOfFrame();
+
+        // Fade the loading screen back out
+        fadeTween = canvasGroup.DOFade(0, fadeDuration).SetDelay(0.3f);
+        canvasGroup.blocksRaycasts = false;
+    }
 }

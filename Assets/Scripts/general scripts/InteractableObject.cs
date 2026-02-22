@@ -6,9 +6,9 @@ public class InteractableObject : MonoBehaviour
     [Tooltip("What happens when E is pressed?")]
     public UnityEvent OnInteract;
 
-    [Header("UI Placement")]
-    [Tooltip("Where should the UI float? Create an Empty GameObject above your item and drag it here.")]
-    public Transform promptLocation;
+    [Header("UI Above Player")]
+    [Tooltip("How high above the player's feet should the UI float?")]
+    public float uiHeightOffset = 2f;
 
     [Header("Idle Rotation")]
     [Tooltip("Check this box to make the object spin continuously.")]
@@ -17,22 +17,34 @@ public class InteractableObject : MonoBehaviour
     public float rotationSpeedZ = 90f;
 
     private bool playerInRange = false;
+    private Transform playerTransform; // This will remember Saleem while he's in the zone
 
     void Update()
     {
         // 1. --- Idle Rotation Logic ---
         if (rotateIdle)
         {
-            // Vector3.forward is the Z-axis. We multiply by deltaTime so it spins smoothly.
             transform.Rotate(Vector3.forward * rotationSpeedZ * Time.deltaTime);
         }
 
-        // 2. --- Interaction Logic ---
+        // 2. --- Follow Player Logic ---
+        if (playerInRange && playerTransform != null && DisplayButtonPrompt.Instance != null)
+        {
+            // Constantly move the UI to float above the player's head
+            DisplayButtonPrompt.Instance.transform.position = playerTransform.position + (Vector3.up * uiHeightOffset);
+
+            // Force the UI to perfectly face the active camera so it never looks backward!
+            if (Camera.main != null)
+            {
+                DisplayButtonPrompt.Instance.transform.rotation = Camera.main.transform.rotation;
+            }
+        }
+
+        // 3. --- Interaction Logic ---
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
             OnInteract.Invoke();
 
-            // Hide the UI using the central instance
             if (DisplayButtonPrompt.Instance != null)
                 DisplayButtonPrompt.Instance.HidePrompt();
         }
@@ -43,13 +55,10 @@ public class InteractableObject : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
+            playerTransform = other.transform; // Save the player's exact location tracker!
 
-            if (DisplayButtonPrompt.Instance != null && promptLocation != null)
+            if (DisplayButtonPrompt.Instance != null)
             {
-                // Teleport the ONE UI to this object's specific location
-                DisplayButtonPrompt.Instance.transform.position = promptLocation.position;
-
-                // Turn it on (which triggers your DOTween animation)
                 DisplayButtonPrompt.Instance.gameObject.SetActive(true);
             }
         }
@@ -60,8 +69,8 @@ public class InteractableObject : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
+            playerTransform = null; // Forget the player
 
-            // Hide the UI when walking away
             if (DisplayButtonPrompt.Instance != null)
                 DisplayButtonPrompt.Instance.HidePrompt();
         }
