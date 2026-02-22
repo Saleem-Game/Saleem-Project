@@ -96,6 +96,12 @@ public class FirstAidGameManager : MonoBehaviour
 
     void Start()
     {
+        // Keep this empty so the game waits for the cutscene!
+    }
+
+    // The Controller will call this when the cutscene ends
+    public void StartMinigame()
+    {
         InitializeGame();
     }
 
