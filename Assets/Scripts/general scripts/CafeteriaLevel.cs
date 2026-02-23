@@ -180,16 +180,19 @@ public class CafeteriaLevel : LevelController
     // Called by TreatmentSystem when the player finishes the first aid minigame successfully
     public void CompleteWholeLevel()
     {
-        // 1. Turn off the treatment stuff
         if (treatmentCamera) treatmentCamera.SetActive(false);
         if (medicalKit) medicalKit.SetActive(false);
         if (minigameUI) minigameUI.SetActive(false);
 
-        // 2. Give control back to Saleem
         TogglePlayer(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // 3. Mark the quest as done!
+        // --- NEW CODE HERE ---
+        TaskManager taskManager = FindObjectOfType<TaskManager>();
+        if (taskManager != null) taskManager.CompleteTask(taskID);
+        // ---------------------
+
         MarkLevelComplete();
-    } }
+    }
+}

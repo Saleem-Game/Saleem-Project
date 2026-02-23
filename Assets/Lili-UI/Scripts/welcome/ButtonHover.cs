@@ -22,6 +22,14 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
         {
             originalScale = transform.localScale;
         }
+        PlayerPrefs.DeleteKey("SavedCoins");
+        for (int i = 0; i < 6; i++)
+        {
+            PlayerPrefs.DeleteKey("TaskCompleted_" + i);
+        }
+
+        // And just to be extra safe, force Unity to save the wipe immediately!
+        PlayerPrefs.Save();
     }
 
     public void OnPointerEnter(PointerEventData eventData)

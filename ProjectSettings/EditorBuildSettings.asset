@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/MapScreen.unity
     guid: ea14cb0f395d9a942a222c752f13cb33
   - enabled: 1
+    path: Assets/Scenes/Welcome.unity
+    guid: ca9c3ce47b3020847b66fbd07c98db6a
+  - enabled: 1
     path: Assets/Scenes/MainMap.unity
     guid: fbbfb87a82051204a83fffcaab010514
   - enabled: 1
@@ -26,9 +29,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/QuizScreen.unity
     guid: 296a31531120bff449ce778c2dabee5a
-  - enabled: 0
-    path: Assets/Scenes/Welcome.unity
-    guid: ca9c3ce47b3020847b66fbd07c98db6a
   - enabled: 0
     path: Assets/Scenes/Lili main.unity
     guid: a66128209befade4f9b16cada6bd552a

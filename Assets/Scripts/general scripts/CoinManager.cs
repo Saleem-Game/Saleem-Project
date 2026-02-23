@@ -23,12 +23,19 @@ public class CoinManager : MonoBehaviour
             Debug.LogError("No AudioSource found! Please add an Audio Source component to this object.");
         }
 
+        // --- NEW: Load the saved score! Defaults to 0 if playing for the first time ---
+        _currentScore = PlayerPrefs.GetInt("SavedCoins", 0);
+
         UpdateScoreUI();
     }
 
     public void AddScore()
     {
         _currentScore++;
+
+        // --- NEW: Save the new score immediately to Unity's permanent memory ---
+        PlayerPrefs.SetInt("SavedCoins", _currentScore);
+        PlayerPrefs.Save();
 
         if (pingSound != null && _audioSource != null)
         {

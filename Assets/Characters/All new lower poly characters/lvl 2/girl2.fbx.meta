@@ -8,12 +8,12 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: tripo_mat_906ef9fb_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 00bfc5c4ace29e74f9dbee9b55cd2e6b, type: 3}
+    second: {fileID: 2800000, guid: e743d8b70db31c14497f72ecaff3589d, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: tripo_mat_906ef9fb_Pbr_Normal
-    second: {fileID: 2800000, guid: 6f195303ccb7eb0448d94426df8d693a, type: 3}
+    second: {fileID: 2800000, guid: 38aa11a9f82586945aa96b2f19b946db, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0
