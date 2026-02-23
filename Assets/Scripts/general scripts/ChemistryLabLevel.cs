@@ -65,6 +65,12 @@ public class ChemistryLabLevel : LevelController
     {
         isLevelActive = false;
         if (UIManager.Instance != null) UIManager.Instance.ShowWinScreen(3);
+
+        // --- NEW CODE HERE ---
+        TaskManager taskManager = FindObjectOfType<TaskManager>();
+        if (taskManager != null) taskManager.CompleteTask(taskID);
+        // ---------------------
+
         MarkLevelComplete();
     }
 

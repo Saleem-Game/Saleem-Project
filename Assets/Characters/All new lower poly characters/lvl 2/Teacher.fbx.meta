@@ -8,7 +8,7 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: tripo_mat_248277e4_Pbr_Diffuse
-    second: {fileID: 2800000, guid: 35adfa97a1b2bc54db48df0198752f0c, type: 3}
+    second: {fileID: 2800000, guid: 57104c7e0ad5b1546886863182ee592f, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

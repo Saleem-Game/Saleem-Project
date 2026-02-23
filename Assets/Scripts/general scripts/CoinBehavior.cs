@@ -4,8 +4,7 @@ public class CoinBehavior : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] private float _spinSpeed = 100f;
-    [SerializeField] private int _value = 1;
-    [SerializeField] private AudioClip _pickupSound; // Drag your 'Ping' sound here
+    // We removed the sound from here because your CoinManager already plays a sound perfectly!
 
     void Update()
     {
@@ -16,19 +15,16 @@ public class CoinBehavior : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // 1. Tell the Global Bank to add money
-            if (GameManager.Instance != null)
+            // 1. Find the CoinManager that is attached to our UI
+            CoinManager coinManager = FindObjectOfType<CoinManager>();
+
+            if (coinManager != null)
             {
-                GameManager.Instance.AddCoins(_value);
+                // 2. Tell the CoinManager to add 1 to the score, save the memory, and update the UI!
+                coinManager.AddScore();
             }
 
-            // 2. Play Sound (Creates a temporary sound object)
-            if (_pickupSound != null)
-            {
-                AudioSource.PlayClipAtPoint(_pickupSound, transform.position);
-            }
-
-            // 3. Destroy this coin
+            // 3. Destroy this coin 3D model
             Destroy(gameObject);
         }
     }

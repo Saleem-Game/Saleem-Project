@@ -55,11 +55,15 @@ public class NosebleedLevelController : LevelController
     {
         if (firstPersonCamera) firstPersonCamera.SetActive(false);
         if (minigameUI) minigameUI.SetActive(false);
-
-        // NEW: Turn the main player camera back on
         if (mainPlayerCamera) mainPlayerCamera.SetActive(true);
 
         TogglePlayer(true);
+
+        // --- NEW CODE HERE ---
+        TaskManager taskManager = FindObjectOfType<TaskManager>();
+        if (taskManager != null) taskManager.CompleteTask(taskID);
+        // ---------------------
+
         MarkLevelComplete();
     }
 

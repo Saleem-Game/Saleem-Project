@@ -255,11 +255,13 @@ public class ComputerLabLevel : LevelController
             // === SUCCESS PATH ===
             if (successSlideObj) successSlideObj.SetActive(true);
             if (failSlideObj) failSlideObj.SetActive(false); // Make sure Fail is OFF
-
-            // Hide any mistake counters
             foreach (var obj in mistakeObjects) if (obj) obj.SetActive(false);
 
-            // Give Rewards
+            // --- NEW CODE HERE ---
+            TaskManager taskManager = FindObjectOfType<TaskManager>();
+            if (taskManager != null) taskManager.CompleteTask(taskID);
+            // ---------------------
+
             MarkLevelComplete();
         }
         else
