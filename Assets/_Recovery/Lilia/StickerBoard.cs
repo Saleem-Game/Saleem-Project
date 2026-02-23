@@ -1,5 +1,5 @@
 using UnityEngine;
-using TMP;
+using TMPro;
 
 public class StickerBoard : MonoBehaviour
 {
