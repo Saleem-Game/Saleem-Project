@@ -3,11 +3,15 @@ using DG.Tweening;
 
 public class DisplayButtonPrompt : MonoBehaviour
 {
+    public static DisplayButtonPrompt Instance; 
     private Vector3 initialScale;
     private Tween breathingTween; // Variable to store the pulse
 
     void Awake()
     {
+
+        Instance = this; 
+
         initialScale = transform.localScale;
         transform.localScale = Vector3.zero;
     }

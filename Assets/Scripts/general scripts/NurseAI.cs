@@ -1,63 +1,114 @@
 using UnityEngine;
-using UnityEngine.AI;
 
-[RequireComponent(typeof(NavMeshAgent))]
-[RequireComponent(typeof(Rigidbody))]
 public class NurseAI : MonoBehaviour
 {
-    public Animator anim;
-    private NavMeshAgent _agent;
-    private Transform _target;
-    private bool _isFollowing = false;
+    [Header("Movement Settings")]
+    public float moveSpeed = 3f;
+    [Tooltip("How close she gets to the player before stopping")]
+    public float stoppingDistance = 2f;
+    public float rotationSpeed = 5f;
 
-    void Awake()
+    private Transform targetToFollow;
+    private bool isFollowing = false;
+    private Animator animator;
+
+    void Start()
     {
-        _agent = GetComponent<NavMeshAgent>();
-
-        // Physics Setup (Logic maintained)
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.isKinematic = true;
-        rb.useGravity = false;
-    }
-
-    public void StartFollowing(Transform player)
-    {
-        _isFollowing = true;
-        _target = player;
-        anim.SetBool("isWalking", true);
-    }
-
-    public void GoSit(Transform chair)
-    {
-        _isFollowing = false;
-        _target = null;
-        _agent.enabled = false; // Disable NavMesh to snap position
-
-        transform.position = chair.position;
-        transform.rotation = chair.rotation;
-
-        anim.SetBool("isWalking", false);
-        anim.SetTrigger("Sit");
+        // Automatically grab the Animator if it's on the Nurse
+        animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        if (_isFollowing && _target != null)
+        // If she is not told to follow, ensure she stands still
+        if (!isFollowing || targetToFollow == null)
         {
-            _agent.SetDestination(_target.position);
+            if (animator != null) animator.SetFloat("Speed", 0f);
+            return;
+        }
 
-            // Optional: Manual distance check if NavMesh stopping distance isn't enough
-            if (_agent.remainingDistance <= _agent.stoppingDistance)
+        // Check how far away the player is
+        float distance = Vector3.Distance(transform.position, targetToFollow.position);
+
+        if (distance > stoppingDistance)
+        {
+            // 1. Calculate direction to look (ignoring Y axis so she doesn't tilt up/down)
+            Vector3 lookPosition = targetToFollow.position;
+            lookPosition.y = transform.position.y;
+
+            Vector3 direction = (lookPosition - transform.position).normalized;
+
+            if (direction != Vector3.zero)
             {
-                anim.SetBool("isWalking", false);
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
             }
-            else
-            {
-                anim.SetBool("isWalking", true);
-            }
+
+            // 2. Move towards the player
+            transform.position = Vector3.MoveTowards(transform.position, lookPosition, moveSpeed * Time.deltaTime);
+
+            // 3. Play Walk Animation
+            if (animator != null) animator.SetFloat("Speed", 1f);
+        }
+        else
+        {
+            // She reached the player, stop walking and play Idle animation
+            if (animator != null) animator.SetFloat("Speed", 0f);
         }
     }
 
-    // Event Handler
-    public void OnFootstep() { }
+    // Called by CafeteriaLevel.cs when Dialogue finishes
+    public void StartFollowing(Transform player)
+    {
+        targetToFollow = player;
+        isFollowing = true;
+    }
+
+    // Called by CafeteriaLevel.cs when arriving at the empty chair
+    public void StopFollowing()
+    {
+        isFollowing = false;
+        targetToFollow = null;
+
+        // Force her back to Idle animation
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", 0f);
+        }
+    }
+
+    // If your BurnLevelManager calls: nurse.GoSit(chairTransform);
+    public void GoSit(Transform seatTransform)
+    {
+        // 1. Stop following the player
+        StopFollowing();
+
+        // 2. Snap the nurse's position and rotation to exactly match the chair
+        if (seatTransform != null)
+        {
+            transform.position = seatTransform.position;
+            transform.rotation = seatTransform.rotation;
+        }
+
+        // 3. Trigger the sitting animation
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", 0f); // Stop walking
+
+            // If you have a sitting animation, you can trigger it like this:
+            // animator.SetBool("IsSitting", true); 
+        }
+    }
+
+    // Just in case your BurnLevelManager calls it WITHOUT a Transform like: nurse.GoSit();
+    public void GoSit()
+    {
+        StopFollowing();
+
+        if (animator != null)
+        {
+            animator.SetFloat("Speed", 0f);
+            // animator.SetBool("IsSitting", true); 
+        }
+    }
 }

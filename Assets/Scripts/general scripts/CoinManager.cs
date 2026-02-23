@@ -42,7 +42,7 @@ public class CoinManager : MonoBehaviour
     {
         if (scoreText != null)
         {
-            scoreText.text = "Coins: " + _currentScore.ToString();
+            scoreText.text = _currentScore.ToString();
         }
     }
 }

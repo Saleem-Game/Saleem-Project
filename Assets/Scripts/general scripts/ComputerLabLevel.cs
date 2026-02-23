@@ -72,8 +72,23 @@ public class ComputerLabLevel : LevelController
         if (mainCam) mainCam.Priority = 10;
         if (cutsceneCam) cutsceneCam.Priority = 0;
 
-        if (projectorParent) projectorParent.SetActive(true);
+        // 1. Force the timeline to stop holding properties
+        if (levelCutscene != null)
+        {
+            levelCutscene.Stop();
+            levelCutscene.gameObject.SetActive(false);
+        }
 
+        // 2. TURN THE PLAYER BACK ON (Fixes the deactivated PlayerArmature!)
+        TogglePlayer(true);
+
+        // 3. FORCE CLEANUP: Hide the slides the cutscene might have left turned on
+        if (successSlideObj) successSlideObj.SetActive(false);
+        if (failSlideObj) failSlideObj.SetActive(false);
+        if (startSlideObj) startSlideObj.SetActive(false);
+
+        // 4. Start the Minigame
+        if (projectorParent) projectorParent.SetActive(true);
         LoadQuestion(0);
     }
 
