@@ -8,13 +8,13 @@ public class StickyNoteScript : MonoBehaviour
   private bool set;
 
   public void changeText(string text) {
+    this.text.isRightToLeftText = true;
     this.text.text = text;
+    this.text.ForceMeshUpdate();
     set = true;
   }
 
   public bool getSet() {
     return set;
   }
-
-  
 }

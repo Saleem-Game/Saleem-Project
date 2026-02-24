@@ -74,7 +74,7 @@ Material:
     - _OcclusionStrength: 1
     - _PageCurl_Curve_1: 0.3
     - _PageCurl_Shadow_1: 4.656
-    - _PageCurl_movement_1: 1
+    - _PageCurl_movement_1: 3.9999974
     - _PageCurl_rotation_1: 0.59
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0

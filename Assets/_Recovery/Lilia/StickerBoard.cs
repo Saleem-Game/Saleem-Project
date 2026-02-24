@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class StickerBoard : MonoBehaviour {
   [SerializeField] GameObject board;
+  [SerializeField] GameObject backgroundPanel;
   [SerializeField] StickyNoteScript [] sticky;
   [SerializeField] Image m;
   float e = 0;
@@ -20,9 +21,9 @@ public class StickerBoard : MonoBehaviour {
     }
   }
 
-
   public void OpenBoard(BoxScript.ID id, string objName, string objDescription) {
-    board.transform.DOLocalMoveY(0, 1).SetEase(Ease.InCirc).OnComplete(() => {
+    backgroundPanel.transform.DOLocalMoveY(0, 1);
+    board.transform.DOLocalMoveY(0, 1).SetEase(Ease.InOutSine).OnComplete(() => {
       int r =Random.Range(0,sticky.Length);
       
       while (sticky[r].getSet()) {
@@ -35,6 +36,18 @@ public class StickerBoard : MonoBehaviour {
       Invoke(nameof(open), 0.1f);
     });
 
+  }
+
+  public void closeBoard()
+  {
+    board.transform.DOLocalMoveY(-1300, 1).SetEase(Ease.InOutSine);
+    backgroundPanel.transform.DOLocalMoveY(-1523.8f, 1);
+  }
+
+  public void openTheBoard()
+  {
+    backgroundPanel.transform.DOLocalMoveY(0, 1);
+    board.transform.DOLocalMoveY(0, 1).SetEase(Ease.InOutSine);
   }
 
   void open() {
