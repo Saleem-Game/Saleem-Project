@@ -51,7 +51,7 @@ AnimatorState:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Breathing Idle
+  m_Name: Yapping
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions: []
@@ -64,7 +64,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: de840ba6c94388e43a24313afa7e5f84, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: e97521c47ea58cf42b520c01bd6047c7, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 

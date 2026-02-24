@@ -13,23 +13,19 @@ public class PlaygroundLevelController : LevelController
     public GameObject injuredBoy;
     public GameObject minigameUI;
 
-    [Header("Football Trigger")]
+    [Header("Navigation Objects")]
     public GameObject footballInteractable;
-
-    [Header("Spawn Point")]
     public Transform spawnPoint;
+    public GameObject exitArrow; // --- NEW: The arrow pointing to the main map
 
     [Header("Characters to Reset (Cutscene Poses)")]
-    [Tooltip("Drag all the low poly kids from the field here so they don't get stuck!")]
     public Transform[] actorsToReset;
 
-    // Memory for the actors
     private Vector3[] startPositions;
     private Quaternion[] startRotations;
 
     void Awake()
     {
-        // Memorize their exact positions before the cutscene moves them!
         if (actorsToReset != null && actorsToReset.Length > 0)
         {
             startPositions = new Vector3[actorsToReset.Length];
@@ -50,6 +46,8 @@ public class PlaygroundLevelController : LevelController
         if (isLevelActive) return;
         isLevelActive = true;
         if (footballInteractable) footballInteractable.SetActive(false);
+        if (exitArrow) exitArrow.SetActive(false); // Hide arrow when playing
+
         TogglePlayer(false);
         PlayCutscene();
     }
@@ -64,7 +62,7 @@ public class PlaygroundLevelController : LevelController
             levelCutscene.gameObject.SetActive(false);
         }
 
-        // --- NEW: Force characters back to their memory spots ---
+        // --- FIXED: Immediate Character Position and Animation Reset ---
         ResetActorPositions();
 
         if (mainPlayerCamera) mainPlayerCamera.SetActive(false);
@@ -84,23 +82,23 @@ public class PlaygroundLevelController : LevelController
         Cursor.visible = true;
     }
 
+    // --- UI BUTTON FUNCTIONS ---
+
     public void Button_WinContinue()
     {
+        if (gameManager != null) gameManager.ResetGame(); // Hides win screen
         ResetLevel();
+        if (exitArrow) exitArrow.SetActive(true); // Turn on the Arrow!
+        TeleportToSpawn();
         StartCoroutine(DelayedTaskCheck());
     }
 
     public void Button_FailContinue()
     {
+        if (gameManager != null) gameManager.ResetGame(); // Hides fail screen
         ResetLevel();
-        if (playerRoot != null && spawnPoint != null)
-        {
-            CharacterController cc = playerRoot.GetComponent<CharacterController>();
-            if (cc != null) cc.enabled = false;
-            playerRoot.transform.position = spawnPoint.position;
-            playerRoot.transform.rotation = spawnPoint.rotation;
-            if (cc != null) cc.enabled = true;
-        }
+        if (exitArrow) exitArrow.SetActive(true); // Turn on the Arrow!
+        TeleportToSpawn();
     }
 
     public void Button_Replay()
@@ -110,6 +108,20 @@ public class PlaygroundLevelController : LevelController
         {
             MedicalKit kitLogic = medicalKit.GetComponent<MedicalKit>();
             if (kitLogic != null) kitLogic.ResetKit();
+        }
+    }
+
+    private void TeleportToSpawn()
+    {
+        if (playerRoot != null && spawnPoint != null)
+        {
+            CharacterController cc = playerRoot.GetComponent<CharacterController>();
+            if (cc != null) cc.enabled = false;
+
+            playerRoot.transform.position = spawnPoint.position;
+            playerRoot.transform.rotation = spawnPoint.rotation;
+
+            if (cc != null) cc.enabled = true;
         }
     }
 
@@ -126,7 +138,6 @@ public class PlaygroundLevelController : LevelController
         isLevelActive = false;
         TogglePlayer(true);
 
-        // --- NEW: Force characters back to memory spots again ---
         ResetActorPositions();
 
         if (medicalKit != null)
@@ -158,8 +169,17 @@ public class PlaygroundLevelController : LevelController
             {
                 if (actorsToReset[i] != null)
                 {
+                    // 1. Reset Position rigidly
                     actorsToReset[i].position = startPositions[i];
                     actorsToReset[i].rotation = startRotations[i];
+
+                    // 2. Reset Animation back to IDLE rigidly
+                    Animator anim = actorsToReset[i].GetComponentInChildren<Animator>();
+                    if (anim != null)
+                    {
+                        anim.Rebind();
+                        anim.Update(0f);
+                    }
                 }
             }
         }

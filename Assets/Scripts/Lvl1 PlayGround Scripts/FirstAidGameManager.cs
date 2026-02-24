@@ -13,8 +13,6 @@ public class FirstAidGameManager : MonoBehaviour
         public GameObject stepPanel;
         public string requiredToolTag = "";
         public bool requiresTapOnly = false;
-
-        // --- NEW: Audio for this specific instruction ---
         public AudioClip instructionAudio;
     }
 
@@ -86,7 +84,6 @@ public class FirstAidGameManager : MonoBehaviour
         isProcessingAction = false;
 
         HideAllPanels();
-        ShowCurrentStep();
 
         if (successPanel != null) successPanel.SetActive(false);
         if (failPanel != null) failPanel.SetActive(false);
@@ -94,6 +91,9 @@ public class FirstAidGameManager : MonoBehaviour
 
         for (int i = 0; i < strikeIcons.Length; i++)
             if (strikeIcons[i] != null) strikeIcons[i].SetActive(false);
+
+        // --- FIXED: Plays the first instruction audio immediately! ---
+        ShowCurrentStep();
     }
 
     void HideAllPanels()
@@ -114,7 +114,7 @@ public class FirstAidGameManager : MonoBehaviour
         ApplyTextureOrMaterial(step.characterTexture, step.characterMaterial);
         OnStepChanged?.Invoke(currentStep);
 
-        // --- NEW: Play Instruction Audio ---
+        // --- FIXED: Instruction Audio Plays Here! ---
         if (audioSource != null && step.instructionAudio != null)
         {
             audioSource.Stop();
@@ -172,34 +172,10 @@ public class FirstAidGameManager : MonoBehaviour
 
     void ProcessCorrectAction()
     {
-        StartCoroutine(CorrectActionRoutine());
-    }
-
-    // --- NEW: The Delay Coroutine for Good Job Audio! ---
-    IEnumerator CorrectActionRoutine()
-    {
-        isProcessingAction = true; // Lock the game so player can't click during the audio
-
-        // Play the "Good Job" sound
-        if (audioSource != null && goodJobAudio != null)
-        {
-            audioSource.Stop();
-            audioSource.PlayOneShot(goodJobAudio);
-            // Wait for exactly how long the audio clip is
-            yield return new WaitForSeconds(goodJobAudio.length);
-        }
-        else
-        {
-            // If you forgot to assign audio, just wait 2 seconds as a fallback
-            yield return new WaitForSeconds(2f);
-        }
-
         currentStep++;
 
         if (currentStep >= treatmentSteps.Length) WinGame();
-        else ShowCurrentStep(); // This will automatically trigger the NEXT instruction audio!
-
-        isProcessingAction = false;
+        else ShowCurrentStep();
     }
 
     void ProcessWrongTool()
@@ -230,6 +206,23 @@ public class FirstAidGameManager : MonoBehaviour
 
         HideAllPanels();
         if (finalHealedTexture != null) ApplyTextureOrMaterial(finalHealedTexture, null);
+
+        // --- FIXED: Good Job Audio only plays at the very end! ---
+        StartCoroutine(WinSequenceWithGoodJob());
+    }
+
+    IEnumerator WinSequenceWithGoodJob()
+    {
+        if (audioSource != null && goodJobAudio != null)
+        {
+            audioSource.Stop();
+            audioSource.PlayOneShot(goodJobAudio);
+            yield return new WaitForSeconds(goodJobAudio.length);
+        }
+        else
+        {
+            yield return new WaitForSeconds(1.5f);
+        }
 
         int starsEarned = 3 - strikes;
         if (starsEarned < 1) starsEarned = 1;
