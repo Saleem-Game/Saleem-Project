@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Collectable : MonoBehaviour
 {
-    public int value = 1;
+    public int value = 5;
     public float spinSpeed = 100f;
 
     void Update()

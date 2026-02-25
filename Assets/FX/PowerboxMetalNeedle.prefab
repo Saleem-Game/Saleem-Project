@@ -4827,6 +4827,9 @@ GameObject:
   - component: {fileID: 4393957104000588}
   - component: {fileID: 198777952086647928}
   - component: {fileID: 199298354483115382}
+  - component: {fileID: 6678680818222621427}
+  - component: {fileID: 4783247777560783924}
+  - component: {fileID: 7611405356383345509}
   m_Layer: 0
   m_Name: PowerboxMetalNeedle
   m_TagString: Untagged
@@ -4844,7 +4847,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: -1.85, y: 2.417, z: -4.41}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4739537540675858}
@@ -9760,6 +9763,60 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &6678680818222621427
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487767482757422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1ba405dfe51adf4790fbe664f4c7cbc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Collectable
+  value: 1
+  spinSpeed: 100
+--- !u!114 &4783247777560783924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487767482757422}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b25585fcafcef7d4fbffb709321c0ac1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoxScript
+  id: 2
+  objectName: "\uFEA3\uFED8\uFEE8\uFE94"
+  objectDescription: "\uFE97\u064F\uFEB3\uFE98\uFEA8\uFEAA\u0645 \uFED3\uFEF2 \u0627\uFEDF\uFEE4\uFEA0\uFE8E\u0644
+    \u0627\uFEDF\uFEC4\uFE92\uFEF2 \uFEF9\uFECB\uFEC4\uFE8E\u0621 \u0627\uFEF7\u062F\u0648\uFEF3\uFE94
+    \u0627\uFEDF\uFEB4\uFE8E\uFE8B\uFEE0\uFE94 \u0623\u0648 \u0627\uFEDF\uFEE0\uFED8\uFE8E\uFEA3\uFE8E\u062A
+    \uFEDF\uFEE0\uFEA0\uFEB4\uFEE2 \uFE91\uFEAA\uFED7\uFE94\u060C \u0623\u0648 \uFEDF\uFEB4\uFEA4\uFE90
+    \uFECB\uFEF4\uFEE8\uFE8E\u062A \u0627\uFEDF\uFEAA\u0645 \uFEDF\uFEE0\uFED4\uFEA4\uFEBA."
+--- !u!65 &7611405356383345509
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487767482757422}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.417099, y: 1.4170994, z: 1.4952337}
+  m_Center: {x: 0, y: 0, z: 0.0008345546}
 --- !u!1 &1749495010820822
 GameObject:
   m_ObjectHideFlags: 0
