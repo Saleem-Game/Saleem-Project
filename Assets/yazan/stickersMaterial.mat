@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: New Material
+  m_Name: stickersMaterial
   m_Shader: {fileID: 4800000, guid: 1a980efd5b6683f46934a978b0b754d2, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -73,9 +73,9 @@ Material:
     - _Mode: 0
     - _OcclusionStrength: 1
     - _PageCurl_Curve_1: 0.3
-    - _PageCurl_Shadow_1: 4.656
-    - _PageCurl_movement_1: 83.40049
-    - _PageCurl_rotation_1: 0.59
+    - _PageCurl_Shadow_1: 8
+    - _PageCurl_movement_1: 0
+    - _PageCurl_rotation_1: 1
     - _Parallax: 0.02
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
