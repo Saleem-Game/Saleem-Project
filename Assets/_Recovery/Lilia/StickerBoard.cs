@@ -7,6 +7,7 @@ public class StickerBoard : MonoBehaviour {
   [SerializeField] GameObject board;
   [SerializeField] GameObject backgroundPanel;
   [SerializeField] StickyNoteScript [] sticky;
+  [SerializeField] DescriptionScript description;
   [SerializeField] Image m;
   float e = 0;
 
@@ -23,16 +24,15 @@ public class StickerBoard : MonoBehaviour {
 
   public void OpenBoard(BoxScript.ID id, string objName, string objDescription) {
     backgroundPanel.transform.DOLocalMoveY(0, 1);
-    board.transform.DOLocalMoveY(0, 1).SetEase(Ease.InOutSine).OnComplete(() => {
+    board.transform.DOLocalMoveY(-62, 1).SetEase(Ease.InOutSine).OnComplete(() => {
       int r =Random.Range(0,sticky.Length);
       
       while (sticky[r].getSet()) {
         r = Random.Range(0, sticky.Length);
       }
 
-      string temp = objName + " " + objDescription;
-
-      sticky[r].changeText(objName);
+      sticky[r].changeText(objName, objDescription);
+      description.changeText(objName, objDescription);
       Invoke(nameof(open), 0.1f);
     });
 
@@ -40,14 +40,22 @@ public class StickerBoard : MonoBehaviour {
 
   public void closeBoard()
   {
-    board.transform.DOLocalMoveY(-1300, 1).SetEase(Ease.InOutSine);
+    board.transform.DOLocalMoveY(-1456, 1).SetEase(Ease.InOutSine);
     backgroundPanel.transform.DOLocalMoveY(-1523.8f, 1);
   }
 
   public void openTheBoard()
   {
     backgroundPanel.transform.DOLocalMoveY(0, 1);
-    board.transform.DOLocalMoveY(0, 1).SetEase(Ease.InOutSine);
+    board.transform.DOLocalMoveY(-62, 1).SetEase(Ease.InOutSine);
+  }
+
+  public void UpdateDescription(string newName, string newDesc)
+  {
+    if (description != null)
+    {
+      description.changeText(newName, newDesc);
+    }
   }
 
   void open() {
