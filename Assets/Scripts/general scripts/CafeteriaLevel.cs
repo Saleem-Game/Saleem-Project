@@ -8,7 +8,7 @@ public class CafeteriaLevel : LevelController
     public GameObject timerUI;
     public Text timerText;
     public float timeLimit = 70f;
-    public GameObject timerFailPanel; // Shows up if timer hits 0
+    public GameObject timerFailPanel;
 
     [Header("Nurse & Quest")]
     public NurseAI nurse;
@@ -25,29 +25,74 @@ public class CafeteriaLevel : LevelController
     public GameObject minigameUI;
     public TreatmentSystem treatmentSystem;
 
+    [Header("Actors to Reset (Cutscene Poses)")]
+    public Transform[] actorsToReset;
+    private Vector3[] startPositions;
+    private Quaternion[] startRotations;
+
     // Background Tracking
     private bool isTimerRunning = false;
     private float currentTime;
     private bool nurseFollowing = false;
     private bool nurseSeated = false;
 
-    // 1. Triggered by the Blue Cross 'E' press
+    void Awake()
+    {
+        // Store original positions and rotations before cutscenes move them
+        if (actorsToReset != null && actorsToReset.Length > 0)
+        {
+            startPositions = new Vector3[actorsToReset.Length];
+            startRotations = new Quaternion[actorsToReset.Length];
+            for (int i = 0; i < actorsToReset.Length; i++)
+            {
+                if (actorsToReset[i] != null)
+                {
+                    startPositions[i] = actorsToReset[i].position;
+                    startRotations[i] = actorsToReset[i].rotation;
+                }
+            }
+        }
+    }
+
     public override void StartLevel()
     {
         if (isLevelActive) return;
         isLevelActive = true;
         LockRoom();
-        PlayCutscene(); // Turns off Saleem and the Main Camera automatically
+        PlayCutscene();
     }
 
-    // 2. Runs automatically when the cutscene timeline finishes
     protected override void OnCutsceneFinished()
     {
-        // Bring Saleem back so he can move!
-        TogglePlayer(true);
+        // --- NEW: Reset Character Positions and Animations immediately ---
+        ResetActorPositions();
 
-        // Start the countdown
+        TogglePlayer(true);
         StartCoroutine(StartTimerSequence());
+    }
+
+    private void ResetActorPositions()
+    {
+        if (actorsToReset != null)
+        {
+            for (int i = 0; i < actorsToReset.Length; i++)
+            {
+                if (actorsToReset[i] != null)
+                {
+                    // Snap back to stored position/rotation
+                    actorsToReset[i].position = startPositions[i];
+                    actorsToReset[i].rotation = startRotations[i];
+
+                    // Force the animator back to its default state (Idle)
+                    Animator anim = actorsToReset[i].GetComponentInChildren<Animator>();
+                    if (anim != null)
+                    {
+                        anim.Rebind();
+                        anim.Update(0f);
+                    }
+                }
+            }
+        }
     }
 
     private IEnumerator StartTimerSequence()
@@ -65,97 +110,75 @@ public class CafeteriaLevel : LevelController
 
         if (!nurseSeated && isTimerRunning)
         {
-            // Time ran out!
             isTimerRunning = false;
             timerUI.SetActive(false);
             ShowFailScreen();
         }
     }
 
-    // 3. Triggered by the Nurse's 'E' press
     public void TriggerNurse()
     {
         if (!isLevelActive || nurseFollowing) return;
-
         nurseFollowing = true;
-
-        // Pass the player's transform to the NurseAI so she follows Saleem
         if (playerRoot != null) nurse.StartFollowing(playerRoot.transform);
-
-        // Start the 5-second delay for the dialogue
         StartCoroutine(DialogueDelaySequence());
     }
 
     private IEnumerator DialogueDelaySequence()
     {
         yield return new WaitForSeconds(5f);
-
-        // Show the UI with the options
         dialoguePanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
 
-    // 4. Triggered by the Buttons on the Dialogue UI
     public void OnDialogueOptionChosen(int optionIndex)
     {
         dialoguePanel.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // Play the chosen audio based on the button clicked
         if (optionIndex >= 0 && optionIndex < optionAudios.Length)
         {
             optionAudios[optionIndex].Play();
         }
     }
 
-    // 5. Triggered by the Chair's 'E' press
     public void TriggerChair()
     {
         if (!nurseFollowing) return;
-
         nurseFollowing = false;
-        nurseSeated = true; // This stops the timer loop!
+        nurseSeated = true;
         isTimerRunning = false;
         timerUI.SetActive(false);
-
         nurse.GoSit(nurseSeat);
-
         StartTreatmentPhase();
     }
 
     private void StartTreatmentPhase()
     {
-        // Switch Cameras (Hide Saleem, show treatment cam)
         TogglePlayer(false);
         treatmentCamera.SetActive(true);
-
-        // Show Kit and UI
         medicalKit.SetActive(true);
         minigameUI.SetActive(true);
-
-        // Enable Cursor for drag and drop
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        // Kick off the drag-and-drop game
         if (treatmentSystem) treatmentSystem.StartMinigame();
     }
 
     private void ShowFailScreen()
     {
-        TogglePlayer(false); // Stop Saleem from moving
+        TogglePlayer(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
         timerFailPanel.SetActive(true);
     }
 
-    // Link this to the "Retry" button on the Fail Screen
     public void RetryTimerPhase()
     {
         ResetLevel();
-        StartLevel(); // Restarts the cutscene and tries again
+        StartLevel();
     }
 
     public override void ResetLevel()
@@ -165,6 +188,9 @@ public class CafeteriaLevel : LevelController
         isTimerRunning = false;
         nurseFollowing = false;
         nurseSeated = false;
+
+        // Ensure actors are reset if the level is manually reset
+        ResetActorPositions();
 
         if (timerUI) timerUI.SetActive(false);
         if (dialoguePanel) dialoguePanel.SetActive(false);
@@ -177,7 +203,7 @@ public class CafeteriaLevel : LevelController
         TogglePlayer(true);
         UnlockRoom();
     }
-    // Called by TreatmentSystem when the player finishes the first aid minigame successfully
+
     public void CompleteWholeLevel()
     {
         if (treatmentCamera) treatmentCamera.SetActive(false);
@@ -188,10 +214,8 @@ public class CafeteriaLevel : LevelController
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        // --- NEW CODE HERE ---
         TaskManager taskManager = FindObjectOfType<TaskManager>();
         if (taskManager != null) taskManager.CompleteTask(taskID);
-        // ---------------------
 
         MarkLevelComplete();
     }
