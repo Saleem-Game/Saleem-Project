@@ -9,6 +9,9 @@ public class CoinManager : MonoBehaviour
     [Header("Audio Settings")]
     public AudioClip pingSound;
 
+    // --- NEW: Added a volume slider to the Inspector! ---
+    [Range(0f, 1f)] public float pingVolume = 0.03f;
+
     private int _currentScore = 0;
     private AudioSource _audioSource;
 
@@ -41,7 +44,8 @@ public class CoinManager : MonoBehaviour
 
         if (pingSound != null && _audioSource != null)
         {
-            _audioSource.PlayOneShot(pingSound);
+            // --- UPDATED: Now it plays at the exact volume you set in the Inspector! ---
+            _audioSource.PlayOneShot(pingSound, pingVolume);
         }
 
         UpdateScoreUI();
