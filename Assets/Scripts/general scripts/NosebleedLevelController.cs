@@ -3,16 +3,39 @@ using UnityEngine;
 public class NosebleedLevelController : LevelController
 {
     [Header("Minigame Setup")]
-    public GameObject firstPersonCamera; // Drag 'LevelCam' here
-    public GameObject mainPlayerCamera;  // NEW: Drag your original MainCamera here!    public GameObject minigameUI;
+    public GameObject firstPersonCamera;
+    public GameObject mainPlayerCamera;
     public GameObject minigameUI;
     public NosebleedLevelManager nosebleedManager;
     public GameObject medicalKit;
-    public GameObject whitePanel; // Drag 'White panel' from 'Cutscene2 prefab' here
+    public GameObject whitePanel;
 
     [Header("Character Swapping")]
     public GameObject cutsceneCharacters;
     public GameObject injuredStudent;
+
+    [Header("Actors to Reset (Cutscene Poses)")]
+    public Transform[] actorsToReset;
+    private Vector3[] startPositions;
+    private Quaternion[] startRotations;
+
+    void Awake()
+    {
+        // Store the original positions and rotations of the actors
+        if (actorsToReset != null && actorsToReset.Length > 0)
+        {
+            startPositions = new Vector3[actorsToReset.Length];
+            startRotations = new Quaternion[actorsToReset.Length];
+            for (int i = 0; i < actorsToReset.Length; i++)
+            {
+                if (actorsToReset[i] != null)
+                {
+                    startPositions[i] = actorsToReset[i].position;
+                    startRotations[i] = actorsToReset[i].rotation;
+                }
+            }
+        }
+    }
 
     public override void StartLevel()
     {
@@ -24,31 +47,52 @@ public class NosebleedLevelController : LevelController
 
     protected override void OnCutsceneFinished()
     {
-        // 1. Keep main player off to avoid camera/audio clashes
+        // --- NEW: Reset Character Positions and Animations immediately ---
+        ResetActorPositions();
+
         TogglePlayer(false);
         if (mainPlayerCamera) mainPlayerCamera.SetActive(false);
-        // 2. CRITICAL: Deactivate the white panel so it doesn't block mouse clicks
         if (whitePanel) whitePanel.SetActive(false);
 
-        // 3. Scene Swap: Show the injured girl and kit
         if (cutsceneCharacters) cutsceneCharacters.SetActive(false);
         if (injuredStudent) injuredStudent.SetActive(true);
         if (medicalKit) medicalKit.SetActive(true);
 
-        // 4. Activate LevelCam and UI
         if (firstPersonCamera) firstPersonCamera.SetActive(true);
         if (minigameUI) minigameUI.SetActive(true);
 
-        // 5. Start Logic
         if (nosebleedManager)
         {
             nosebleedManager.controller = this;
             nosebleedManager.StartMinigame();
         }
 
-        // 6. Enable the cursor for drag-and-drop
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
+    }
+
+    private void ResetActorPositions()
+    {
+        if (actorsToReset != null)
+        {
+            for (int i = 0; i < actorsToReset.Length; i++)
+            {
+                if (actorsToReset[i] != null)
+                {
+                    // Snap back to stored position/rotation
+                    actorsToReset[i].position = startPositions[i];
+                    actorsToReset[i].rotation = startRotations[i];
+
+                    // Force the animator back to its default state (Idle)
+                    Animator anim = actorsToReset[i].GetComponentInChildren<Animator>();
+                    if (anim != null)
+                    {
+                        anim.Rebind();
+                        anim.Update(0f);
+                    }
+                }
+            }
+        }
     }
 
     public void OnMinigameWin()
@@ -59,10 +103,8 @@ public class NosebleedLevelController : LevelController
 
         TogglePlayer(true);
 
-        // --- NEW CODE HERE ---
         TaskManager taskManager = FindObjectOfType<TaskManager>();
         if (taskManager != null) taskManager.CompleteTask(taskID);
-        // ---------------------
 
         MarkLevelComplete();
     }
@@ -72,9 +114,10 @@ public class NosebleedLevelController : LevelController
         isLevelActive = false;
         TogglePlayer(true);
 
-        // NEW: Turn the main player camera back on if we reset
-        if (mainPlayerCamera) mainPlayerCamera.SetActive(true);
+        // Ensure actors are reset if the level is manually reset
+        ResetActorPositions();
 
+        if (mainPlayerCamera) mainPlayerCamera.SetActive(true);
         if (firstPersonCamera) firstPersonCamera.SetActive(false);
         if (whitePanel) whitePanel.SetActive(false);
     }
