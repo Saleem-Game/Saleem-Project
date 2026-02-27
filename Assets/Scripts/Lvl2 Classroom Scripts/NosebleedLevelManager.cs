@@ -1,11 +1,30 @@
 ﻿using UnityEngine;
+using TMPro; // <-- NEW: Needed to change the text on your Win screen!
 
 public class NosebleedLevelManager : MonoBehaviour
 {
     public enum Stage { HeadForward, PinchHold, Sheets, BandAidRoll, Completed, Failed }
 
     [Header("System Bridge")]
-    public NosebleedLevelController controller; // Reference to the main controller
+    public NosebleedLevelController controller;
+
+    [Header("Minigame Cleanup (Drag objects here)")]
+    public GameObject girlyRoots;
+    public GameObject interactiveMedicalKit;
+
+    [Header("Task Settings")]
+    [Tooltip("The ID for the Classroom Task (usually 3 based on your UI list)")]
+    public int classroomTaskID = 3;
+    private bool taskAlreadyChecked = false;
+
+    [Header("Dynamic Coin Rewards")]
+    public int coinsFor3Stars = 20; // 0 mistakes
+    public int coinsFor2Stars = 15; // 1 mistake
+    public int coinsFor1Star = 10;  // 2 mistakes
+    private int calculatedReward = 0; // Memory for what they actually won
+
+    [Tooltip("Drag the Text_Value object from your Win screen here!")]
+    public TextMeshProUGUI winScreenRewardText;
 
     [Header("Stage")]
     public Stage currentStage = Stage.HeadForward;
@@ -51,11 +70,12 @@ public class NosebleedLevelManager : MonoBehaviour
     [Header("Extras")]
     public GameObject coldPack;
 
-    // This is called by the LevelController when the cutscene ends
     public void StartMinigame()
     {
         currentStage = Stage.HeadForward;
         mistakes = 0;
+        taskAlreadyChecked = false;
+
         if (girlRenderer != null && matNosebleed != null)
             girlRenderer.material = matNosebleed;
 
@@ -63,19 +83,6 @@ public class NosebleedLevelManager : MonoBehaviour
         Debug.Log("[MINIGAME] Logic Started.");
 
         UpdateUIForStage();
-    }
-
-    void Start()
-    {
-        //currentStage = Stage.HeadForward;
-        //mistakes = 0;
-        //if (girlRenderer != null && matNosebleed != null)
-        //    girlRenderer.material = matNosebleed;
-
-        //if (bgSource != null && !bgSource.isPlaying) bgSource.Play();
-        //Debug.Log("[MINIGAME] Logic Started.");
-
-        //UpdateUIForStage();
     }
 
     void SetStage(Stage s)
@@ -92,9 +99,12 @@ public class NosebleedLevelManager : MonoBehaviour
         ui.SetTitle("التعليمات");
 
         bool playing = (currentStage != Stage.Completed && currentStage != Stage.Failed);
+
         ui.ShowInstructions(playing);
+        ui.ShowStrikes(playing);
         ui.ShowWin(currentStage == Stage.Completed);
         ui.ShowLose(currentStage == Stage.Failed);
+
         if (currentStage == Stage.Completed)
         {
             ui.SetWinStars(mistakes);
@@ -147,7 +157,6 @@ public class NosebleedLevelManager : MonoBehaviour
             return;
         }
 
-        // ✅ Correct: Sheets
         if (currentStage == Stage.Sheets)
         {
             if (girlRenderer != null && matCleanNose != null)
@@ -161,7 +170,6 @@ public class NosebleedLevelManager : MonoBehaviour
             return;
         }
 
-        // ✅ Correct: BandAidRoll
         if (currentStage == Stage.BandAidRoll)
         {
             if (girlRenderer != null && matTissueV2 != null)
@@ -172,11 +180,31 @@ public class NosebleedLevelManager : MonoBehaviour
 
             if (coldPack != null) coldPack.SetActive(true);
 
+            // --- NEW: Calculate reward based on mistakes and update the Win screen text! ---
+            if (mistakes == 0) calculatedReward = coinsFor3Stars;
+            else if (mistakes == 1) calculatedReward = coinsFor2Stars;
+            else calculatedReward = coinsFor1Star;
+
+            if (winScreenRewardText != null)
+            {
+                winScreenRewardText.text = calculatedReward.ToString();
+            }
+
             PlaySfx(winClip);
             SetStage(Stage.Completed);
 
-            if (controller != null) controller.OnMinigameWin();
-            Debug.Log("[LEVEL] WIN 🎉");
+            if (!taskAlreadyChecked)
+            {
+                taskAlreadyChecked = true;
+                TaskManager tm = Object.FindFirstObjectByType<TaskManager>();
+                if (tm != null)
+                {
+                    Debug.Log("[LEVEL] Win Screen Active! Checking Classroom Task...");
+                    tm.CompleteTask(classroomTaskID);
+                }
+            }
+
+            Debug.Log("[LEVEL] WIN 🎉 Waiting for Done Button...");
             return;
         }
     }
@@ -191,10 +219,45 @@ public class NosebleedLevelManager : MonoBehaviour
         Debug.Log($"[LEVEL] Mistake {mistakes}/{maxMistakes} ❌ Reason: {reason}");
 
         if (drag != null) drag.ForceReturn();
+
         if (mistakes >= maxMistakes)
         {
             SetStage(Stage.Failed);
-            Debug.Log("[LEVEL] LOSE ❌");
+            Debug.Log("[LEVEL] LOSE ❌ Waiting for Fail Button...");
+
+            if (interactiveMedicalKit != null) interactiveMedicalKit.SetActive(false);
         }
+    }
+
+    public void OnDoneButtonPressed()
+    {
+        Debug.Log("[LEVEL] Win Screen closed! Handing control back to Player.");
+
+        if (ui != null) ui.ShowWin(false);
+
+        TaskManager tm = Object.FindFirstObjectByType<TaskManager>();
+        if (tm != null)
+        {
+            tm.CompleteTask(classroomTaskID);
+        }
+
+        // --- UPDATED: Uses the dynamic reward we calculated! ---
+        CoinManager coinManager = Object.FindFirstObjectByType<CoinManager>();
+        if (coinManager != null)
+        {
+            coinManager.AddCoins(calculatedReward);
+            Debug.Log($"[LEVEL] Player rewarded with {calculatedReward} coins!");
+        }
+
+        if (controller != null) controller.OnMinigameWin();
+    }
+
+    public void OnFailButtonPressed()
+    {
+        Debug.Log("[LEVEL] Fail Screen closed! Resetting level.");
+
+        if (ui != null) ui.ShowLose(false);
+
+        if (controller != null) controller.ResetLevel();
     }
 }
