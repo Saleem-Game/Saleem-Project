@@ -3,9 +3,11 @@ using System.Collections;
 
 public class PlaygroundLevelController : LevelController
 {
-    [Header("Cameras")]
+    [Header("Cameras & Visuals")]
     public GameObject mainPlayerCamera;
     public GameObject minigameCamera;
+    [Tooltip("Drag the PlayerArmature here so we can hide it during the first-person view!")]
+    public GameObject playerArmature; // --- NEW: This will now show up in your Inspector! ---
 
     [Header("Minigame Elements")]
     public FirstAidGameManager gameManager;
@@ -16,7 +18,7 @@ public class PlaygroundLevelController : LevelController
     [Header("Navigation Objects")]
     public GameObject footballInteractable;
     public Transform spawnPoint;
-    public GameObject exitArrow; // --- NEW: The arrow pointing to the main map
+    public GameObject exitArrow;
 
     [Header("Characters to Reset (Cutscene Poses)")]
     public Transform[] actorsToReset;
@@ -46,7 +48,7 @@ public class PlaygroundLevelController : LevelController
         if (isLevelActive) return;
         isLevelActive = true;
         if (footballInteractable) footballInteractable.SetActive(false);
-        if (exitArrow) exitArrow.SetActive(false); // Hide arrow when playing
+        if (exitArrow) exitArrow.SetActive(false);
 
         TogglePlayer(false);
         PlayCutscene();
@@ -62,8 +64,10 @@ public class PlaygroundLevelController : LevelController
             levelCutscene.gameObject.SetActive(false);
         }
 
-        // --- FIXED: Immediate Character Position and Animation Reset ---
         ResetActorPositions();
+
+        // --- NEW: Hide the player body! ---
+        if (playerArmature != null) playerArmature.SetActive(false);
 
         if (mainPlayerCamera) mainPlayerCamera.SetActive(false);
         if (minigameCamera) minigameCamera.SetActive(true);
@@ -82,33 +86,12 @@ public class PlaygroundLevelController : LevelController
         Cursor.visible = true;
     }
 
-    // --- UI BUTTON FUNCTIONS ---
-
-    public void Button_WinContinue()
-    {
-        if (gameManager != null) gameManager.ResetGame(); // Hides win screen
-        ResetLevel();
-        if (exitArrow) exitArrow.SetActive(true); // Turn on the Arrow!
-        TeleportToSpawn();
-        StartCoroutine(DelayedTaskCheck());
-    }
-
-    public void Button_FailContinue()
-    {
-        if (gameManager != null) gameManager.ResetGame(); // Hides fail screen
-        ResetLevel();
-        if (exitArrow) exitArrow.SetActive(true); // Turn on the Arrow!
-        TeleportToSpawn();
-    }
-
-    public void Button_Replay()
+    public void OnMinigameWin()
     {
         if (gameManager != null) gameManager.ResetGame();
-        if (medicalKit != null)
-        {
-            MedicalKit kitLogic = medicalKit.GetComponent<MedicalKit>();
-            if (kitLogic != null) kitLogic.ResetKit();
-        }
+        ResetLevel();
+        if (exitArrow) exitArrow.SetActive(true);
+        MarkLevelComplete();
     }
 
     private void TeleportToSpawn()
@@ -125,20 +108,16 @@ public class PlaygroundLevelController : LevelController
         }
     }
 
-    private IEnumerator DelayedTaskCheck()
-    {
-        yield return new WaitForSeconds(1f);
-        TaskManager taskManager = FindObjectOfType<TaskManager>();
-        if (taskManager != null) taskManager.CompleteTask(taskID);
-        MarkLevelComplete();
-    }
-
     public override void ResetLevel()
     {
         isLevelActive = false;
         TogglePlayer(true);
 
+        // --- NEW: Show the player body again! ---
+        if (playerArmature != null) playerArmature.SetActive(true);
+
         ResetActorPositions();
+        TeleportToSpawn();
 
         if (medicalKit != null)
         {
@@ -169,11 +148,9 @@ public class PlaygroundLevelController : LevelController
             {
                 if (actorsToReset[i] != null)
                 {
-                    // 1. Reset Position rigidly
                     actorsToReset[i].position = startPositions[i];
                     actorsToReset[i].rotation = startRotations[i];
 
-                    // 2. Reset Animation back to IDLE rigidly
                     Animator anim = actorsToReset[i].GetComponentInChildren<Animator>();
                     if (anim != null)
                     {
