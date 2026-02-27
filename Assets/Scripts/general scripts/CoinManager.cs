@@ -14,26 +14,28 @@ public class CoinManager : MonoBehaviour
 
     void Start()
     {
-        // 1. Find the Audio Source component you attached manually
         _audioSource = GetComponent<AudioSource>();
 
-        // Safety check in case you forgot to add it
         if (_audioSource == null)
         {
             Debug.LogError("No AudioSource found! Please add an Audio Source component to this object.");
         }
 
-        // --- NEW: Load the saved score! Defaults to 0 if playing for the first time ---
         _currentScore = PlayerPrefs.GetInt("SavedCoins", 0);
-
         UpdateScoreUI();
     }
 
+    // Keeps your single coin pickups working perfectly!
     public void AddScore()
     {
-        _currentScore++;
+        AddCoins(1);
+    }
 
-        // --- NEW: Save the new score immediately to Unity's permanent memory ---
+    // --- NEW: Allows us to add ANY amount of coins at once! ---
+    public void AddCoins(int amount)
+    {
+        _currentScore += amount;
+
         PlayerPrefs.SetInt("SavedCoins", _currentScore);
         PlayerPrefs.Save();
 
