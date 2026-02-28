@@ -10562,13 +10562,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 536.34863, y: -50}
-  m_SizeDelta: {x: 551.1256, y: 100}
-=======
   m_AnchoredPosition: {x: 526.63, y: -50}
   m_SizeDelta: {x: 590, y: 100}
->>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8272380757412057122
 CanvasRenderer:
@@ -16505,13 +16500,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 536.34863, y: -50}
-  m_SizeDelta: {x: 551.1256, y: 124.0972}
-=======
   m_AnchoredPosition: {x: 526.63, y: -50}
   m_SizeDelta: {x: 590, y: 124.0972}
->>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7995364938007880126
 CanvasRenderer:
@@ -17242,11 +17232,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 100.928604, y: -50}
-=======
   m_AnchoredPosition: {x: 91.21001, y: -50}
->>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2632984711494785581
@@ -18560,11 +18546,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 100.928604, y: -50}
-=======
   m_AnchoredPosition: {x: 91.21001, y: -50}
->>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6661680510009562329
@@ -19097,11 +19079,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 100.928604, y: -50}
-=======
   m_AnchoredPosition: {x: 91.21001, y: -50}
->>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3063526811101674665
@@ -34755,11 +34733,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 100.928604, y: -50}
-=======
   m_AnchoredPosition: {x: 91.21001, y: -50}
->>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7546385479014850450
@@ -45392,11 +45366,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 100.928604, y: -50}
-=======
   m_AnchoredPosition: {x: 91.21001, y: -50}
->>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5501552551062915069
@@ -50387,13 +50357,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 536.34863, y: -50}
-  m_SizeDelta: {x: 551.1256, y: 117.6139}
-=======
   m_AnchoredPosition: {x: 526.63, y: -50}
   m_SizeDelta: {x: 590, y: 117.6139}
->>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5699692650897428321
 CanvasRenderer:
@@ -76925,13 +76890,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 536.34863, y: -50}
-  m_SizeDelta: {x: 551.1256, y: 100}
-=======
   m_AnchoredPosition: {x: 526.63, y: -50}
   m_SizeDelta: {x: 590, y: 100}
->>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3134255156843508333
 CanvasRenderer:
@@ -77680,13 +77640,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 536.34863, y: -50}
-  m_SizeDelta: {x: 551.1256, y: 100}
-=======
   m_AnchoredPosition: {x: 526.63, y: -50}
   m_SizeDelta: {x: 590, y: 100}
->>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6899860543854995033
 CanvasRenderer:
@@ -82764,11 +82719,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 100.928604, y: -50}
-=======
   m_AnchoredPosition: {x: 91.21001, y: -50}
->>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1219022190483236189
@@ -156237,6 +156188,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: '::'
   scoreText: {fileID: 57809879633044229}
   pingSound: {fileID: 8300000, guid: ba159f07b4a392c4d8dd237e46bb1804, type: 3}
+  pingVolume: 0.132
 --- !u!82 &3339583319957669891
 AudioSource:
   m_ObjectHideFlags: 0
@@ -162309,13 +162261,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-<<<<<<< Updated upstream
-  m_AnchoredPosition: {x: 536.34863, y: -50}
-  m_SizeDelta: {x: 551.1256, y: 115.9849}
-=======
   m_AnchoredPosition: {x: 526.63, y: -50}
   m_SizeDelta: {x: 590, y: 115.9849}
->>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3022242233046685260
 CanvasRenderer:
