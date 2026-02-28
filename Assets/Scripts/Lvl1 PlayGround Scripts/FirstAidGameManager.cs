@@ -76,7 +76,24 @@ public class FirstAidGameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        InitializeGame();
+        // Reset all data tracking
+        currentStep = 0;
+        strikes = 0;
+        gameEnded = false;
+        isProcessingAction = false;
+        taskAlreadyChecked = false;
+
+        // SILENT RESET: Stop audio and hide UI so it doesn't "flash" on screen
+        if (audioSource != null) audioSource.Stop();
+        HideAllPanels();
+
+        if (successPanel != null) successPanel.SetActive(false);
+        if (failPanel != null) failPanel.SetActive(false);
+
+        if (strikePanel != null) strikePanel.SetActive(false);
+
+        // NOTE: We do NOT call ShowCurrentStep() here. 
+        // This keeps the game quiet until StartMinigame() is called properly.
     }
 
     void InitializeGame()
@@ -221,8 +238,14 @@ public class FirstAidGameManager : MonoBehaviour
     {
         if (gameEnded) return;
         gameEnded = true;
+
+        // Stop Step 1/Instruction audio immediately
+        if (audioSource != null) audioSource.Stop();
+
         HideAllPanels();
+
         if (finalHealedTexture != null) ApplyTextureOrMaterial(finalHealedTexture, null);
+
         StartCoroutine(WinSequenceWithGoodJob());
     }
 
@@ -258,21 +281,31 @@ public class FirstAidGameManager : MonoBehaviour
     {
         if (gameEnded) return;
         gameEnded = true;
+
+        // Stop Step 1/Instruction audio immediately
+        if (audioSource != null) audioSource.Stop();
+
         HideAllPanels();
+
         if (failPanel != null) failPanel.SetActive(true);
     }
 
     public void OnDoneButtonPressed()
     {
+        // 1. Hide the panel immediately
         if (successPanel != null) successPanel.SetActive(false);
-        StartCoroutine(DoneButtonSequence());
+
+        // 2. Run the cleanup immediately (No Coroutine, No Wait)
+        ExecuteWinCleanup();
     }
 
-    private IEnumerator DoneButtonSequence()
+    private void ExecuteWinCleanup()
     {
+        // Reward Coins
         CoinManager coinManager = UnityEngine.Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
         if (coinManager != null) coinManager.AddCoins(calculatedReward);
 
+        // Complete Task
         TaskManager taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
         if (taskManager != null && !taskAlreadyChecked)
         {
@@ -281,8 +314,7 @@ public class FirstAidGameManager : MonoBehaviour
             taskManager.CompleteTask(playgroundTaskID);
         }
 
-        yield return new WaitForSeconds(3f);
-
+        // 3. Exit the minigame IMMEDIATELY (Removing the 3s delay)
         if (levelController != null) levelController.OnMinigameWin();
     }
 
