@@ -2,24 +2,27 @@ using UnityEngine;
 
 public class TilePiece : MonoBehaviour
 {
-    public PuzzleManager manager; // Reference to the boss script
-    public Vector3 targetPosition; // Where should I be visually?
-    public bool isEmptySlot = false; // Is this the invisible one?
+    public ChemistryLabLevel manager;
+    public Vector3 targetPosition;
+    public bool isEmptySlot = false;
+
+    [HideInInspector]
+    public Vector3 originalTargetPosition;
 
     void Start()
     {
         targetPosition = transform.localPosition;
+        originalTargetPosition = targetPosition;
     }
 
     void Update()
     {
-        // Smoothly slide to the new spot
         transform.localPosition = Vector3.Lerp(transform.localPosition, targetPosition, 10f * Time.deltaTime);
     }
 
     void OnMouseDown()
     {
-        Debug.Log("Clicked on: " + gameObject.name); // <--- Add this line
+        Debug.Log("Clicked on: " + gameObject.name);
 
         if (manager != null && !isEmptySlot)
         {
