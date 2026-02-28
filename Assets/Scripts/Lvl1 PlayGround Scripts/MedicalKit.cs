@@ -16,27 +16,9 @@ public class MedicalKit : MonoBehaviour
     private bool isOpen = false;
     private List<MedicalItem> medicalItems = new List<MedicalItem>();
 
-    private Dictionary<MedicalItem, Transform> initialParents = new Dictionary<MedicalItem, Transform>();
-    private Dictionary<MedicalItem, Vector3> initialPositions = new Dictionary<MedicalItem, Vector3>();
-    private Dictionary<MedicalItem, Quaternion> initialRotations = new Dictionary<MedicalItem, Quaternion>();
-    // --- NEW: Memory for the original size! ---
-    private Dictionary<MedicalItem, Vector3> initialScales = new Dictionary<MedicalItem, Vector3>();
-
     void Start()
     {
         medicalItems.AddRange(GetComponentsInChildren<MedicalItem>());
-
-        foreach (var item in medicalItems)
-        {
-            if (item != null)
-            {
-                initialParents[item] = item.transform.parent;
-                initialPositions[item] = item.transform.localPosition;
-                initialRotations[item] = item.transform.localRotation;
-                // Memorize the exact scale right when the game starts
-                initialScales[item] = item.transform.localScale;
-            }
-        }
 
         if (spawnItemsOnOpen)
         {
@@ -79,15 +61,18 @@ public class MedicalKit : MonoBehaviour
 
     public void ReturnItemToBox(MedicalItem item)
     {
-        if (item != null && initialPositions.ContainsKey(item))
+        if (item != null)
         {
-            item.transform.SetParent(initialParents[item]);
-            item.transform.localPosition = initialPositions[item];
-            item.transform.localRotation = initialRotations[item];
-            // --- NEW: Apply the memorized scale! ---
-            item.transform.localScale = initialScales[item];
-
+            item.ResetToBox();
             item.gameObject.SetActive(!spawnItemsOnOpen || isOpen);
+        }
+    }
+
+    public void PackToolsBack()
+    {
+        foreach (var item in medicalItems)
+        {
+            ReturnItemToBox(item);
         }
     }
 
@@ -99,11 +84,7 @@ public class MedicalKit : MonoBehaviour
             kitAnimator.Rebind();
             kitAnimator.Update(0f);
         }
-
-        foreach (var item in medicalItems)
-        {
-            ReturnItemToBox(item);
-        }
+        PackToolsBack();
     }
 
     void SpawnItems()

@@ -21,7 +21,6 @@ public class NosebleedLevelController : LevelController
 
     void Awake()
     {
-        // Store the original positions and rotations of the actors
         if (actorsToReset != null && actorsToReset.Length > 0)
         {
             startPositions = new Vector3[actorsToReset.Length];
@@ -47,7 +46,6 @@ public class NosebleedLevelController : LevelController
 
     protected override void OnCutsceneFinished()
     {
-        // --- NEW: Reset Character Positions and Animations immediately ---
         ResetActorPositions();
 
         TogglePlayer(false);
@@ -79,11 +77,9 @@ public class NosebleedLevelController : LevelController
             {
                 if (actorsToReset[i] != null)
                 {
-                    // Snap back to stored position/rotation
                     actorsToReset[i].position = startPositions[i];
                     actorsToReset[i].rotation = startRotations[i];
 
-                    // Force the animator back to its default state (Idle)
                     Animator anim = actorsToReset[i].GetComponentInChildren<Animator>();
                     if (anim != null)
                     {
@@ -101,12 +97,26 @@ public class NosebleedLevelController : LevelController
         if (minigameUI) minigameUI.SetActive(false);
         if (mainPlayerCamera) mainPlayerCamera.SetActive(true);
 
+        if (injuredStudent) injuredStudent.SetActive(false);
+        if (whitePanel) whitePanel.SetActive(false);
+
+        // --- NEW: Pack the tools back into the box before hiding it! ---
+        if (medicalKit)
+        {
+            MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
+            if (kitScript != null) kitScript.ResetKit();
+
+            medicalKit.SetActive(false);
+        }
+
         TogglePlayer(true);
 
-        TaskManager taskManager = FindObjectOfType<TaskManager>();
-        if (taskManager != null) taskManager.CompleteTask(taskID);
+        //TaskManager taskManager = FindObjectOfType<TaskManager>();
+        //if (taskManager != null) taskManager.CompleteTask(taskID);
 
         MarkLevelComplete();
+
+        isLevelActive = false;
     }
 
     public override void ResetLevel()
@@ -114,11 +124,23 @@ public class NosebleedLevelController : LevelController
         isLevelActive = false;
         TogglePlayer(true);
 
-        // Ensure actors are reset if the level is manually reset
         ResetActorPositions();
 
-        if (mainPlayerCamera) mainPlayerCamera.SetActive(true);
+        if (injuredStudent) injuredStudent.SetActive(false);
+        if (minigameUI) minigameUI.SetActive(false);
         if (firstPersonCamera) firstPersonCamera.SetActive(false);
         if (whitePanel) whitePanel.SetActive(false);
+
+        // --- NEW: Pack the tools back into the box when the player fails/retries! ---
+        if (medicalKit)
+        {
+            MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
+            if (kitScript != null) kitScript.ResetKit();
+
+            medicalKit.SetActive(false);
+        }
+
+        if (mainPlayerCamera) mainPlayerCamera.SetActive(true);
+        if (cutsceneCharacters) cutsceneCharacters.SetActive(true);
     }
 }

@@ -12,6 +12,7 @@ public class NosebleedUIController : MonoBehaviour
     public GameObject instructionsPanel;
     public GameObject winPanel;
     public GameObject losePanel;
+    public GameObject strikeCanvas; // <-- NEW: To hide the strikes when the game ends!
 
     [Header("Strikes")]
     public Image[] strikeImages; // size = 3
@@ -25,11 +26,16 @@ public class NosebleedUIController : MonoBehaviour
 
     void Awake()
     {
-        //ShowWin(false);
+        // FIX 1: Turn everything OFF when the scene first loads!
+        // They will only turn on when StartMinigame() is officially called.
+        ShowWin(false);
         ShowLose(false);
         ShowInstructions(false);
+<<<<<<< HEAD
+=======
+        ShowStrikes(false);
+>>>>>>> eddf3de3dfa3814b14b3ac110f9950c0467c6362
         SetStrikes(0);
-      
     }
 
     public void SetTitle(string t)
@@ -51,14 +57,32 @@ public class NosebleedUIController : MonoBehaviour
     {
         if (winPanel != null)
         {
+            // FIX 2: If the parent folder (Win screen) is turned off, this forces it to wake up!
+            if (show && winPanel.transform.parent != null)
+            {
+                winPanel.transform.parent.gameObject.SetActive(true);
+            }
             winPanel.SetActive(show);
-            Debug.Log("ShowWin(" + show + ") -> " + winPanel.name);
         }
     }
 
     public void ShowLose(bool show)
     {
-        if (losePanel != null) losePanel.SetActive(show);
+        if (losePanel != null)
+        {
+            // Forces the parent folder (Fail screen) to wake up!
+            if (show && losePanel.transform.parent != null)
+            {
+                losePanel.transform.parent.gameObject.SetActive(true);
+            }
+            losePanel.SetActive(show);
+        }
+    }
+
+    // FIX 3: Method to turn the Strikes canvas on and off
+    public void ShowStrikes(bool show)
+    {
+        if (strikeCanvas != null) strikeCanvas.SetActive(show);
     }
 
     public void OnRetry()

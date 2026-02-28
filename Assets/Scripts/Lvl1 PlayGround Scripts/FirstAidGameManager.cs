@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class FirstAidGameManager : MonoBehaviour
 {
@@ -32,17 +33,31 @@ public class FirstAidGameManager : MonoBehaviour
     public GameObject successPanel;
     public GameObject failPanel;
 
-    [Header("New Strike System UI")]
+    [Header("Strike System UI")]
     public GameObject strikePanel;
     public GameObject[] strikeIcons = new GameObject[3];
 
-    [Header("Win Screen Stars")]
+    [Header("Task Settings")]
+    public int playgroundTaskID = 4;
+    private bool taskAlreadyChecked = false;
+
+    [Header("Win Screen Stars & Rewards")]
     public GameObject[] winStars = new GameObject[3];
+    public TextMeshProUGUI winScreenRewardText;
+
+    public int coinsFor3Stars = 20;
+    public int coinsFor2Stars = 15;
+    public int coinsFor1Star = 10;
+    private int calculatedReward = 0;
 
     [Header("Game Settings")]
     public int maxStrikes = 3;
     public float wrongToolPanelDuration = 2f;
     public Texture2D finalHealedTexture;
+
+    // --- NEW: Added a reference to the medical kit so we can reset tools! ---
+    [Header("Tool Cleanup")]
+    public MedicalKit medicalKit;
 
     [HideInInspector] public PlaygroundLevelController levelController;
 
@@ -82,17 +97,19 @@ public class FirstAidGameManager : MonoBehaviour
         strikes = 0;
         gameEnded = false;
         isProcessingAction = false;
+        taskAlreadyChecked = false;
 
         HideAllPanels();
 
         if (successPanel != null) successPanel.SetActive(false);
         if (failPanel != null) failPanel.SetActive(false);
+
         if (strikePanel != null) strikePanel.SetActive(false);
-
         for (int i = 0; i < strikeIcons.Length; i++)
+        {
             if (strikeIcons[i] != null) strikeIcons[i].SetActive(false);
+        }
 
-        // --- FIXED: Plays the first instruction audio immediately! ---
         ShowCurrentStep();
     }
 
@@ -114,7 +131,6 @@ public class FirstAidGameManager : MonoBehaviour
         ApplyTextureOrMaterial(step.characterTexture, step.characterMaterial);
         OnStepChanged?.Invoke(currentStep);
 
-        // --- FIXED: Instruction Audio Plays Here! ---
         if (audioSource != null && step.instructionAudio != null)
         {
             audioSource.Stop();
@@ -172,6 +188,9 @@ public class FirstAidGameManager : MonoBehaviour
 
     void ProcessCorrectAction()
     {
+        // --- NEW: Immediately pack tools back into the box so they can be reused! ---
+        if (medicalKit != null) medicalKit.PackToolsBack();
+
         currentStep++;
 
         if (currentStep >= treatmentSteps.Length) WinGame();
@@ -181,6 +200,10 @@ public class FirstAidGameManager : MonoBehaviour
     void ProcessWrongTool()
     {
         if (gameEnded) return;
+
+        // --- NEW: Immediately pack wrong tools back into the box too! ---
+        if (medicalKit != null) medicalKit.PackToolsBack();
+
         strikes++;
         StartCoroutine(ShowStrikeRoutine());
     }
@@ -188,6 +211,7 @@ public class FirstAidGameManager : MonoBehaviour
     IEnumerator ShowStrikeRoutine()
     {
         isProcessingAction = true;
+
         if (strikePanel != null) strikePanel.SetActive(true);
         for (int i = 0; i < strikeIcons.Length; i++)
             if (strikeIcons[i] != null) strikeIcons[i].SetActive(i < strikes);
@@ -195,6 +219,7 @@ public class FirstAidGameManager : MonoBehaviour
         yield return new WaitForSeconds(wrongToolPanelDuration);
 
         if (strikePanel != null) strikePanel.SetActive(false);
+
         if (strikes >= maxStrikes) LoseGame();
         else isProcessingAction = false;
     }
@@ -205,9 +230,9 @@ public class FirstAidGameManager : MonoBehaviour
         gameEnded = true;
 
         HideAllPanels();
+
         if (finalHealedTexture != null) ApplyTextureOrMaterial(finalHealedTexture, null);
 
-        // --- FIXED: Good Job Audio only plays at the very end! ---
         StartCoroutine(WinSequenceWithGoodJob());
     }
 
@@ -227,6 +252,15 @@ public class FirstAidGameManager : MonoBehaviour
         int starsEarned = 3 - strikes;
         if (starsEarned < 1) starsEarned = 1;
 
+        if (starsEarned == 3) calculatedReward = coinsFor3Stars;
+        else if (starsEarned == 2) calculatedReward = coinsFor2Stars;
+        else calculatedReward = coinsFor1Star;
+
+        if (winScreenRewardText != null)
+        {
+            winScreenRewardText.text = calculatedReward.ToString();
+        }
+
         for (int i = 0; i < winStars.Length; i++)
             if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
 
@@ -239,7 +273,45 @@ public class FirstAidGameManager : MonoBehaviour
         gameEnded = true;
 
         HideAllPanels();
+
         if (failPanel != null) failPanel.SetActive(true);
+    }
+
+    public void OnDoneButtonPressed()
+    {
+        if (successPanel != null) successPanel.SetActive(false);
+        StartCoroutine(DoneButtonSequence());
+    }
+
+    private IEnumerator DoneButtonSequence()
+    {
+        CoinManager coinManager = UnityEngine.Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
+        if (coinManager != null)
+        {
+            coinManager.AddCoins(calculatedReward);
+        }
+
+        TaskManager taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
+        if (taskManager != null && !taskAlreadyChecked)
+        {
+            taskAlreadyChecked = true;
+            taskManager.gameObject.SetActive(true);
+            taskManager.CompleteTask(playgroundTaskID);
+        }
+
+        yield return new WaitForSeconds(3f);
+
+        if (levelController != null)
+        {
+            levelController.OnMinigameWin();
+        }
+    }
+
+    // --- NEW: Replaces all your old Fail/Retry buttons. Just call this on the Fail Screen "Continue" button! ---
+    public void OnFailButtonPressed()
+    {
+        if (failPanel != null) failPanel.SetActive(false);
+        if (levelController != null) levelController.ResetLevel();
     }
 
     public bool IsGameEnded() { return gameEnded; }
