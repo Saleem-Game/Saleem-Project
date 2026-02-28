@@ -31,10 +31,7 @@ public class NosebleedUIController : MonoBehaviour
         ShowWin(false);
         ShowLose(false);
         ShowInstructions(false);
-<<<<<<< HEAD
-=======
         ShowStrikes(false);
->>>>>>> eddf3de3dfa3814b14b3ac110f9950c0467c6362
         SetStrikes(0);
     }
 
