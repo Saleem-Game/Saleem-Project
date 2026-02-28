@@ -23,17 +23,30 @@ public class CoinManager : MonoBehaviour
             Debug.LogError("No AudioSource found! Please add an Audio Source component to this object.");
         }
 
-        // --- NEW: Load the saved score! Defaults to 0 if playing for the first time ---
+        // Load the saved score! Defaults to 0 if playing for the first time
         _currentScore = PlayerPrefs.GetInt("SavedCoins", 0);
 
         UpdateScoreUI();
     }
 
+    // Used for picking up 1 single coin in the map
     public void AddScore()
     {
         _currentScore++;
+        SaveAndPlaySound();
+    }
 
-        // --- NEW: Save the new score immediately to Unity's permanent memory ---
+    // NEW: Used by the Chemistry Lab to add bulk coins (10, 15, or 20)!
+    public void AddCoins(int amount)
+    {
+        _currentScore += amount;
+        SaveAndPlaySound();
+    }
+
+    // Helper method so we don't repeat code
+    private void SaveAndPlaySound()
+    {
+        // Save the new score immediately to Unity's permanent memory
         PlayerPrefs.SetInt("SavedCoins", _currentScore);
         PlayerPrefs.Save();
 

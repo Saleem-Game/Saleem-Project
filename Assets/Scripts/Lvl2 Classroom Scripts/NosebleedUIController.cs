@@ -27,7 +27,7 @@ public class NosebleedUIController : MonoBehaviour
     {
         //ShowWin(false);
         ShowLose(false);
-        ShowInstructions(true);
+        ShowInstructions(false);
         SetStrikes(0);
       
     }

@@ -26,10 +26,17 @@ public class TaskManager : MonoBehaviour
         // 2. Refresh the UI invisibly in the background
         UpdateTaskList();
 
-        // 3. Force THIS game object to be active so the Coroutine doesn't instantly die!
+        // 3. THE FIX: Wake up the parent canvas BEFORE trying to start the Coroutine!
+        // If the parent is turned off, the Coroutine will instantly die.
+        if (tasksPanel != null && tasksPanel.transform.parent != null)
+        {
+            tasksPanel.transform.parent.gameObject.SetActive(true);
+        }
+
+        // 4. Force THIS game object to be active so the Coroutine can run
         gameObject.SetActive(true);
 
-        // 4. Start the celebratory pop-up sequence!
+        // 5. Start the celebratory pop-up sequence!
         StartCoroutine(ShowPanelSequence());
     }
 
@@ -50,21 +57,15 @@ public class TaskManager : MonoBehaviour
 
     private IEnumerator ShowPanelSequence()
     {
-        // --- THE ULTIMATE FIX: Force the parent Canvas (General UI Full) to wake up! ---
-        if (tasksPanel != null)
-        {
-            Transform parentCanvas = tasksPanel.transform.parent;
-            if (parentCanvas != null)
-            {
-                parentCanvas.gameObject.SetActive(true); // Wakes up the main UI Canvas!
-            }
-        }
-
         // Reduced from 2f to 0.5f so the panel drops down almost immediately!
         yield return new WaitForSeconds(0.5f);
 
         if (tasksPanel != null)
         {
+            // === THE ULTIMATE FIX ===
+            // We MUST physically turn the panel on before trying to play an animation!
+            tasksPanel.SetActive(true);
+
             UIPanelController animController = tasksPanel.GetComponent<UIPanelController>();
 
             if (animController != null)
@@ -72,10 +73,14 @@ public class TaskManager : MonoBehaviour
                 animController.Open();
                 yield return new WaitForSeconds(3.5f); // Wait long enough for the player to read it
                 animController.Close();
+
+                // Wait 1 second to let the closing animation finish, then fully turn the object off
+                yield return new WaitForSeconds(1f);
+                tasksPanel.SetActive(false);
             }
             else
             {
-                tasksPanel.SetActive(true);
+                // If there's no animation controller, just wait and turn it off
                 yield return new WaitForSeconds(3.5f);
                 tasksPanel.SetActive(false);
             }

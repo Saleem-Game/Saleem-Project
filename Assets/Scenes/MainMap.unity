@@ -26104,8 +26104,6 @@ MonoBehaviour:
   exitTriggers:
   - {fileID: 1621159688}
   - {fileID: 1931485992}
-  winScreenUI: {fileID: 1954693716}
-  winCoinReward: 20
 --- !u!1 &766301347
 GameObject:
   m_ObjectHideFlags: 0
@@ -80002,11 +80000,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b7e53047f807458418d27a74abc19d5a, type: 3}
---- !u!1 &1954693716 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8022323991438857573, guid: b7e53047f807458418d27a74abc19d5a, type: 3}
-  m_PrefabInstance: {fileID: 1954693715}
-  m_PrefabAsset: {fileID: 0}
 --- !u!224 &1954693717 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8100571748804593861, guid: b7e53047f807458418d27a74abc19d5a, type: 3}
@@ -306117,7 +306110,6 @@ MonoBehaviour:
   instructionsPanel: {fileID: 3788307994135766411}
   winPanel: {fileID: 3300922543773166124}
   losePanel: {fileID: 1268824131}
-  strikeCanvas: {fileID: 6185540695744094687}
   strikeImages:
   - {fileID: 6313292442501745442}
   - {fileID: 805005361763041174}
@@ -315411,13 +315403,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NosebleedLevelManager
   controller: {fileID: 600725879}
-  girlyRoots: {fileID: 5148745304914865934}
-  interactiveMedicalKit: {fileID: 954855160}
-  classroomTaskID: 3
-  coinsFor3Stars: 20
-  coinsFor2Stars: 15
-  coinsFor1Star: 10
-  winScreenRewardText: {fileID: 7566192082230965331}
   currentStage: 0
   maxMistakes: 3
   mistakes: 0
