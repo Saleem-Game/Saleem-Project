@@ -1,5 +1,5 @@
 using UnityEngine;
-using UnityEngine.UI; // <-- CRUCIAL: This lets us talk to UI Toggles!
+using UnityEngine.UI;
 using System.Collections;
 
 public class TaskManager : MonoBehaviour
@@ -10,7 +10,7 @@ public class TaskManager : MonoBehaviour
 
     [Header("Task Checkmarks")]
     [Tooltip("Drag the 'Toggle_CheckBox' objects here in order")]
-    public Toggle[] checkmarks; // <-- CHANGED from GameObject to Toggle!
+    public Toggle[] checkmarks;
 
     void Start()
     {
@@ -26,7 +26,10 @@ public class TaskManager : MonoBehaviour
         // 2. Refresh the UI invisibly in the background
         UpdateTaskList();
 
-        // 3. Start the celebratory pop-up sequence!
+        // 3. Force THIS game object to be active so the Coroutine doesn't instantly die!
+        gameObject.SetActive(true);
+
+        // 4. Start the celebratory pop-up sequence!
         StartCoroutine(ShowPanelSequence());
     }
 
@@ -40,7 +43,6 @@ public class TaskManager : MonoBehaviour
 
             if (checkmarks[i] != null)
             {
-                // <-- CHANGED: This physically ticks the "Is On" box in the Inspector!
                 checkmarks[i].isOn = isComplete;
             }
         }
@@ -48,7 +50,18 @@ public class TaskManager : MonoBehaviour
 
     private IEnumerator ShowPanelSequence()
     {
-        yield return new WaitForSeconds(2f);
+        // --- THE ULTIMATE FIX: Force the parent Canvas (General UI Full) to wake up! ---
+        if (tasksPanel != null)
+        {
+            Transform parentCanvas = tasksPanel.transform.parent;
+            if (parentCanvas != null)
+            {
+                parentCanvas.gameObject.SetActive(true); // Wakes up the main UI Canvas!
+            }
+        }
+
+        // Reduced from 2f to 0.5f so the panel drops down almost immediately!
+        yield return new WaitForSeconds(0.5f);
 
         if (tasksPanel != null)
         {
@@ -57,13 +70,13 @@ public class TaskManager : MonoBehaviour
             if (animController != null)
             {
                 animController.Open();
-                yield return new WaitForSeconds(2.5f);
+                yield return new WaitForSeconds(3.5f); // Wait long enough for the player to read it
                 animController.Close();
             }
             else
             {
                 tasksPanel.SetActive(true);
-                yield return new WaitForSeconds(2f);
+                yield return new WaitForSeconds(3.5f);
                 tasksPanel.SetActive(false);
             }
         }

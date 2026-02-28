@@ -8,10 +8,12 @@ public class PuzzleVisuals : MonoBehaviour
 
     private Vector3 originalPos;
     private bool isIdle = true;
+    private float defaultLightIntensity;
 
     void Start()
     {
         originalPos = transform.position;
+        if (hoverLight != null) defaultLightIntensity = hoverLight.intensity;
     }
 
     void Update()
@@ -26,7 +28,17 @@ public class PuzzleVisuals : MonoBehaviour
     public void StopIdleEffects()
     {
         isIdle = false;
-        transform.position = originalPos; // Snap back
+        transform.position = originalPos; // Snap back instantly so the camera stays completely still!
         if (hoverLight) hoverLight.enabled = false;
+    }
+
+    public void RestartIdleEffects()
+    {
+        isIdle = true;
+        if (hoverLight)
+        {
+            hoverLight.enabled = true;
+            hoverLight.intensity = defaultLightIntensity;
+        }
     }
 }

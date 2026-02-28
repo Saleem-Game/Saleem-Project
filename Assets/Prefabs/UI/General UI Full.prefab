@@ -10562,8 +10562,13 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 536.34863, y: -50}
   m_SizeDelta: {x: 551.1256, y: 100}
+=======
+  m_AnchoredPosition: {x: 526.63, y: -50}
+  m_SizeDelta: {x: 590, y: 100}
+>>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8272380757412057122
 CanvasRenderer:
@@ -10606,7 +10611,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: stickers
+  m_Text: "\uFE95\uFE8E\uFED8\uFEBC\uFEE0\uFEE4\uFEDF\uFE8D \uFED6\uFEF3\uFEA9\uFE8E\uFEE8\uFEBB
+    \uFEDE\uFEDB \uFECA\uFEE4\uFE9F\uFE8D"
 --- !u!1 &362256275809673984
 GameObject:
   m_ObjectHideFlags: 0
@@ -16499,8 +16505,13 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 536.34863, y: -50}
   m_SizeDelta: {x: 551.1256, y: 124.0972}
+=======
+  m_AnchoredPosition: {x: 526.63, y: -50}
+  m_SizeDelta: {x: 590, y: 124.0972}
+>>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7995364938007880126
 CanvasRenderer:
@@ -16543,7 +16554,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: chemistry lab
+  m_Text: "\uFE80\uFE8E\uFEF4\uFEE4\uFEF4\uFEDC\uFEDF\uFE8D \uFEAE\uFE92\uFE98\uFEA8\uFEE3
+    \uFEF2\uFED3 \uFEB0\uFED0\uFEE0\uFEDF\uFE8D \uFEDD\u0650\uFEA3\r\n"
 --- !u!1 &704033303801145438
 GameObject:
   m_ObjectHideFlags: 0
@@ -17230,7 +17242,11 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 100.928604, y: -50}
+=======
+  m_AnchoredPosition: {x: 91.21001, y: -50}
+>>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2632984711494785581
@@ -18544,7 +18560,11 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 100.928604, y: -50}
+=======
+  m_AnchoredPosition: {x: 91.21001, y: -50}
+>>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6661680510009562329
@@ -19077,7 +19097,11 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 100.928604, y: -50}
+=======
+  m_AnchoredPosition: {x: 91.21001, y: -50}
+>>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3063526811101674665
@@ -34731,7 +34755,11 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 100.928604, y: -50}
+=======
+  m_AnchoredPosition: {x: 91.21001, y: -50}
+>>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7546385479014850450
@@ -45364,7 +45392,11 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 100.928604, y: -50}
+=======
+  m_AnchoredPosition: {x: 91.21001, y: -50}
+>>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5501552551062915069
@@ -50355,8 +50387,13 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 536.34863, y: -50}
   m_SizeDelta: {x: 551.1256, y: 117.6139}
+=======
+  m_AnchoredPosition: {x: 526.63, y: -50}
+  m_SizeDelta: {x: 590, y: 117.6139}
+>>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5699692650897428321
 CanvasRenderer:
@@ -50399,7 +50436,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: cafeteria level
+  m_Text: "\uFE8E\uFEF3\uFEAE\uFEF4\uFE98\uFED3\uFE8E\uFEDC\uFEDF\uFE8D \uFEF2\uFED3
+    \uFED5\uFEAE\uFEA4\uFEDF\uFE8D \uFE9E\uFEDF\uFE8E\uFECB\r\n"
 --- !u!1 &2571603232987672858
 GameObject:
   m_ObjectHideFlags: 0
@@ -50411,7 +50449,7 @@ GameObject:
   - component: {fileID: 139200566353530443}
   - component: {fileID: 6109096861598746009}
   m_Layer: 5
-  m_Name: task 3
+  m_Name: Cafeteria 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76800,7 +76838,7 @@ GameObject:
   - component: {fileID: 8266183132016863016}
   - component: {fileID: 881104395368655638}
   m_Layer: 5
-  m_Name: task 4
+  m_Name: Classroom 3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -76887,8 +76925,13 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 536.34863, y: -50}
   m_SizeDelta: {x: 551.1256, y: 100}
+=======
+  m_AnchoredPosition: {x: 526.63, y: -50}
+  m_SizeDelta: {x: 590, y: 100}
+>>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3134255156843508333
 CanvasRenderer:
@@ -76931,7 +76974,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: playground
+  m_Text: "\uFE90\uFECC\uFEE0\uFEDF\uFE8D \uFE94\uFEA3\uFE8E\uFEB3 \uFEF2\uFED3 \uFE94\uFE92\uFEDB\uFEAE\uFEDF\uFE8D
+    \uFEB5\uFEAA\uFEA7 \uFE9E\uFEDF\uFE8E\uFECB\r\n"
 --- !u!1 &3519756356939148715
 GameObject:
   m_ObjectHideFlags: 0
@@ -77636,8 +77680,13 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 536.34863, y: -50}
   m_SizeDelta: {x: 551.1256, y: 100}
+=======
+  m_AnchoredPosition: {x: 526.63, y: -50}
+  m_SizeDelta: {x: 590, y: 100}
+>>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6899860543854995033
 CanvasRenderer:
@@ -77680,7 +77729,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: classroom
+  m_Text: "\uFE94\uFEF4\uFED4\uFEBC\uFEDF\uFE8D \uFE94\uFED3\uFEAE\uFED0\uFEDF\uFE8D
+    \uFEF2\uFED3 \uFED2\uFEE7\uFEF7\uFE8D \uFED2\uFEF3\uFEB0\uFEE7 \uFED2\uFED7\uFEED\uFE83\r\n"
 --- !u!1 &3785489610348821861
 GameObject:
   m_ObjectHideFlags: 0
@@ -82714,7 +82764,11 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 100.928604, y: -50}
+=======
+  m_AnchoredPosition: {x: 91.21001, y: -50}
+>>>>>>> Stashed changes
   m_SizeDelta: {x: 84, y: 84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1219022190483236189
@@ -90496,7 +90550,7 @@ GameObject:
   - component: {fileID: 7362764943272366305}
   - component: {fileID: 1854350994505478480}
   m_Layer: 5
-  m_Name: task 2
+  m_Name: Chemistry lab 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -122883,7 +122937,7 @@ GameObject:
   - component: {fileID: 962310474604638454}
   - component: {fileID: 3867785570117500268}
   m_Layer: 5
-  m_Name: task 5
+  m_Name: Playground 4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -128786,7 +128840,7 @@ GameObject:
   - component: {fileID: 7530199466856171460}
   - component: {fileID: 8846407462001101051}
   m_Layer: 5
-  m_Name: task 6
+  m_Name: Stickers 5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -156331,7 +156385,7 @@ GameObject:
   - component: {fileID: 505799929056476780}
   - component: {fileID: 8130172524993687245}
   m_Layer: 5
-  m_Name: task 1
+  m_Name: Computer lab 0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -162255,8 +162309,13 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
+<<<<<<< Updated upstream
   m_AnchoredPosition: {x: 536.34863, y: -50}
   m_SizeDelta: {x: 551.1256, y: 115.9849}
+=======
+  m_AnchoredPosition: {x: 526.63, y: -50}
+  m_SizeDelta: {x: 590, y: 115.9849}
+>>>>>>> Stashed changes
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3022242233046685260
 CanvasRenderer:
@@ -162299,7 +162358,8 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: computer lab
+  m_Text: "\uFE8F\uFEEE\uFEB3\uFE8E\uFEA4\uFEDF\uFE8D \uFEAE\uFE92\uFE98\uFEA8\uFEE3
+    \uFEF2\uFED3 \uFE94\uFEE0\uFE8C\uFEB3\uFEF7\uFE8D \uFEF0\uFEE0\uFECB \uFE8F\uFEED\uFE8E\uFE9F\r\n"
 --- !u!1 &8568345018187431652
 GameObject:
   m_ObjectHideFlags: 0
