@@ -6,8 +6,13 @@ public class PlaygroundLevelController : LevelController
     [Header("Cameras & Visuals")]
     public GameObject mainPlayerCamera;
     public GameObject minigameCamera;
+
     [Tooltip("Drag the PlayerArmature here so we can hide it during the first-person view!")]
-    public GameObject playerArmature; // --- NEW: This will now show up in your Inspector! ---
+    public GameObject playerArmature;
+
+    // --- NEW: Trigger Ball Reference ---
+    [Tooltip("Drag the TriggerBall here to hide it during the minigame!")]
+    public GameObject triggerBall;
 
     [Header("Minigame Elements")]
     public FirstAidGameManager gameManager;
@@ -66,8 +71,9 @@ public class PlaygroundLevelController : LevelController
 
         ResetActorPositions();
 
-        // --- NEW: Hide the player body! ---
+        // --- UPDATED: Hide the player body AND trigger ball when minigame starts ---
         if (playerArmature != null) playerArmature.SetActive(false);
+        if (triggerBall != null) triggerBall.SetActive(false);
 
         if (mainPlayerCamera) mainPlayerCamera.SetActive(false);
         if (minigameCamera) minigameCamera.SetActive(true);
@@ -113,8 +119,9 @@ public class PlaygroundLevelController : LevelController
         isLevelActive = false;
         TogglePlayer(true);
 
-        // --- NEW: Show the player body again! ---
+        // --- UPDATED: Show the player body AND trigger ball again! ---
         if (playerArmature != null) playerArmature.SetActive(true);
+        if (triggerBall != null) triggerBall.SetActive(true);
 
         ResetActorPositions();
         TeleportToSpawn();

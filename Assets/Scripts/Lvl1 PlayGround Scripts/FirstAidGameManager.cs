@@ -55,7 +55,6 @@ public class FirstAidGameManager : MonoBehaviour
     public float wrongToolPanelDuration = 2f;
     public Texture2D finalHealedTexture;
 
-    // --- NEW: Added a reference to the medical kit so we can reset tools! ---
     [Header("Tool Cleanup")]
     public MedicalKit medicalKit;
 
@@ -82,6 +81,7 @@ public class FirstAidGameManager : MonoBehaviour
 
     void InitializeGame()
     {
+        // Internal logic setup
         if (characterRenderer == null && injuredCharacter != null)
             characterRenderer = injuredCharacter.GetComponentInChildren<Renderer>();
 
@@ -188,9 +188,7 @@ public class FirstAidGameManager : MonoBehaviour
 
     void ProcessCorrectAction()
     {
-        // --- NEW: Immediately pack tools back into the box so they can be reused! ---
         if (medicalKit != null) medicalKit.PackToolsBack();
-
         currentStep++;
 
         if (currentStep >= treatmentSteps.Length) WinGame();
@@ -200,10 +198,7 @@ public class FirstAidGameManager : MonoBehaviour
     void ProcessWrongTool()
     {
         if (gameEnded) return;
-
-        // --- NEW: Immediately pack wrong tools back into the box too! ---
         if (medicalKit != null) medicalKit.PackToolsBack();
-
         strikes++;
         StartCoroutine(ShowStrikeRoutine());
     }
@@ -211,13 +206,11 @@ public class FirstAidGameManager : MonoBehaviour
     IEnumerator ShowStrikeRoutine()
     {
         isProcessingAction = true;
-
         if (strikePanel != null) strikePanel.SetActive(true);
         for (int i = 0; i < strikeIcons.Length; i++)
             if (strikeIcons[i] != null) strikeIcons[i].SetActive(i < strikes);
 
         yield return new WaitForSeconds(wrongToolPanelDuration);
-
         if (strikePanel != null) strikePanel.SetActive(false);
 
         if (strikes >= maxStrikes) LoseGame();
@@ -228,11 +221,8 @@ public class FirstAidGameManager : MonoBehaviour
     {
         if (gameEnded) return;
         gameEnded = true;
-
         HideAllPanels();
-
         if (finalHealedTexture != null) ApplyTextureOrMaterial(finalHealedTexture, null);
-
         StartCoroutine(WinSequenceWithGoodJob());
     }
 
@@ -256,10 +246,7 @@ public class FirstAidGameManager : MonoBehaviour
         else if (starsEarned == 2) calculatedReward = coinsFor2Stars;
         else calculatedReward = coinsFor1Star;
 
-        if (winScreenRewardText != null)
-        {
-            winScreenRewardText.text = calculatedReward.ToString();
-        }
+        if (winScreenRewardText != null) winScreenRewardText.text = calculatedReward.ToString();
 
         for (int i = 0; i < winStars.Length; i++)
             if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
@@ -271,9 +258,7 @@ public class FirstAidGameManager : MonoBehaviour
     {
         if (gameEnded) return;
         gameEnded = true;
-
         HideAllPanels();
-
         if (failPanel != null) failPanel.SetActive(true);
     }
 
@@ -286,10 +271,7 @@ public class FirstAidGameManager : MonoBehaviour
     private IEnumerator DoneButtonSequence()
     {
         CoinManager coinManager = UnityEngine.Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
-        if (coinManager != null)
-        {
-            coinManager.AddCoins(calculatedReward);
-        }
+        if (coinManager != null) coinManager.AddCoins(calculatedReward);
 
         TaskManager taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
         if (taskManager != null && !taskAlreadyChecked)
@@ -301,13 +283,9 @@ public class FirstAidGameManager : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
 
-        if (levelController != null)
-        {
-            levelController.OnMinigameWin();
-        }
+        if (levelController != null) levelController.OnMinigameWin();
     }
 
-    // --- NEW: Replaces all your old Fail/Retry buttons. Just call this on the Fail Screen "Continue" button! ---
     public void OnFailButtonPressed()
     {
         if (failPanel != null) failPanel.SetActive(false);
