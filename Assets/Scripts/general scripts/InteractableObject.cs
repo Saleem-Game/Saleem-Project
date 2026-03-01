@@ -17,7 +17,19 @@ public class InteractableObject : MonoBehaviour
     public float rotationSpeedZ = 90f;
 
     private bool playerInRange = false;
-    private Transform playerTransform; // This will remember Saleem while he's in the zone
+    private Transform playerTransform;
+
+    // --- NEW: THE FIX ---
+    private void OnDisable()
+    {
+        // When the Trigger Ball is disabled by the Level Controller,
+        // we MUST force the player out of range so they can't press E from anywhere.
+        playerInRange = false;
+        playerTransform = null;
+
+        if (DisplayButtonPrompt.Instance != null)
+            DisplayButtonPrompt.Instance.HidePrompt();
+    }
 
     void Update()
     {
@@ -30,10 +42,8 @@ public class InteractableObject : MonoBehaviour
         // 2. --- Follow Player Logic ---
         if (playerInRange && playerTransform != null && DisplayButtonPrompt.Instance != null)
         {
-            // Constantly move the UI to float above the player's head
             DisplayButtonPrompt.Instance.transform.position = playerTransform.position + (Vector3.up * uiHeightOffset);
 
-            // Force the UI to perfectly face the active camera so it never looks backward!
             if (Camera.main != null)
             {
                 DisplayButtonPrompt.Instance.transform.rotation = Camera.main.transform.rotation;
@@ -43,6 +53,9 @@ public class InteractableObject : MonoBehaviour
         // 3. --- Interaction Logic ---
         if (playerInRange && Input.GetKeyDown(KeyCode.E))
         {
+            // IMPORTANT: Immediately set playerInRange to false so they can't spam E
+            playerInRange = false;
+
             OnInteract.Invoke();
 
             if (DisplayButtonPrompt.Instance != null)
@@ -55,7 +68,7 @@ public class InteractableObject : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = true;
-            playerTransform = other.transform; // Save the player's exact location tracker!
+            playerTransform = other.transform;
 
             if (DisplayButtonPrompt.Instance != null)
             {
@@ -69,7 +82,7 @@ public class InteractableObject : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             playerInRange = false;
-            playerTransform = null; // Forget the player
+            playerTransform = null;
 
             if (DisplayButtonPrompt.Instance != null)
                 DisplayButtonPrompt.Instance.HidePrompt();

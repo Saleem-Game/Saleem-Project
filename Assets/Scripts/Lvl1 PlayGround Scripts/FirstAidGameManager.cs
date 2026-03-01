@@ -14,7 +14,8 @@ public class FirstAidGameManager : MonoBehaviour
         public GameObject stepPanel;
         public string requiredToolTag = "";
         public bool requiresTapOnly = false;
-        public AudioClip instructionAudio;
+        public AudioClip instructionAudio;  // Voice instruction
+        public AudioClip actionSuccessAudio; // Tool/Action sound effect
     }
 
     [Header("Character Setup")]
@@ -26,8 +27,14 @@ public class FirstAidGameManager : MonoBehaviour
     public TreatmentStep[] treatmentSteps = new TreatmentStep[5];
 
     [Header("Audio Setup")]
-    public AudioSource audioSource;
+    public AudioSource voiceSource; // For instructions and "Good Job"
+    public AudioSource sfxSource;   // For UI, Win, Lose, Strikes, and Tools
+
+    [Space(10)]
     public AudioClip goodJobAudio;
+    public AudioClip winScreenAudio;
+    public AudioClip loseScreenAudio;
+    public AudioClip strikeAudio;
 
     [Header("Main UI Panels")]
     public GameObject successPanel;
@@ -55,7 +62,6 @@ public class FirstAidGameManager : MonoBehaviour
     public float wrongToolPanelDuration = 2f;
     public Texture2D finalHealedTexture;
 
-    // --- NEW: Added a reference to the medical kit so we can reset tools! ---
     [Header("Tool Cleanup")]
     public MedicalKit medicalKit;
 
@@ -77,7 +83,20 @@ public class FirstAidGameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        InitializeGame();
+        currentStep = 0;
+        strikes = 0;
+        gameEnded = false;
+        isProcessingAction = false;
+        taskAlreadyChecked = false;
+
+        if (voiceSource != null) voiceSource.Stop();
+        if (sfxSource != null) sfxSource.Stop();
+
+        HideAllPanels();
+
+        if (successPanel != null) successPanel.SetActive(false);
+        if (failPanel != null) failPanel.SetActive(false);
+        if (strikePanel != null) strikePanel.SetActive(false);
     }
 
     void InitializeGame()
@@ -100,11 +119,10 @@ public class FirstAidGameManager : MonoBehaviour
         taskAlreadyChecked = false;
 
         HideAllPanels();
-
         if (successPanel != null) successPanel.SetActive(false);
         if (failPanel != null) failPanel.SetActive(false);
-
         if (strikePanel != null) strikePanel.SetActive(false);
+
         for (int i = 0; i < strikeIcons.Length; i++)
         {
             if (strikeIcons[i] != null) strikeIcons[i].SetActive(false);
@@ -131,11 +149,12 @@ public class FirstAidGameManager : MonoBehaviour
         ApplyTextureOrMaterial(step.characterTexture, step.characterMaterial);
         OnStepChanged?.Invoke(currentStep);
 
-        if (audioSource != null && step.instructionAudio != null)
+        // CHANNEL 1: VOICE
+        if (voiceSource != null && step.instructionAudio != null)
         {
-            audioSource.Stop();
-            audioSource.clip = step.instructionAudio;
-            audioSource.Play();
+            voiceSource.Stop();
+            voiceSource.clip = step.instructionAudio;
+            voiceSource.Play();
         }
     }
 
@@ -188,8 +207,13 @@ public class FirstAidGameManager : MonoBehaviour
 
     void ProcessCorrectAction()
     {
-        // --- NEW: Immediately pack tools back into the box so they can be reused! ---
         if (medicalKit != null) medicalKit.PackToolsBack();
+
+        // CHANNEL 2: SFX (Step sound)
+        if (sfxSource != null && treatmentSteps[currentStep].actionSuccessAudio != null)
+        {
+            sfxSource.PlayOneShot(treatmentSteps[currentStep].actionSuccessAudio);
+        }
 
         currentStep++;
 
@@ -200,9 +224,13 @@ public class FirstAidGameManager : MonoBehaviour
     void ProcessWrongTool()
     {
         if (gameEnded) return;
-
-        // --- NEW: Immediately pack wrong tools back into the box too! ---
         if (medicalKit != null) medicalKit.PackToolsBack();
+
+        // CHANNEL 2: SFX (Strike sound)
+        if (sfxSource != null && strikeAudio != null)
+        {
+            sfxSource.PlayOneShot(strikeAudio);
+        }
 
         strikes++;
         StartCoroutine(ShowStrikeRoutine());
@@ -211,13 +239,11 @@ public class FirstAidGameManager : MonoBehaviour
     IEnumerator ShowStrikeRoutine()
     {
         isProcessingAction = true;
-
         if (strikePanel != null) strikePanel.SetActive(true);
         for (int i = 0; i < strikeIcons.Length; i++)
             if (strikeIcons[i] != null) strikeIcons[i].SetActive(i < strikes);
 
         yield return new WaitForSeconds(wrongToolPanelDuration);
-
         if (strikePanel != null) strikePanel.SetActive(false);
 
         if (strikes >= maxStrikes) LoseGame();
@@ -229,6 +255,7 @@ public class FirstAidGameManager : MonoBehaviour
         if (gameEnded) return;
         gameEnded = true;
 
+        if (voiceSource != null) voiceSource.Stop();
         HideAllPanels();
 
         if (finalHealedTexture != null) ApplyTextureOrMaterial(finalHealedTexture, null);
@@ -238,10 +265,10 @@ public class FirstAidGameManager : MonoBehaviour
 
     IEnumerator WinSequenceWithGoodJob()
     {
-        if (audioSource != null && goodJobAudio != null)
+        // CHANNEL 1: VOICE
+        if (voiceSource != null && goodJobAudio != null)
         {
-            audioSource.Stop();
-            audioSource.PlayOneShot(goodJobAudio);
+            voiceSource.PlayOneShot(goodJobAudio);
             yield return new WaitForSeconds(goodJobAudio.length);
         }
         else
@@ -249,17 +276,19 @@ public class FirstAidGameManager : MonoBehaviour
             yield return new WaitForSeconds(1.5f);
         }
 
-        int starsEarned = 3 - strikes;
-        if (starsEarned < 1) starsEarned = 1;
+        // CHANNEL 2: SFX (Win Fanfare)
+        if (sfxSource != null && winScreenAudio != null)
+        {
+            sfxSource.PlayOneShot(winScreenAudio);
+        }
+
+        int starsEarned = Mathf.Clamp(3 - strikes, 1, 3);
 
         if (starsEarned == 3) calculatedReward = coinsFor3Stars;
         else if (starsEarned == 2) calculatedReward = coinsFor2Stars;
         else calculatedReward = coinsFor1Star;
 
-        if (winScreenRewardText != null)
-        {
-            winScreenRewardText.text = calculatedReward.ToString();
-        }
+        if (winScreenRewardText != null) winScreenRewardText.text = calculatedReward.ToString();
 
         for (int i = 0; i < winStars.Length; i++)
             if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
@@ -272,7 +301,14 @@ public class FirstAidGameManager : MonoBehaviour
         if (gameEnded) return;
         gameEnded = true;
 
+        if (voiceSource != null) voiceSource.Stop();
         HideAllPanels();
+
+        // CHANNEL 2: SFX (Lose sound)
+        if (sfxSource != null && loseScreenAudio != null)
+        {
+            sfxSource.PlayOneShot(loseScreenAudio);
+        }
 
         if (failPanel != null) failPanel.SetActive(true);
     }
@@ -280,18 +316,15 @@ public class FirstAidGameManager : MonoBehaviour
     public void OnDoneButtonPressed()
     {
         if (successPanel != null) successPanel.SetActive(false);
-        StartCoroutine(DoneButtonSequence());
+        ExecuteWinCleanup();
     }
 
-    private IEnumerator DoneButtonSequence()
+    private void ExecuteWinCleanup()
     {
-        CoinManager coinManager = UnityEngine.Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
-        if (coinManager != null)
-        {
-            coinManager.AddCoins(calculatedReward);
-        }
+        CoinManager coinManager = Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
+        if (coinManager != null) coinManager.AddCoins(calculatedReward);
 
-        TaskManager taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
+        TaskManager taskManager = Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
         if (taskManager != null && !taskAlreadyChecked)
         {
             taskAlreadyChecked = true;
@@ -299,15 +332,9 @@ public class FirstAidGameManager : MonoBehaviour
             taskManager.CompleteTask(playgroundTaskID);
         }
 
-        yield return new WaitForSeconds(3f);
-
-        if (levelController != null)
-        {
-            levelController.OnMinigameWin();
-        }
+        if (levelController != null) levelController.OnMinigameWin();
     }
 
-    // --- NEW: Replaces all your old Fail/Retry buttons. Just call this on the Fail Screen "Continue" button! ---
     public void OnFailButtonPressed()
     {
         if (failPanel != null) failPanel.SetActive(false);
@@ -315,9 +342,11 @@ public class FirstAidGameManager : MonoBehaviour
     }
 
     public bool IsGameEnded() { return gameEnded; }
+
     public TreatmentStep GetCurrentStepData()
     {
-        if (currentStep >= 0 && currentStep < treatmentSteps.Length) return treatmentSteps[currentStep];
+        if (currentStep >= 0 && currentStep < treatmentSteps.Length)
+            return treatmentSteps[currentStep];
         return null;
     }
 }

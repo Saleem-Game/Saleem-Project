@@ -6,8 +6,17 @@ public class PlaygroundLevelController : LevelController
     [Header("Cameras & Visuals")]
     public GameObject mainPlayerCamera;
     public GameObject minigameCamera;
+
     [Tooltip("Drag the PlayerArmature here so we can hide it during the first-person view!")]
-    public GameObject playerArmature; // --- NEW: This will now show up in your Inspector! ---
+    public GameObject playerArmature;
+
+    [Tooltip("Drag the TriggerBall here to hide it during the minigame!")]
+    public GameObject triggerBall;
+
+    // --- NEW: Extra Characters to enable after game ---
+    [Header("Post-Game Characters")]
+    [Tooltip("Add characters here that should appear only after the minigame ends.")]
+    public GameObject[] charactersToEnable;
 
     [Header("Minigame Elements")]
     public FirstAidGameManager gameManager;
@@ -46,10 +55,20 @@ public class PlaygroundLevelController : LevelController
     public override void StartLevel()
     {
         if (isLevelActive) return;
+
         isLevelActive = true;
+
+        // Force the TriggerBall collider off so it can't detect E during cutscenes
+        if (triggerBall != null)
+        {
+            var col = triggerBall.GetComponent<Collider>();
+            if (col != null) col.enabled = false;
+        }
+
         if (footballInteractable) footballInteractable.SetActive(false);
         if (exitArrow) exitArrow.SetActive(false);
 
+        ToggleExtraCharacters(false);
         TogglePlayer(false);
         PlayCutscene();
     }
@@ -66,8 +85,8 @@ public class PlaygroundLevelController : LevelController
 
         ResetActorPositions();
 
-        // --- NEW: Hide the player body! ---
         if (playerArmature != null) playerArmature.SetActive(false);
+        if (triggerBall != null) triggerBall.SetActive(false);
 
         if (mainPlayerCamera) mainPlayerCamera.SetActive(false);
         if (minigameCamera) minigameCamera.SetActive(true);
@@ -113,9 +132,17 @@ public class PlaygroundLevelController : LevelController
         isLevelActive = false;
         TogglePlayer(true);
 
-        // --- NEW: Show the player body again! ---
         if (playerArmature != null) playerArmature.SetActive(true);
 
+        // Reset the Trigger Ball
+        if (triggerBall != null)
+        {
+            triggerBall.SetActive(true);
+            var col = triggerBall.GetComponent<Collider>();
+            if (col != null) col.enabled = true; // Enable collider again
+        }
+
+        ToggleExtraCharacters(true);
         ResetActorPositions();
         TeleportToSpawn();
 
@@ -138,6 +165,18 @@ public class PlaygroundLevelController : LevelController
         Cursor.visible = false;
 
         if (levelCutscene != null) levelCutscene.gameObject.SetActive(true);
+    }
+
+    // Helper method to toggle the characters
+    private void ToggleExtraCharacters(bool state)
+    {
+        if (charactersToEnable != null)
+        {
+            foreach (GameObject character in charactersToEnable)
+            {
+                if (character != null) character.SetActive(state);
+            }
+        }
     }
 
     private void ResetActorPositions()
