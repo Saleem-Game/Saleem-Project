@@ -12,30 +12,28 @@ public class NurseAI : MonoBehaviour
     private bool isFollowing = false;
     private Animator animator;
 
+    // --- FIX: This variable remembers what animation is playing so it doesn't restart! ---
+    private string currentAnimState;
+
     void Start()
     {
-        // Automatically grab the Animator if it's on the Nurse
         animator = GetComponent<Animator>();
     }
 
     void Update()
     {
-        // If she is not told to follow, ensure she stands still
         if (!isFollowing || targetToFollow == null)
         {
-            if (animator != null) animator.SetFloat("Speed", 0f);
-            return;
+            return; // Only move if she is currently following
         }
 
-        // Check how far away the player is
         float distance = Vector3.Distance(transform.position, targetToFollow.position);
 
         if (distance > stoppingDistance)
         {
-            // 1. Calculate direction to look (ignoring Y axis so she doesn't tilt up/down)
+            // Calculate direction to look (ignoring Y axis so she doesn't tilt up/down)
             Vector3 lookPosition = targetToFollow.position;
             lookPosition.y = transform.position.y;
-
             Vector3 direction = (lookPosition - transform.position).normalized;
 
             if (direction != Vector3.zero)
@@ -44,71 +42,66 @@ public class NurseAI : MonoBehaviour
                 transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
             }
 
-            // 2. Move towards the player
+            // Move towards the player
             transform.position = Vector3.MoveTowards(transform.position, lookPosition, moveSpeed * Time.deltaTime);
 
-            // 3. Play Walk Animation
-            if (animator != null) animator.SetFloat("Speed", 1f);
+            // FIX: Safely switch to Walk
+            ChangeAnimationState("Walk_N");
         }
         else
         {
-            // She reached the player, stop walking and play Idle animation
-            if (animator != null) animator.SetFloat("Speed", 0f);
+            // FIX: Safely switch to Idle
+            ChangeAnimationState("Idle");
         }
     }
 
-    // Called by CafeteriaLevel.cs when Dialogue finishes
     public void StartFollowing(Transform player)
     {
         targetToFollow = player;
         isFollowing = true;
     }
 
-    // Called by CafeteriaLevel.cs when arriving at the empty chair
     public void StopFollowing()
     {
         isFollowing = false;
         targetToFollow = null;
 
-        // Force her back to Idle animation
-        if (animator != null)
-        {
-            animator.SetFloat("Speed", 0f);
-        }
+        ChangeAnimationState("Idle");
     }
 
-    // If your BurnLevelManager calls: nurse.GoSit(chairTransform);
     public void GoSit(Transform seatTransform)
     {
-        // 1. Stop following the player
         StopFollowing();
 
-        // 2. Snap the nurse's position and rotation to exactly match the chair
         if (seatTransform != null)
         {
             transform.position = seatTransform.position;
             transform.rotation = seatTransform.rotation;
         }
 
-        // 3. Trigger the sitting animation
-        if (animator != null)
-        {
-            animator.SetFloat("Speed", 0f); // Stop walking
-
-            // If you have a sitting animation, you can trigger it like this:
-            // animator.SetBool("IsSitting", true); 
-        }
+        // FIX: Safely switch to Sitting
+        ChangeAnimationState("Sitting");
     }
 
-    // Just in case your BurnLevelManager calls it WITHOUT a Transform like: nurse.GoSit();
     public void GoSit()
     {
         StopFollowing();
+        ChangeAnimationState("Sitting");
+    }
 
-        if (animator != null)
-        {
-            animator.SetFloat("Speed", 0f);
-            // animator.SetBool("IsSitting", true); 
-        }
+    // ==========================================
+    // THE ULTIMATE FIX: The Animation State Manager
+    // ==========================================
+    private void ChangeAnimationState(string newState)
+    {
+        // Safety check to make sure she has an animator
+        if (animator == null) return;
+
+        // If she is ALREADY playing this animation, stop and do nothing!
+        if (currentAnimState == newState) return;
+
+        // Otherwise, play the new animation and update our tracker
+        animator.Play(newState);
+        currentAnimState = newState;
     }
 }

@@ -1,23 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using TMPro;
 
 public class CafeteriaLevel : LevelController
 {
+    [Header("Cafeteria Triggers")]
+    public GameObject blueCrossTrigger;
+    public GameObject nurseInteractTrigger;
+    public GameObject seatInteractTrigger;
+
     [Header("Timer Setup")]
     public GameObject timerUI;
-    public Text timerText;
-    public float timeLimit = 70f;
+    public TextMeshProUGUI timerText;
+    public float timeLimit = 80f;
     public GameObject timerFailPanel;
 
     [Header("Nurse & Quest")]
     public NurseAI nurse;
     public Transform nurseSeat;
 
-    [Header("Dialogue UI (5s Delay)")]
+    [Header("Dialogue UI & Feedback")]
     public GameObject dialoguePanel;
-    [Tooltip("Drag the 4 AudioSources for the answers here")]
-    public AudioSource[] optionAudios;
+    public GameObject rightAnswerPanel;
+    public GameObject wrongAnswerPanel;
+    public int correctAnswerIndex = 0;
+
+    [Header("Dialogue Audio")]
+    public AudioSource nurseAudioSource;
+    public AudioClip welcomeAudio;
 
     [Header("Treatment Phase")]
     public GameObject treatmentCamera;
@@ -25,20 +36,23 @@ public class CafeteriaLevel : LevelController
     public GameObject minigameUI;
     public TreatmentSystem treatmentSystem;
 
+    // --- NEW: The Injured Character for the Minigame ---
+    [Header("Minigame Actors")]
+    public GameObject injuredCharacter;
+
     [Header("Actors to Reset (Cutscene Poses)")]
     public Transform[] actorsToReset;
     private Vector3[] startPositions;
     private Quaternion[] startRotations;
 
-    // Background Tracking
     private bool isTimerRunning = false;
     private float currentTime;
     private bool nurseFollowing = false;
     private bool nurseSeated = false;
+    private bool hasTalkedToNurse = false;
 
     void Awake()
     {
-        // Store original positions and rotations before cutscenes move them
         if (actorsToReset != null && actorsToReset.Length > 0)
         {
             startPositions = new Vector3[actorsToReset.Length];
@@ -59,15 +73,23 @@ public class CafeteriaLevel : LevelController
         if (isLevelActive) return;
         isLevelActive = true;
         LockRoom();
+
+        if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
+        if (seatInteractTrigger) seatInteractTrigger.SetActive(false);
+
+        // Ensure the injured character is completely hidden at the start!
+        if (injuredCharacter) injuredCharacter.SetActive(false);
+
         PlayCutscene();
     }
 
     protected override void OnCutsceneFinished()
     {
-        // --- NEW: Reset Character Positions and Animations immediately ---
         ResetActorPositions();
-
         TogglePlayer(true);
+
+        if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
+
         StartCoroutine(StartTimerSequence());
     }
 
@@ -79,17 +101,11 @@ public class CafeteriaLevel : LevelController
             {
                 if (actorsToReset[i] != null)
                 {
-                    // Snap back to stored position/rotation
                     actorsToReset[i].position = startPositions[i];
                     actorsToReset[i].rotation = startRotations[i];
 
-                    // Force the animator back to its default state (Idle)
                     Animator anim = actorsToReset[i].GetComponentInChildren<Animator>();
-                    if (anim != null)
-                    {
-                        anim.Rebind();
-                        anim.Update(0f);
-                    }
+                    if (anim != null) { anim.Rebind(); anim.Update(0f); }
                 }
             }
         }
@@ -118,15 +134,17 @@ public class CafeteriaLevel : LevelController
 
     public void TriggerNurse()
     {
-        if (!isLevelActive || nurseFollowing) return;
-        nurseFollowing = true;
-        if (playerRoot != null) nurse.StartFollowing(playerRoot.transform);
-        StartCoroutine(DialogueDelaySequence());
+        if (!isLevelActive || nurseFollowing || hasTalkedToNurse) return;
+
+        hasTalkedToNurse = true;
+        TogglePlayer(false);
+        StartCoroutine(WelcomeSequence());
     }
 
-    private IEnumerator DialogueDelaySequence()
+    private IEnumerator WelcomeSequence()
     {
-        yield return new WaitForSeconds(5f);
+        if (nurseAudioSource != null && welcomeAudio != null) nurseAudioSource.PlayOneShot(welcomeAudio);
+        yield return new WaitForSeconds(1f);
         dialoguePanel.SetActive(true);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
@@ -135,23 +153,48 @@ public class CafeteriaLevel : LevelController
     public void OnDialogueOptionChosen(int optionIndex)
     {
         dialoguePanel.SetActive(false);
+        bool isCorrect = (optionIndex == correctAnswerIndex);
+        StartCoroutine(AnswerFeedbackSequence(isCorrect));
+    }
+
+    private IEnumerator AnswerFeedbackSequence(bool isCorrect)
+    {
+        if (isCorrect && rightAnswerPanel != null) rightAnswerPanel.SetActive(true);
+        else if (!isCorrect && wrongAnswerPanel != null) wrongAnswerPanel.SetActive(true);
+
+        yield return new WaitForSeconds(2f);
+
+        if (rightAnswerPanel) rightAnswerPanel.SetActive(false);
+        if (wrongAnswerPanel) wrongAnswerPanel.SetActive(false);
+
+        TogglePlayer(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
-        if (optionIndex >= 0 && optionIndex < optionAudios.Length)
-        {
-            optionAudios[optionIndex].Play();
-        }
+        nurseFollowing = true;
+        if (playerRoot != null) nurse.StartFollowing(playerRoot.transform);
+
+        if (seatInteractTrigger) seatInteractTrigger.SetActive(true);
     }
 
     public void TriggerChair()
     {
         if (!nurseFollowing) return;
+
         nurseFollowing = false;
         nurseSeated = true;
         isTimerRunning = false;
-        timerUI.SetActive(false);
+        if (timerUI) timerUI.SetActive(false);
+
+        if (seatInteractTrigger) seatInteractTrigger.SetActive(false);
         nurse.GoSit(nurseSeat);
+
+        StartCoroutine(WaitBeforeTreatmentSequence());
+    }
+
+    private IEnumerator WaitBeforeTreatmentSequence()
+    {
+        yield return new WaitForSeconds(5f);
         StartTreatmentPhase();
     }
 
@@ -161,6 +204,10 @@ public class CafeteriaLevel : LevelController
         treatmentCamera.SetActive(true);
         medicalKit.SetActive(true);
         minigameUI.SetActive(true);
+
+        // --- NEW: Turn on the injured character right as the camera switches! ---
+        if (injuredCharacter) injuredCharacter.SetActive(true);
+
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
@@ -172,7 +219,7 @@ public class CafeteriaLevel : LevelController
         TogglePlayer(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        timerFailPanel.SetActive(true);
+        if (timerFailPanel) timerFailPanel.SetActive(true);
     }
 
     public void RetryTimerPhase()
@@ -188,16 +235,24 @@ public class CafeteriaLevel : LevelController
         isTimerRunning = false;
         nurseFollowing = false;
         nurseSeated = false;
+        hasTalkedToNurse = false;
 
-        // Ensure actors are reset if the level is manually reset
         ResetActorPositions();
 
         if (timerUI) timerUI.SetActive(false);
         if (dialoguePanel) dialoguePanel.SetActive(false);
+        if (rightAnswerPanel) rightAnswerPanel.SetActive(false);
+        if (wrongAnswerPanel) wrongAnswerPanel.SetActive(false);
         if (timerFailPanel) timerFailPanel.SetActive(false);
         if (treatmentCamera) treatmentCamera.SetActive(false);
         if (medicalKit) medicalKit.SetActive(false);
         if (minigameUI) minigameUI.SetActive(false);
+
+        // Hide injured character on reset
+        if (injuredCharacter) injuredCharacter.SetActive(false);
+
+        if (blueCrossTrigger) blueCrossTrigger.SetActive(true);
+        if (seatInteractTrigger) seatInteractTrigger.SetActive(false);
 
         if (nurse) nurse.StopFollowing();
         TogglePlayer(true);
@@ -209,6 +264,9 @@ public class CafeteriaLevel : LevelController
         if (treatmentCamera) treatmentCamera.SetActive(false);
         if (medicalKit) medicalKit.SetActive(false);
         if (minigameUI) minigameUI.SetActive(false);
+
+        // Hide injured character when finished
+        if (injuredCharacter) injuredCharacter.SetActive(false);
 
         TogglePlayer(true);
         Cursor.lockState = CursorLockMode.Locked;
