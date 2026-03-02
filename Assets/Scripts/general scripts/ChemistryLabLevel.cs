@@ -43,6 +43,11 @@ public class ChemistryLabLevel : LevelController
     private float currentTime;
     private bool isTimerRunning = false;
 
+    [Header("7. Audio Settings")] // <--- NEW AUDIO HEADER
+    public AudioClip winSound;
+    public AudioClip failSound;
+    public AudioSource audioSource;
+
     private TilePiece[,] grid = new TilePiece[3, 3];
     private bool puzzleSolved = false;
     private Coroutine shuffleCoroutine;
@@ -261,6 +266,9 @@ public class ChemistryLabLevel : LevelController
         if (referenceImageUI) referenceImageUI.SetActive(false);
 
         if (failScreenUI) failScreenUI.SetActive(true);
+
+        // <--- NEW AUDIO LOGIC --->
+        if (audioSource != null && failSound != null) audioSource.PlayOneShot(failSound);
     }
 
     private void ForceWinPuzzle()
@@ -289,6 +297,9 @@ public class ChemistryLabLevel : LevelController
         if (referenceImageUI) referenceImageUI.SetActive(false);
 
         if (winScreenUI) winScreenUI.SetActive(true);
+
+        // <--- NEW AUDIO LOGIC --->
+        if (audioSource != null && winSound != null) audioSource.PlayOneShot(winSound);
 
         float timeTaken = maxTime - currentTime;
         int starsEarned = 1;
@@ -328,20 +339,15 @@ public class ChemistryLabLevel : LevelController
         StartCoroutine(DoneButtonSequence());
     }
 
-    // --- FIXED: Mirrored perfectly to match your Playground sequence! ---
     private IEnumerator DoneButtonSequence()
     {
-        // 1. Give the coins early
         CoinManager coinManager = UnityEngine.Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
         if (coinManager != null) coinManager.AddCoins(calculatedReward);
 
-        // 2. Call ResetLevel FIRST! This instantly restores Saleem's camera and turns his General UI completely back on.
         ResetLevel();
 
-        // 3. Wait 1 second to let the player adjust to being back in the room
         yield return new WaitForSeconds(1f);
 
-        // 4. Now that the General UI is definitely turned on, trigger the Task Panel!
         TaskManager taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
         if (taskManager != null && !taskAlreadyChecked)
         {
@@ -349,7 +355,6 @@ public class ChemistryLabLevel : LevelController
             taskManager.CompleteTask(taskID);
         }
 
-        // 5. Officially mark the level done to unlock the room doors
         MarkLevelComplete();
     }
 
@@ -358,7 +363,6 @@ public class ChemistryLabLevel : LevelController
         isLevelActive = false;
         isTimerRunning = false;
 
-        // --- THIS is what actually restores Saleem's HUD! ---
         TogglePlayer(true);
 
         if (playerArmature) playerArmature.SetActive(true);
