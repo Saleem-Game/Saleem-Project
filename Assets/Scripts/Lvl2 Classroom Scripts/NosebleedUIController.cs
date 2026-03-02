@@ -12,22 +12,25 @@ public class NosebleedUIController : MonoBehaviour
     public GameObject instructionsPanel;
     public GameObject winPanel;
     public GameObject losePanel;
-    public GameObject strikeCanvas; // <-- NEW: To hide the strikes when the game ends!
+    public GameObject strikeCanvas;
 
     [Header("Strikes")]
-    public Image[] strikeImages; // size = 3
+    public Image[] strikeImages;
     public Color strikeOffColor = Color.white;
     public Color strikeOnColor = Color.red;
 
     [Header("Win Stars")]
-    public Image[] winStarImages; // size = 3
+    public Image[] winStarImages;
     public Sprite winStarOn;
     public Sprite winStarOff;
 
+    [Header("Audio Settings")] // <--- NEW AUDIO HEADER
+    public AudioClip winSound;
+    public AudioClip failSound;
+    public AudioSource audioSource;
+
     void Awake()
     {
-        // FIX 1: Turn everything OFF when the scene first loads!
-        // They will only turn on when StartMinigame() is officially called.
         ShowWin(false);
         ShowLose(false);
         ShowInstructions(false);
@@ -54,12 +57,14 @@ public class NosebleedUIController : MonoBehaviour
     {
         if (winPanel != null)
         {
-            // FIX 2: If the parent folder (Win screen) is turned off, this forces it to wake up!
             if (show && winPanel.transform.parent != null)
             {
                 winPanel.transform.parent.gameObject.SetActive(true);
             }
             winPanel.SetActive(show);
+
+            // <--- NEW AUDIO LOGIC --->
+            if (show && audioSource != null && winSound != null) audioSource.PlayOneShot(winSound);
         }
     }
 
@@ -67,16 +72,17 @@ public class NosebleedUIController : MonoBehaviour
     {
         if (losePanel != null)
         {
-            // Forces the parent folder (Fail screen) to wake up!
             if (show && losePanel.transform.parent != null)
             {
                 losePanel.transform.parent.gameObject.SetActive(true);
             }
             losePanel.SetActive(show);
+
+            // <--- NEW AUDIO LOGIC --->
+            if (show && audioSource != null && failSound != null) audioSource.PlayOneShot(failSound);
         }
     }
 
-    // FIX 3: Method to turn the Strikes canvas on and off
     public void ShowStrikes(bool show)
     {
         if (strikeCanvas != null) strikeCanvas.SetActive(show);
@@ -108,7 +114,7 @@ public class NosebleedUIController : MonoBehaviour
         if (winStarImages == null || winStarImages.Length == 0) return;
 
         int m = Mathf.Clamp(mistakes, 0, 2);
-        int starsCount = 3 - m; // 0=>3, 1=>2, 2=>1
+        int starsCount = 3 - m;
 
         for (int i = 0; i < winStarImages.Length; i++)
         {

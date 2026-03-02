@@ -39,6 +39,11 @@ public class ComputerLabLevel : LevelController
     public GameObject winScreenUI;
     public int winCoinReward = 20;
 
+    [Header("8. Audio Settings")] // <--- NEW AUDIO HEADER
+    public AudioClip winSound;
+    public AudioClip failSound;
+    public AudioSource audioSource;
+
     // Internal State
     private int currentQuestionIndex = 0;
     private int mistakeCount = 0;
@@ -246,6 +251,9 @@ public class ComputerLabLevel : LevelController
             // Turn on the Win Screen UI!
             if (winScreenUI != null) winScreenUI.SetActive(true);
 
+            // <--- NEW AUDIO LOGIC --->
+            if (audioSource != null && winSound != null) audioSource.PlayOneShot(winSound);
+
             // Unlock cursor so they can click "Done"
             Cursor.lockState = CursorLockMode.None;
             Cursor.visible = true;
@@ -255,6 +263,9 @@ public class ComputerLabLevel : LevelController
             // === FAIL PATH ===
             if (successSlideObj) successSlideObj.SetActive(false);
             if (failSlideObj) failSlideObj.SetActive(true);
+
+            // <--- NEW AUDIO LOGIC --->
+            if (audioSource != null && failSound != null) audioSource.PlayOneShot(failSound);
 
             int index = mistakeCount - 1;
             if (index >= 0 && index < mistakeObjects.Length)
@@ -274,7 +285,7 @@ public class ComputerLabLevel : LevelController
     }
 
     // --- NEW: Triggered by the "Done" Button on your Win Screen ---
-  
+
     public void OnWinScreenDoneButtonPressed()
     {
         // 1. Hide the Win Screen immediately
