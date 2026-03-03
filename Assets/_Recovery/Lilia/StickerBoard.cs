@@ -26,18 +26,24 @@ public class StickerBoard : MonoBehaviour {
     }
   }
 
-  public void OpenBoard(BoxScript.ID id, string objName, string objDescription) {
+  public void OpenBoard(BoxScript.ID id, string objName, string objDescription)
+  {
+    int r = Random.Range(0, sticky.Length);
+
+    int attempts = 0;
+    while (sticky[r].getSet() && attempts < sticky.Length)
+    {
+      r = (r + 1) % sticky.Length; 
+      attempts++;
+    }
+
+    sticky[r].changeText(objName, objDescription);
+    description.changeText(objName, objDescription);
+
     backgroundPanel.transform.DOLocalMoveY(0, 1);
-    board.transform.DOLocalMoveY(-62, 1).SetEase(Ease.InOutSine).OnComplete(() => {
 
-      int r = Random.Range(0, sticky.Length);
-      while (sticky[r].getSet()) {
-        r = Random.Range(0, sticky.Length);
-      }
-
-      sticky[r].changeText(objName, objDescription);
-      description.changeText(objName, objDescription);
-
+    board.transform.DOLocalMoveY(-62, 1).SetEase(Ease.InOutSine).OnComplete(() =>
+    {
       StartStickerPlace(id);
     });
   }
