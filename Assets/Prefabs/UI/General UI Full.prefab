@@ -10525,9 +10525,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: c301e2f55ca0d424883dffdd54460f00, type: 3}
-  itemName: Green fit
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &356755624852167114
 GameObject:
   m_ObjectHideFlags: 0
@@ -66561,9 +66566,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 82b880f6d911e56489e3d7c5ee22c31a, type: 3}
-  itemName: propeller
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &3328037204692549870
 GameObject:
   m_ObjectHideFlags: 0
@@ -76398,11 +76408,11 @@ RectTransform:
   m_Children:
   - {fileID: 2438451611855928190}
   - {fileID: 1897205722172173375}
-  m_Father: {fileID: 3355786770607733729}
+  m_Father: {fileID: 901509322794592646}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -321.71252}
   m_SizeDelta: {x: 195.9942, y: 103.1696}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1011290100758787450
@@ -77184,9 +77194,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 2900991bd964d11498d562a219234895, type: 3}
-  itemName: Blonde hair
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &3537629013570878845
 GameObject:
   m_ObjectHideFlags: 0
@@ -77423,82 +77438,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &3661181970155975799
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3355786770607733729}
-  - component: {fileID: 1085175139073411344}
-  - component: {fileID: 2599003899829824342}
-  m_Layer: 5
-  m_Name: Cost
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3355786770607733729
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3661181970155975799}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 8066003166727424278}
-  m_Father: {fileID: 901509322794592646}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: -321.71255}
-  m_SizeDelta: {x: -191.1067, y: -738.075}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1085175139073411344
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3661181970155975799}
-  m_CullTransparentMesh: 1
---- !u!114 &2599003899829824342
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3661181970155975799}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.019607844, g: 0.39607844, b: 0.78039217, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 535d5068f6e6f4174a907fe1688dc8c1, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3744142473399635735
 GameObject:
   m_ObjectHideFlags: 0
@@ -83248,9 +83187,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: a8b0e6715f2a24c4a95e0caf308a4d33, type: 3}
-  itemName: shmegah
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &4160916957843413189
 GameObject:
   m_ObjectHideFlags: 0
@@ -83831,18 +83775,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4229333621900093056}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2984612279782731534}
   - {fileID: 7029754365047517199}
-  m_Father: {fileID: 9124690702237588347}
+  m_Father: {fileID: 1695787845603948767}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1.3584, y: 1.5848}
+  m_AnchoredPosition: {x: -1.3584, y: -320.12772}
   m_SizeDelta: {x: 195.9942, y: 103.1696}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1047095244038368356
@@ -89737,9 +89681,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 19b19232adcf46c49b04486f985c8f2d, type: 3}
-  itemName: fire
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &4515315704786702358
 GameObject:
   m_ObjectHideFlags: 0
@@ -91380,7 +91329,7 @@ RectTransform:
   m_Children:
   - {fileID: 7138483747169085735}
   - {fileID: 8101403937169236645}
-  - {fileID: 9124690702237588347}
+  - {fileID: 2134853376342225327}
   m_Father: {fileID: 3912014650038536871}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -96697,9 +96646,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 211e5febde1249e44bc47e5c47a5f86c, type: 3}
-  itemName: burger
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &5276613583470808515
 GameObject:
   m_ObjectHideFlags: 0
@@ -97212,9 +97166,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 71cd2a36bc091224d8333c505718ce78, type: 3}
-  itemName: white fit
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &5313442925188314196
 GameObject:
   m_ObjectHideFlags: 0
@@ -122485,9 +122444,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 9d0207a14ca28f145a5530f15369c289, type: 3}
-  itemName: Black hair
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &5712189283621308903
 GameObject:
   m_ObjectHideFlags: 0
@@ -122874,9 +122838,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 364ca55ea1b932c48b4fdc1d36e9fc41, type: 3}
-  itemName: Brown hair
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &5799216091887893457
 GameObject:
   m_ObjectHideFlags: 0
@@ -123498,9 +123467,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 0274750faa3d7894c83c220253f1afe1, type: 3}
-  itemName: tarboosh
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &5895367582353222438
 GameObject:
   m_ObjectHideFlags: 0
@@ -129212,9 +129186,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: b82d9b93e9a69e94fbbb6892a67a304b, type: 3}
-  itemName: kuffiyeh
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &6056669039954604692
 GameObject:
   m_ObjectHideFlags: 0
@@ -135367,82 +135346,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &6424610054998694908
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 9124690702237588347}
-  - component: {fileID: 5188043469773440884}
-  - component: {fileID: 3079269071932666183}
-  m_Layer: 5
-  m_Name: Cost
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &9124690702237588347
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6424610054998694908}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 2134853376342225327}
-  m_Father: {fileID: 1695787845603948767}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.000015258789, y: -321.71255}
-  m_SizeDelta: {x: -191.1067, y: -738.075}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &5188043469773440884
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6424610054998694908}
-  m_CullTransparentMesh: 1
---- !u!114 &3079269071932666183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6424610054998694908}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.019607844, g: 0.39607844, b: 0.78039217, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 535d5068f6e6f4174a907fe1688dc8c1, type: 3}
-  m_Type: 1
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &6434980384818675621
 GameObject:
   m_ObjectHideFlags: 0
@@ -136366,9 +136269,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 82db17a71dc33ff44af296ce6ae25e8f, type: 3}
-  itemName: blue fit
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &6591841246750884449
 GameObject:
   m_ObjectHideFlags: 0
@@ -147433,7 +147341,7 @@ RectTransform:
   m_Children:
   - {fileID: 5935864068348404424}
   - {fileID: 4378557156399182324}
-  - {fileID: 3355786770607733729}
+  - {fileID: 8066003166727424278}
   m_Father: {fileID: 6336670951969902762}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -153196,9 +153104,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: fc5923d94cf48ca4fa098340ee931426, type: 3}
-  itemName: red fit
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &7432106763975997283
 GameObject:
   m_ObjectHideFlags: 0
@@ -154337,9 +154250,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: b2123dece57ca214b82ec81c86b3d10e, type: 3}
-  itemName: dino
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &7665355259691552000
 GameObject:
   m_ObjectHideFlags: 0
@@ -155838,9 +155756,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: 42e9577ffd960ba4d80ef25ae5e12eeb, type: 3}
-  itemName: Blue hair
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &8051410059870075880
 GameObject:
   m_ObjectHideFlags: 0
@@ -168705,9 +168628,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb66cda1efe5124985f70f50e3891eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShopItem
-  itemIcon: {fileID: 21300000, guid: b4f639733c224d34d982976df8402f66, type: 3}
-  itemName: pixel
+  itemID: 
+  price: 0
+  previewSprite: {fileID: 0}
+  costState: {fileID: 0}
+  boughtState: {fileID: 0}
+  wearingState: {fileID: 0}
   confirmationPopup: {fileID: 0}
+  notEnoughCoinsPanel: {fileID: 0}
 --- !u!1 &9067290946667208573
 GameObject:
   m_ObjectHideFlags: 0
