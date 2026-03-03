@@ -283,7 +283,7 @@ public class BurnLevelManager : MonoBehaviour
                 nurseMissionActive = false;
                 arrowObj.SetActive(false);
                 nurseMissionPanel.SetActive(false);
-                nurseScript.GoSit(teacherChairSpot);
+                //nurseScript.GoSit(teacherChairSpot);
             }
 
             // --- TIME UP ---

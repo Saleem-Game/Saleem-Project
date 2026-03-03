@@ -16,9 +16,10 @@ public class CafeteriaLevel : LevelController
     public float timeLimit = 80f;
     public GameObject timerFailPanel;
 
-    [Header("Nurse & Quest")]
-    public NurseAI nurse;
-    public Transform nurseSeat;
+    [Header("Nurse Swapping")]
+    public GameObject walkingNurseObj;
+    public GameObject sittingNurseObj;
+    public NurseAI nurseAI;
 
     [Header("Dialogue UI & Feedback")]
     public GameObject dialoguePanel;
@@ -36,7 +37,6 @@ public class CafeteriaLevel : LevelController
     public GameObject minigameUI;
     public TreatmentSystem treatmentSystem;
 
-    // --- NEW: The Injured Character for the Minigame ---
     [Header("Minigame Actors")]
     public GameObject injuredCharacter;
 
@@ -75,10 +75,13 @@ public class CafeteriaLevel : LevelController
         LockRoom();
 
         if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
-        if (seatInteractTrigger) seatInteractTrigger.SetActive(false);
 
-        // Ensure the injured character is completely hidden at the start!
+        // --- FIX: Only turn off the collider so the 3D chair stays visible! ---
+        if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
+            seatInteractTrigger.GetComponent<Collider>().enabled = false;
+
         if (injuredCharacter) injuredCharacter.SetActive(false);
+        if (sittingNurseObj) sittingNurseObj.SetActive(false);
 
         PlayCutscene();
     }
@@ -120,7 +123,11 @@ public class CafeteriaLevel : LevelController
         while (currentTime > 0 && !nurseSeated)
         {
             currentTime -= Time.deltaTime;
-            if (timerText) timerText.text = Mathf.Ceil(currentTime).ToString() + "s";
+
+            int minutes = Mathf.FloorToInt(currentTime / 60F);
+            int seconds = Mathf.FloorToInt(currentTime - minutes * 60);
+            if (timerText) timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+
             yield return null;
         }
 
@@ -172,9 +179,11 @@ public class CafeteriaLevel : LevelController
         Cursor.visible = false;
 
         nurseFollowing = true;
-        if (playerRoot != null) nurse.StartFollowing(playerRoot.transform);
+        if (playerRoot != null && nurseAI != null) nurseAI.StartFollowing(playerRoot.transform);
 
-        if (seatInteractTrigger) seatInteractTrigger.SetActive(true);
+        // --- FIX: Turn the chair's collider back on so Saleem can click it! ---
+        if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
+            seatInteractTrigger.GetComponent<Collider>().enabled = true;
     }
 
     public void TriggerChair()
@@ -186,8 +195,12 @@ public class CafeteriaLevel : LevelController
         isTimerRunning = false;
         if (timerUI) timerUI.SetActive(false);
 
-        if (seatInteractTrigger) seatInteractTrigger.SetActive(false);
-        nurse.GoSit(nurseSeat);
+        // --- FIX: Turn the chair's collider back off so it isn't clickable anymore! ---
+        if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
+            seatInteractTrigger.GetComponent<Collider>().enabled = false;
+
+        if (walkingNurseObj) walkingNurseObj.SetActive(false);
+        if (sittingNurseObj) sittingNurseObj.SetActive(true);
 
         StartCoroutine(WaitBeforeTreatmentSequence());
     }
@@ -205,7 +218,6 @@ public class CafeteriaLevel : LevelController
         medicalKit.SetActive(true);
         minigameUI.SetActive(true);
 
-        // --- NEW: Turn on the injured character right as the camera switches! ---
         if (injuredCharacter) injuredCharacter.SetActive(true);
 
         Cursor.lockState = CursorLockMode.None;
@@ -248,13 +260,17 @@ public class CafeteriaLevel : LevelController
         if (medicalKit) medicalKit.SetActive(false);
         if (minigameUI) minigameUI.SetActive(false);
 
-        // Hide injured character on reset
+        if (walkingNurseObj) walkingNurseObj.SetActive(true);
+        if (sittingNurseObj) sittingNurseObj.SetActive(false);
         if (injuredCharacter) injuredCharacter.SetActive(false);
 
         if (blueCrossTrigger) blueCrossTrigger.SetActive(true);
-        if (seatInteractTrigger) seatInteractTrigger.SetActive(false);
 
-        if (nurse) nurse.StopFollowing();
+        // --- FIX: Reset the chair's collider to off! ---
+        if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
+            seatInteractTrigger.GetComponent<Collider>().enabled = false;
+
+        if (nurseAI) nurseAI.StopFollowing();
         TogglePlayer(true);
         UnlockRoom();
     }
@@ -265,7 +281,6 @@ public class CafeteriaLevel : LevelController
         if (medicalKit) medicalKit.SetActive(false);
         if (minigameUI) minigameUI.SetActive(false);
 
-        // Hide injured character when finished
         if (injuredCharacter) injuredCharacter.SetActive(false);
 
         TogglePlayer(true);
