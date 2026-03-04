@@ -43,6 +43,9 @@ public class ShopItem : MonoBehaviour
 
     public void OnClick()
     {
+        Debug.Log($"OnClick called for '{itemID}' | isPurchased:{isPurchased} | coins:{coinManager.GetCoins()} | price:{price}");
+        Debug.Log($"notEnoughCoinsPanel active: {notEnoughCoinsPanel.activeSelf}");
+        Debug.Log($"confirmationPopup active: {confirmationPopup.gameObject.activeSelf}");
         if (isPurchased)
         {
             Equip();
