@@ -18,7 +18,14 @@ public class TaskManager : MonoBehaviour
 
     void Update()
     {
+<<<<<<< Updated upstream
 
+=======
+        // ==========================================
+        // DEV CHEAT: ERASES ALL PROGRESS!
+        // Press LEFT SHIFT + R to clear your hard drive so you can test cleanly!
+        // ==========================================
+>>>>>>> Stashed changes
         if (Input.GetKeyDown(KeyCode.R) && Input.GetKey(KeyCode.LeftShift))
         {
             PlayerPrefs.DeleteAll();
@@ -26,6 +33,13 @@ public class TaskManager : MonoBehaviour
             UpdateTaskList();
             Debug.LogWarning("[TaskManager] ALL PROGRESS CLEARED FOR TESTING!");
         }
+<<<<<<< Updated upstream
+=======
+
+        // --- THE RUTHLESS ENFORCER ---
+        // If the panel is open, we force the images to stay on 60 times a second.
+        // Nothing in Unity can ever turn them off now!
+>>>>>>> Stashed changes
         if (tasksPanel != null && tasksPanel.activeInHierarchy)
         {
             UpdateTaskList();
@@ -36,9 +50,17 @@ public class TaskManager : MonoBehaviour
     {
         Debug.Log($"--- [TaskManager] SAVING TASK {taskID} AS COMPLETE! ---");
 
+<<<<<<< Updated upstream
         PlayerPrefs.SetInt("TaskCompleted_" + taskID, 1);
         PlayerPrefs.Save();
 
+=======
+        // 1. Force save it permanently to the hard drive
+        PlayerPrefs.SetInt("TaskCompleted_" + taskID, 1);
+        PlayerPrefs.Save();
+
+        // 2. Force the parent canvas to wake up
+>>>>>>> Stashed changes
         if (tasksPanel != null)
         {
             if (tasksPanel.transform.parent != null)
@@ -47,14 +69,28 @@ public class TaskManager : MonoBehaviour
             }
             tasksPanel.SetActive(true);
 
+<<<<<<< Updated upstream
+=======
+            // Safety catch: Ensures the panel isn't accidentally set to transparent
+>>>>>>> Stashed changes
             CanvasGroup cg = tasksPanel.GetComponent<CanvasGroup>();
             if (cg != null) cg.alpha = 1f;
         }
 
+<<<<<<< Updated upstream
         UpdateTaskList();
 
         gameObject.SetActive(true);
 
+=======
+        // 3. Update the UI right now
+        UpdateTaskList();
+
+        // 4. Force this game object to be active so the Coroutine can run
+        gameObject.SetActive(true);
+
+        // 5. Start the pop-up sequence!
+>>>>>>> Stashed changes
         StartCoroutine(ShowPanelSequence());
     }
 
@@ -66,8 +102,15 @@ public class TaskManager : MonoBehaviour
         {
             if (tickMarks[i] != null)
             {
+<<<<<<< Updated upstream
                 bool isComplete = (PlayerPrefs.GetInt("TaskCompleted_" + i, 0) == 1);
 
+=======
+                // Check the hard drive: Is it a 1?
+                bool isComplete = (PlayerPrefs.GetInt("TaskCompleted_" + i, 0) == 1);
+
+                // Force the GameObject to stay active!
+>>>>>>> Stashed changes
                 tickMarks[i].SetActive(isComplete);
             }
         }

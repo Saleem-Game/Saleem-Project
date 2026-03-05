@@ -84,6 +84,11 @@ public class DraggableItem : MonoBehaviour
 
             Debug.Log($"[DRAG] Dropped ON TARGET: {name}");
 
+<<<<<<< Updated upstream
+=======
+            // --- THE UNIVERSAL FIX ---
+            // This politely tells WHATEVER target we hit to trigger its NotifyDrop logic!
+>>>>>>> Stashed changes
             snapPoint.SendMessage("NotifyDrop", gameObject, SendMessageOptions.DontRequireReceiver);
         }
         else
