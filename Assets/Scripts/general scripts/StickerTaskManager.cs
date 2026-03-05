@@ -5,6 +5,10 @@ public class StickerTaskManager : MonoBehaviour
 {
     public static StickerTaskManager Instance;
 
+    [Header("Task Settings")]
+    [Tooltip("The ID of the sticker task in the Task Manager (should be 5 for the 6th checkbox)")]
+    public int taskID = 5; // <--- NEW: Now you can change this in the Inspector!
+
     [Header("The 6 Powerboxes")]
     public GameObject[] powerboxes;
 
@@ -36,7 +40,7 @@ public class StickerTaskManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 taskAlreadyCompleted = true;
-                Debug.Log(" Click detected! Closing board and starting Task 5...");
+                Debug.Log($" Click detected! Closing board and starting Task {taskID}...");
 
                 // Force close the sticker board visually
                 if (StickerBoard.Instance != null)
@@ -70,7 +74,8 @@ public class StickerTaskManager : MonoBehaviour
 
         if (taskManager != null)
         {
-            taskManager.CompleteTask(5);
+            // <--- NEW: Uses your Inspector variable instead of a hardcoded number!
+            taskManager.CompleteTask(taskID);
         }
     }
 }

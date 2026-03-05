@@ -1,12 +1,20 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Collider))]
-public class DraggableItem : MonoBehaviour
+public class DraggableItem2 : MonoBehaviour
 {
     [Header("Drag Settings")]
-    public LayerMask dragSurfaceMask;
-    public float followSpeed = 25f;
     public float returnSpeed = 20f;
+
+    [Tooltip("How much the item lifts towards the camera when picked up to prevent clipping")]
+    public float liftAmount = 1.5f;
+
+    [Header("Offset Customization")]
+    [Tooltip("If checked, the tool won't snap its center to your mouse. It will grab exactly where you clicked it.")]
+    public bool maintainClickOffset = true;
+
+    [Tooltip("Manually shift the item away from the cursor. Tweak these numbers for each tool! (X=Left/Right, Y=Up/Down)")]
+    [SerializeField] private Vector3 manualOffset = Vector3.zero;
 
     private Camera cam;
     private bool dragging;
@@ -14,10 +22,12 @@ public class DraggableItem : MonoBehaviour
 
     private Vector3 startPos;
     private Quaternion startRot;
-    private Vector3 grabOffset;
 
     private bool overTarget;
     private Transform snapPoint;
+
+    private Plane dragPlane;
+    private Vector3 autoClickOffset = Vector3.zero;
 
     void Start()
     {
@@ -38,7 +48,7 @@ public class DraggableItem : MonoBehaviour
             cam = Camera.main;
         }
 
-        if (returning)
+        if (returning && !dragging)
         {
             transform.position = Vector3.Lerp(transform.position, startPos, Time.deltaTime * returnSpeed);
             transform.rotation = Quaternion.Slerp(transform.rotation, startRot, Time.deltaTime * returnSpeed);
@@ -58,18 +68,37 @@ public class DraggableItem : MonoBehaviour
         dragging = true;
         returning = false;
 
-        if (RayToSurface(out Vector3 hit)) grabOffset = transform.position - hit;
-        else grabOffset = Vector3.zero;
+        if (cam != null)
+        {
+            // Creates the invisible dragging plane
+            Vector3 planePos = transform.position - (cam.transform.forward * liftAmount);
+            dragPlane = new Plane(-cam.transform.forward, planePos);
+
+            // Calculate the exact spot we clicked so it doesn't jump
+            if (maintainClickOffset)
+            {
+                Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+                if (dragPlane.Raycast(ray, out float distance))
+                {
+                    autoClickOffset = transform.position - ray.GetPoint(distance);
+                }
+            }
+            else
+            {
+                autoClickOffset = Vector3.zero;
+            }
+        }
     }
 
     void OnMouseDrag()
     {
         if (!dragging || cam == null) return;
 
-        if (RayToSurface(out Vector3 hit))
+        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        if (dragPlane.Raycast(ray, out float distance))
         {
-            Vector3 targetPos = hit + grabOffset;
-            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * followSpeed);
+            // Glues the object to the cursor, factoring in your manual tweaks and click position!
+            transform.position = ray.GetPoint(distance) + autoClickOffset + manualOffset;
         }
     }
 
@@ -81,11 +110,7 @@ public class DraggableItem : MonoBehaviour
         {
             transform.position = snapPoint.position;
             transform.rotation = snapPoint.rotation;
-
             Debug.Log($"[DRAG] Dropped ON TARGET: {name}");
-
-            // --- THE UNIVERSAL FIX ---
-            // This politely tells WHATEVER target we hit to trigger its NotifyDrop logic!
             snapPoint.SendMessage("NotifyDrop", gameObject, SendMessageOptions.DontRequireReceiver);
         }
         else
@@ -93,20 +118,6 @@ public class DraggableItem : MonoBehaviour
             returning = true;
             Debug.Log($"[DRAG] Dropped OUTSIDE -> Return {name}");
         }
-    }
-
-    bool RayToSurface(out Vector3 hitPoint)
-    {
-        hitPoint = default;
-        if (cam == null) return false;
-
-        Ray ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit, 200f, dragSurfaceMask))
-        {
-            hitPoint = hit.point;
-            return true;
-        }
-        return false;
     }
 
     public void SetOverTarget(bool isOver, Transform targetSnap)
