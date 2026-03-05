@@ -27,6 +27,9 @@ public class CafeteriaLevel : LevelController
     public GameObject wrongAnswerPanel;
     public int correctAnswerIndex = 0;
 
+    [Tooltip("Drag your NosebleedUIController here so we can show strikes!")]
+    public CafeteriaUIController uiController;
+
     [Header("Dialogue Audio")]
     public AudioSource nurseAudioSource;
     public AudioClip welcomeAudio;
@@ -35,7 +38,7 @@ public class CafeteriaLevel : LevelController
     public GameObject treatmentCamera;
     public GameObject medicalKit;
     public GameObject minigameUI;
-    public TreatmentSystem treatmentSystem;
+    public TreatmentSystem treatmentManager;
 
     [Header("Minigame Actors")]
     public GameObject injuredCharacter;
@@ -50,6 +53,9 @@ public class CafeteriaLevel : LevelController
     private bool nurseFollowing = false;
     private bool nurseSeated = false;
     private bool hasTalkedToNurse = false;
+
+    // Memory to carry our dialogue mistake over to the treatment phase!
+    private int currentMistakes = 0;
 
     void Awake()
     {
@@ -72,11 +78,11 @@ public class CafeteriaLevel : LevelController
     {
         if (isLevelActive) return;
         isLevelActive = true;
+        currentMistakes = 0;
         LockRoom();
 
         if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
 
-        // --- FIX: Only turn off the collider so the 3D chair stays visible! ---
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;
 
@@ -91,6 +97,7 @@ public class CafeteriaLevel : LevelController
         ResetActorPositions();
         TogglePlayer(true);
 
+        // Turn OFF the cross strictly when the cutscene ends
         if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
 
         StartCoroutine(StartTimerSequence());
@@ -174,6 +181,19 @@ public class CafeteriaLevel : LevelController
         if (rightAnswerPanel) rightAnswerPanel.SetActive(false);
         if (wrongAnswerPanel) wrongAnswerPanel.SetActive(false);
 
+        // --- NEW: Add a strike after 1 second if they got it wrong! ---
+        if (!isCorrect)
+        {
+            yield return new WaitForSeconds(1f);
+            currentMistakes++;
+
+            if (uiController != null)
+            {
+                uiController.ShowStrikes(true);
+                uiController.SetStrikes(currentMistakes);
+            }
+        }
+
         TogglePlayer(true);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
@@ -181,7 +201,6 @@ public class CafeteriaLevel : LevelController
         nurseFollowing = true;
         if (playerRoot != null && nurseAI != null) nurseAI.StartFollowing(playerRoot.transform);
 
-        // --- FIX: Turn the chair's collider back on so Saleem can click it! ---
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = true;
     }
@@ -195,12 +214,14 @@ public class CafeteriaLevel : LevelController
         isTimerRunning = false;
         if (timerUI) timerUI.SetActive(false);
 
-        // --- FIX: Turn the chair's collider back off so it isn't clickable anymore! ---
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;
 
         if (walkingNurseObj) walkingNurseObj.SetActive(false);
         if (sittingNurseObj) sittingNurseObj.SetActive(true);
+
+        // --- FIX: Activate injured character immediately while we wait for treatment! ---
+        if (injuredCharacter) injuredCharacter.SetActive(true);
 
         StartCoroutine(WaitBeforeTreatmentSequence());
     }
@@ -218,12 +239,10 @@ public class CafeteriaLevel : LevelController
         medicalKit.SetActive(true);
         minigameUI.SetActive(true);
 
-        if (injuredCharacter) injuredCharacter.SetActive(true);
-
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
 
-        if (treatmentSystem) treatmentSystem.StartMinigame();
+        if (treatmentManager != null) treatmentManager.StartMinigame(currentMistakes);
     }
 
     private void ShowFailScreen()
@@ -238,6 +257,42 @@ public class CafeteriaLevel : LevelController
     {
         ResetLevel();
         StartLevel();
+    }
+
+    // --- NEW: The Cinematic Reward sequence we perfected earlier! ---
+    public void CompleteWholeLevel(int rewardCoins)
+    {
+        StartCoroutine(DoneButtonSequence(rewardCoins));
+    }
+
+    private IEnumerator DoneButtonSequence(int rewardCoins)
+    {
+        // 1. Grant coins
+        CoinManager coinManager = UnityEngine.Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
+        if (coinManager != null) coinManager.AddCoins(rewardCoins);
+
+        // 2. Clear UI and snap camera back to Saleem
+        if (treatmentCamera) treatmentCamera.SetActive(false);
+        if (minigameUI) minigameUI.SetActive(false);
+        if (injuredCharacter) injuredCharacter.SetActive(false);
+
+        if (medicalKit)
+        {
+            MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
+            if (kitScript != null) kitScript.ResetKit();
+            medicalKit.SetActive(false);
+        }
+
+        ResetLevel(); // Wakes Saleem's UI up
+
+        // 3. Trigger the Task Panel 
+        yield return new WaitForSeconds(1f);
+
+        TaskManager taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
+        if (taskManager != null) taskManager.CompleteTask(taskID);
+
+        // 4. Officially mark level as done
+        MarkLevelComplete();
     }
 
     public override void ResetLevel()
@@ -257,39 +312,28 @@ public class CafeteriaLevel : LevelController
         if (wrongAnswerPanel) wrongAnswerPanel.SetActive(false);
         if (timerFailPanel) timerFailPanel.SetActive(false);
         if (treatmentCamera) treatmentCamera.SetActive(false);
-        if (medicalKit) medicalKit.SetActive(false);
+
+        if (medicalKit)
+        {
+            MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
+            if (kitScript != null) kitScript.ResetKit();
+            medicalKit.SetActive(false);
+        }
+
         if (minigameUI) minigameUI.SetActive(false);
 
         if (walkingNurseObj) walkingNurseObj.SetActive(true);
         if (sittingNurseObj) sittingNurseObj.SetActive(false);
         if (injuredCharacter) injuredCharacter.SetActive(false);
 
+        // --- NEW: Turn Blue Cross ON whether you win or lose! ---
         if (blueCrossTrigger) blueCrossTrigger.SetActive(true);
 
-        // --- FIX: Reset the chair's collider to off! ---
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;
 
         if (nurseAI) nurseAI.StopFollowing();
         TogglePlayer(true);
         UnlockRoom();
-    }
-
-    public void CompleteWholeLevel()
-    {
-        if (treatmentCamera) treatmentCamera.SetActive(false);
-        if (medicalKit) medicalKit.SetActive(false);
-        if (minigameUI) minigameUI.SetActive(false);
-
-        if (injuredCharacter) injuredCharacter.SetActive(false);
-
-        TogglePlayer(true);
-        Cursor.lockState = CursorLockMode.Locked;
-        Cursor.visible = false;
-
-        TaskManager taskManager = FindObjectOfType<TaskManager>();
-        if (taskManager != null) taskManager.CompleteTask(taskID);
-
-        MarkLevelComplete();
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
 
 public class TreatmentSystem : MonoBehaviour
 {
@@ -14,38 +15,62 @@ public class TreatmentSystem : MonoBehaviour
     public GameObject[] instructionCards;
 
     [Header("UI Panels")]
-    public GameObject winScreenPanel; // 3 Stars, 2 Stars, 1 Star
-    public GameObject failScreenPanel; // The "You Lost" screen with Continue/Retry
-    public GameObject strikesPanel; // The UI showing X's
-    public GameObject[] strikeXIcons; // Array of 3 Red X images
+    public GameObject winScreenPanel;
+    public GameObject failScreenPanel;
+    public GameObject strikesPanel;
+    public GameObject[] strikeXIcons;
+
+    [Header("Dynamic Rewards (NEW)")]
+    public int coinsFor3Stars = 20;
+    public int coinsFor2Stars = 15;
+    public int coinsFor1Star = 10;
+    private int calculatedReward = 0;
+    public TextMeshProUGUI winScreenRewardText;
+    public GameObject[] winStars = new GameObject[3];
+
+    [Header("Audio (Optional)")]
+    public AudioSource sfxSource;
+    public AudioClip correctClip;
+    public AudioClip wrongClip;
+    public AudioClip winClip;
 
     private int currentStep = 0;
     private int strikes = 0;
     private bool isGameActive = false;
 
-    public void StartMinigame()
+    public void StartMinigame(int startingStrikes)
     {
         firstAidKit3D.SetActive(true);
         currentStep = 0;
-        strikes = 0;
+        strikes = startingStrikes;
         isGameActive = true;
 
         winScreenPanel.SetActive(false);
         failScreenPanel.SetActive(false);
-        strikesPanel.SetActive(false);
 
-        foreach (var x in strikeXIcons) x.SetActive(false);
+        foreach (var x in strikeXIcons) if (x != null) x.SetActive(false);
 
         UpdateUI();
+
+        if (strikes > 0) UpdateStrikesUI();
+
+        if (strikes >= 3)
+        {
+            ShowCompleteFail();
+        }
     }
 
+    // --- FIXED: Renamed back to CheckToolDrop so your DraggableTool script can find it! ---
     public void CheckToolDrop(string droppedTag, GameObject toolObj)
     {
         if (!isGameActive) return;
 
-        if (droppedTag == correctToolTags[currentStep])
+        if (currentStep < correctToolTags.Count && droppedTag == correctToolTags[currentStep])
         {
+            // Correct Tool!
             toolObj.SetActive(false);
+            if (sfxSource && correctClip) sfxSource.PlayOneShot(correctClip);
+
             currentStep++;
 
             if (currentStep >= correctToolTags.Count)
@@ -59,8 +84,14 @@ public class TreatmentSystem : MonoBehaviour
         }
         else
         {
+            // Wrong Tool!
             strikes++;
+            if (sfxSource && wrongClip) sfxSource.PlayOneShot(wrongClip);
+
             UpdateStrikesUI();
+
+            // (Note: We don't need to force the tool to return here, because your DraggableTool.cs 
+            // already naturally snaps back to its start position on MouseUp!)
 
             if (strikes >= 3)
             {
@@ -82,7 +113,7 @@ public class TreatmentSystem : MonoBehaviour
         strikesPanel.SetActive(true);
         for (int i = 0; i < strikes; i++)
         {
-            if (i < strikeXIcons.Length) strikeXIcons[i].SetActive(true);
+            if (i < strikeXIcons.Length && strikeXIcons[i] != null) strikeXIcons[i].SetActive(true);
         }
     }
 
@@ -91,13 +122,33 @@ public class TreatmentSystem : MonoBehaviour
         isGameActive = false;
         firstAidKit3D.SetActive(false);
 
-        int stars = 3 - strikes;
-        if (stars < 1) stars = 1; // 2 strikes still gets 1 star
+        int starsEarned = 1;
+        if (strikes == 0)
+        {
+            starsEarned = 3;
+            calculatedReward = coinsFor3Stars;
+        }
+        else if (strikes == 1)
+        {
+            starsEarned = 2;
+            calculatedReward = coinsFor2Stars;
+        }
+        else
+        {
+            starsEarned = 1;
+            calculatedReward = coinsFor1Star;
+        }
+
+        if (winScreenRewardText) winScreenRewardText.text = calculatedReward.ToString();
+        if (sfxSource && winClip) sfxSource.PlayOneShot(winClip);
+
+        for (int i = 0; i < winStars.Length; i++)
+        {
+            if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
+        }
 
         winScreenPanel.SetActive(true);
-
-        // TODO: Call your specific script on winScreenPanel to display the right number of stars!
-        Debug.Log($"Passed Treatment with {stars} Stars!");
+        Debug.Log($"[TREATMENT] Passed with {starsEarned} Stars! Reward: {calculatedReward}");
     }
 
     void ShowCompleteFail()
@@ -108,26 +159,21 @@ public class TreatmentSystem : MonoBehaviour
         failScreenPanel.SetActive(true);
     }
 
-    // --- UI BUTTON HOOKS ---
-
-    // Button: Win Panel -> Done/Claim
     public void OnWinPanelClaimed()
     {
         winScreenPanel.SetActive(false);
-        levelManager.CompleteWholeLevel();
+        if (levelManager != null) levelManager.CompleteWholeLevel(calculatedReward);
     }
 
-    // Button: Fail Panel -> Try Again
     public void RetryTreatmentPhase()
     {
         failScreenPanel.SetActive(false);
-        StartMinigame(); // Restarts just the treatment part
+        if (levelManager != null) levelManager.ResetLevel();
     }
 
-    // Button: Fail Panel -> Continue (If you want them to skip failing)
     public void ContinueFromFail()
     {
         failScreenPanel.SetActive(false);
-        levelManager.CompleteWholeLevel();
+        if (levelManager != null) levelManager.ResetLevel();
     }
 }

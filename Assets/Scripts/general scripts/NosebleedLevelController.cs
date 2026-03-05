@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections; // Needed for the delay Coroutine
 
 public class NosebleedLevelController : LevelController
 {
@@ -91,8 +92,15 @@ public class NosebleedLevelController : LevelController
         }
     }
 
+    // --- UPDATED: Now triggers the cinematic Task Panel sequence! ---
     public void OnMinigameWin()
     {
+        StartCoroutine(DoneButtonSequence());
+    }
+
+    private IEnumerator DoneButtonSequence()
+    {
+        // 1. Instantly switch the cameras and hide the minigame stuff
         if (firstPersonCamera) firstPersonCamera.SetActive(false);
         if (minigameUI) minigameUI.SetActive(false);
         if (mainPlayerCamera) mainPlayerCamera.SetActive(true);
@@ -100,22 +108,30 @@ public class NosebleedLevelController : LevelController
         if (injuredStudent) injuredStudent.SetActive(false);
         if (whitePanel) whitePanel.SetActive(false);
 
-        // --- NEW: Pack the tools back into the box before hiding it! ---
         if (medicalKit)
         {
             MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
             if (kitScript != null) kitScript.ResetKit();
-
             medicalKit.SetActive(false);
         }
 
+        // 2. Turn Saleem's UI back on
         TogglePlayer(true);
 
-        //TaskManager taskManager = FindObjectOfType<TaskManager>();
-        //if (taskManager != null) taskManager.CompleteTask(taskID);
+        yield return new WaitForSeconds(0.1f);
 
+        // 3. THE MASSIVE FIX: The slashes are gone, so it actually saves to the hard drive now!
+        TaskManager taskManager = UnityEngine.Object.FindFirstObjectByType<TaskManager>(FindObjectsInactive.Include);
+        if (taskManager != null)
+        {
+            taskManager.CompleteTask(taskID);
+        }
+
+        // 4. Wait for the Task Panel animation to play out
+        yield return new WaitForSeconds(3f);
+
+        // 5. Unlock the doors
         MarkLevelComplete();
-
         isLevelActive = false;
     }
 
@@ -131,12 +147,10 @@ public class NosebleedLevelController : LevelController
         if (firstPersonCamera) firstPersonCamera.SetActive(false);
         if (whitePanel) whitePanel.SetActive(false);
 
-        // --- NEW: Pack the tools back into the box when the player fails/retries! ---
         if (medicalKit)
         {
             MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
             if (kitScript != null) kitScript.ResetKit();
-
             medicalKit.SetActive(false);
         }
 
