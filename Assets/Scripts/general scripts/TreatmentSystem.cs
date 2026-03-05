@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
@@ -13,6 +14,9 @@ public class TreatmentSystem : MonoBehaviour
     [Header("Steps")]
     public List<string> correctToolTags;
     public GameObject[] instructionCards;
+
+    [Tooltip("Drag your Voice-Over audio clips here in the exact same order as the instruction cards!")]
+    public AudioClip[] instructionVOs; // <--- NEW: Voice Overs!
 
     [Header("UI Panels")]
     public GameObject winScreenPanel;
@@ -38,6 +42,8 @@ public class TreatmentSystem : MonoBehaviour
     private int strikes = 0;
     private bool isGameActive = false;
 
+    private Coroutine strikeCoroutine;
+
     public void StartMinigame(int startingStrikes)
     {
         firstAidKit3D.SetActive(true);
@@ -47,9 +53,11 @@ public class TreatmentSystem : MonoBehaviour
 
         winScreenPanel.SetActive(false);
         failScreenPanel.SetActive(false);
+        strikesPanel.SetActive(false);
 
         foreach (var x in strikeXIcons) if (x != null) x.SetActive(false);
 
+        // This instantly triggers the first instruction card AND the first Voice-Over!
         UpdateUI();
 
         if (strikes > 0) UpdateStrikesUI();
@@ -60,14 +68,12 @@ public class TreatmentSystem : MonoBehaviour
         }
     }
 
-    // --- FIXED: Renamed back to CheckToolDrop so your DraggableTool script can find it! ---
     public void CheckToolDrop(string droppedTag, GameObject toolObj)
     {
         if (!isGameActive) return;
 
         if (currentStep < correctToolTags.Count && droppedTag == correctToolTags[currentStep])
         {
-            // Correct Tool!
             toolObj.SetActive(false);
             if (sfxSource && correctClip) sfxSource.PlayOneShot(correctClip);
 
@@ -79,19 +85,16 @@ public class TreatmentSystem : MonoBehaviour
             }
             else
             {
+                // Instantly shows the next card and plays the next Voice-Over!
                 UpdateUI();
             }
         }
         else
         {
-            // Wrong Tool!
             strikes++;
             if (sfxSource && wrongClip) sfxSource.PlayOneShot(wrongClip);
 
             UpdateStrikesUI();
-
-            // (Note: We don't need to force the tool to return here, because your DraggableTool.cs 
-            // already naturally snaps back to its start position on MouseUp!)
 
             if (strikes >= 3)
             {
@@ -102,18 +105,41 @@ public class TreatmentSystem : MonoBehaviour
 
     void UpdateUI()
     {
+        // 1. Show the correct text card
         for (int i = 0; i < instructionCards.Length; i++)
         {
             if (instructionCards[i]) instructionCards[i].SetActive(i == currentStep);
+        }
+
+        // 2. Play the corresponding Voice-Over!
+        if (instructionVOs != null && currentStep < instructionVOs.Length)
+        {
+            if (sfxSource != null && instructionVOs[currentStep] != null)
+            {
+                sfxSource.PlayOneShot(instructionVOs[currentStep]);
+            }
         }
     }
 
     void UpdateStrikesUI()
     {
-        strikesPanel.SetActive(true);
         for (int i = 0; i < strikes; i++)
         {
             if (i < strikeXIcons.Length && strikeXIcons[i] != null) strikeXIcons[i].SetActive(true);
+        }
+
+        if (strikeCoroutine != null) StopCoroutine(strikeCoroutine);
+        strikeCoroutine = StartCoroutine(ShowStrikesRoutine());
+    }
+
+    private IEnumerator ShowStrikesRoutine()
+    {
+        strikesPanel.SetActive(true);
+        yield return new WaitForSeconds(2f);
+
+        if (isGameActive)
+        {
+            strikesPanel.SetActive(false);
         }
     }
 
@@ -121,6 +147,7 @@ public class TreatmentSystem : MonoBehaviour
     {
         isGameActive = false;
         firstAidKit3D.SetActive(false);
+        strikesPanel.SetActive(false);
 
         int starsEarned = 1;
         if (strikes == 0)
@@ -148,7 +175,6 @@ public class TreatmentSystem : MonoBehaviour
         }
 
         winScreenPanel.SetActive(true);
-        Debug.Log($"[TREATMENT] Passed with {starsEarned} Stars! Reward: {calculatedReward}");
     }
 
     void ShowCompleteFail()
