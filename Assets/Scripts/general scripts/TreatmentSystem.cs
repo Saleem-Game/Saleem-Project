@@ -1,5 +1,7 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 public class TreatmentSystem : MonoBehaviour
 {
@@ -9,63 +11,95 @@ public class TreatmentSystem : MonoBehaviour
     public float dropDistance = 1.0f;
     public GameObject firstAidKit3D;
 
+    [Header("Healing Visuals (NEW)")]
+    [Tooltip("Drag the 3D Model object of the girl (or her arm) that has the Renderer component here!")]
+    public Renderer injuredCharacterRenderer;
+
+    [Tooltip("Drag your HEALED Texture here! (e.g., the skin with the Band-Aid drawn on it)")]
+    public Texture healedTexture;
+
+    private Texture originalTexture;
+
     [Header("Steps")]
     public List<string> correctToolTags;
     public GameObject[] instructionCards;
+    public AudioClip[] instructionVOs;
 
     [Header("UI Panels")]
-    public GameObject winScreenPanel; // 3 Stars, 2 Stars, 1 Star
-    public GameObject failScreenPanel; // The "You Lost" screen with Continue/Retry
-    public GameObject strikesPanel; // The UI showing X's
-    public GameObject[] strikeXIcons; // Array of 3 Red X images
+    public GameObject winScreenPanel;
+    public GameObject failScreenPanel;
+    public GameObject strikesPanel;
+    public GameObject[] strikeXIcons;
+
+    [Header("Dynamic Rewards")]
+    public int coinsFor3Stars = 20;
+    public int coinsFor2Stars = 15;
+    public int coinsFor1Star = 10;
+    private int calculatedReward = 0;
+    public TextMeshProUGUI winScreenRewardText;
+    public GameObject[] winStars = new GameObject[3];
+
+    [Header("Audio")]
+    public AudioSource sfxSource;
+    public AudioClip correctClip;
+    public AudioClip wrongClip;
+    public AudioClip winClip;
 
     private int currentStep = 0;
     private int strikes = 0;
     private bool isGameActive = false;
+    private Coroutine strikeCoroutine;
 
-    public void StartMinigame()
+    void Awake()
     {
+        if (injuredCharacterRenderer != null)
+        {
+            originalTexture = injuredCharacterRenderer.material.GetTexture("_BaseMap");
+            if (originalTexture == null) originalTexture = injuredCharacterRenderer.material.mainTexture;
+        }
+    }
+
+    public void StartMinigame(int startingStrikes)
+    {
+        ResetAllTools();
+
         firstAidKit3D.SetActive(true);
         currentStep = 0;
-        strikes = 0;
+        strikes = startingStrikes;
         isGameActive = true;
 
         winScreenPanel.SetActive(false);
         failScreenPanel.SetActive(false);
         strikesPanel.SetActive(false);
 
-        foreach (var x in strikeXIcons) x.SetActive(false);
+        foreach (var x in strikeXIcons) if (x != null) x.SetActive(false);
 
         UpdateUI();
+
+        if (strikes > 0) UpdateStrikesUI();
+        if (strikes >= 3) ShowCompleteFail();
     }
 
     public void CheckToolDrop(string droppedTag, GameObject toolObj)
     {
         if (!isGameActive) return;
 
-        if (droppedTag == correctToolTags[currentStep])
+        if (currentStep < correctToolTags.Count && droppedTag == correctToolTags[currentStep])
         {
             toolObj.SetActive(false);
+            if (sfxSource && correctClip) sfxSource.PlayOneShot(correctClip);
+
             currentStep++;
 
-            if (currentStep >= correctToolTags.Count)
-            {
-                DetermineWinState();
-            }
-            else
-            {
-                UpdateUI();
-            }
+            if (currentStep >= correctToolTags.Count) DetermineWinState();
+            else UpdateUI();
         }
         else
         {
             strikes++;
+            if (sfxSource && wrongClip) sfxSource.PlayOneShot(wrongClip);
             UpdateStrikesUI();
-
-            if (strikes >= 3)
-            {
-                ShowCompleteFail();
-            }
+            if (strikes >= 3) ShowCompleteFail();
         }
     }
 
@@ -73,61 +107,158 @@ public class TreatmentSystem : MonoBehaviour
     {
         for (int i = 0; i < instructionCards.Length; i++)
         {
-            if (instructionCards[i]) instructionCards[i].SetActive(i == currentStep);
+            if (instructionCards[i] != null)
+            {
+                if (instructionCards[i].transform.parent != null)
+                    instructionCards[i].transform.parent.gameObject.SetActive(true);
+
+                instructionCards[i].SetActive(i == currentStep);
+            }
+        }
+
+        if (instructionVOs != null && currentStep < instructionVOs.Length)
+        {
+            if (sfxSource != null && instructionVOs[currentStep] != null)
+            {
+                sfxSource.Stop();
+                sfxSource.PlayOneShot(instructionVOs[currentStep]);
+            }
+        }
+    }
+
+    void HideAllInstructions()
+    {
+        for (int i = 0; i < instructionCards.Length; i++)
+        {
+            if (instructionCards[i] != null)
+            {
+                instructionCards[i].SetActive(false);
+                if (instructionCards[i].transform.parent != null)
+                    instructionCards[i].transform.parent.gameObject.SetActive(false);
+            }
         }
     }
 
     void UpdateStrikesUI()
     {
-        strikesPanel.SetActive(true);
         for (int i = 0; i < strikes; i++)
         {
-            if (i < strikeXIcons.Length) strikeXIcons[i].SetActive(true);
+            if (i < strikeXIcons.Length && strikeXIcons[i] != null) strikeXIcons[i].SetActive(true);
         }
+
+        if (strikeCoroutine != null) StopCoroutine(strikeCoroutine);
+        strikeCoroutine = StartCoroutine(ShowStrikesRoutine());
+    }
+
+    private IEnumerator ShowStrikesRoutine()
+    {
+        strikesPanel.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        if (isGameActive) strikesPanel.SetActive(false);
     }
 
     void DetermineWinState()
     {
         isGameActive = false;
-        firstAidKit3D.SetActive(false);
+        HideAllInstructions();
+        strikesPanel.SetActive(false);
 
-        int stars = 3 - strikes;
-        if (stars < 1) stars = 1; // 2 strikes still gets 1 star
+        // --- NEW: APPLIES THE HEALED TEXTURE ---
+        if (injuredCharacterRenderer != null && healedTexture != null)
+        {
+            injuredCharacterRenderer.material.SetTexture("_BaseMap", healedTexture); // URP
+            injuredCharacterRenderer.material.mainTexture = healedTexture;         // Standard
+        }
 
-        winScreenPanel.SetActive(true);
+        int starsEarned = 1;
+        if (strikes == 0) { starsEarned = 3; calculatedReward = coinsFor3Stars; }
+        else if (strikes == 1) { starsEarned = 2; calculatedReward = coinsFor2Stars; }
+        else { starsEarned = 1; calculatedReward = coinsFor1Star; }
 
-        // TODO: Call your specific script on winScreenPanel to display the right number of stars!
-        Debug.Log($"Passed Treatment with {stars} Stars!");
+        if (winScreenRewardText) winScreenRewardText.text = calculatedReward.ToString();
+
+        if (sfxSource != null)
+        {
+            sfxSource.Stop();
+            if (winClip) sfxSource.PlayOneShot(winClip);
+        }
+
+        for (int i = 0; i < winStars.Length; i++)
+        {
+            if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
+        }
+
+        if (winScreenPanel != null)
+        {
+            if (winScreenPanel.transform.parent != null)
+                winScreenPanel.transform.parent.gameObject.SetActive(true);
+
+            winScreenPanel.SetActive(true);
+        }
     }
 
     void ShowCompleteFail()
     {
         isGameActive = false;
-        firstAidKit3D.SetActive(false);
+        HideAllInstructions();
         strikesPanel.SetActive(false);
-        failScreenPanel.SetActive(true);
+        if (sfxSource != null) sfxSource.Stop();
+
+        if (failScreenPanel != null)
+        {
+            if (failScreenPanel.transform.parent != null)
+                failScreenPanel.transform.parent.gameObject.SetActive(true);
+
+            failScreenPanel.SetActive(true);
+        }
     }
 
-    // --- UI BUTTON HOOKS ---
+    public void ResetAllTools()
+    {
+        // --- NEW: REVERTS THE TEXTURE BACK TO INJURED ---
+        if (injuredCharacterRenderer != null && originalTexture != null)
+        {
+            injuredCharacterRenderer.material.SetTexture("_BaseMap", originalTexture);
+            injuredCharacterRenderer.material.mainTexture = originalTexture;
+        }
 
-    // Button: Win Panel -> Done/Claim
+        if (firstAidKit3D == null) return;
+        DraggableItem2[] allTools = firstAidKit3D.GetComponentsInChildren<DraggableItem2>(true);
+        foreach (DraggableItem2 tool in allTools)
+        {
+            tool.ResetToBox();
+            tool.gameObject.SetActive(true);
+        }
+    }
+
     public void OnWinPanelClaimed()
     {
-        winScreenPanel.SetActive(false);
-        levelManager.CompleteWholeLevel();
+        if (winScreenPanel != null)
+        {
+            winScreenPanel.SetActive(false);
+            if (winScreenPanel.transform.parent != null) winScreenPanel.transform.parent.gameObject.SetActive(false);
+        }
+
+        if (levelManager != null) levelManager.CompleteWholeLevel(calculatedReward);
     }
 
-    // Button: Fail Panel -> Try Again
     public void RetryTreatmentPhase()
     {
-        failScreenPanel.SetActive(false);
-        StartMinigame(); // Restarts just the treatment part
+        if (failScreenPanel != null)
+        {
+            failScreenPanel.SetActive(false);
+            if (failScreenPanel.transform.parent != null) failScreenPanel.transform.parent.gameObject.SetActive(false);
+        }
+        if (levelManager != null) levelManager.ResetLevel();
     }
 
-    // Button: Fail Panel -> Continue (If you want them to skip failing)
     public void ContinueFromFail()
     {
-        failScreenPanel.SetActive(false);
-        levelManager.CompleteWholeLevel();
+        if (failScreenPanel != null)
+        {
+            failScreenPanel.SetActive(false);
+            if (failScreenPanel.transform.parent != null) failScreenPanel.transform.parent.gameObject.SetActive(false);
+        }
+        if (levelManager != null) levelManager.ResetLevel();
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 public class DraggableItem : MonoBehaviour
 {
     [Header("Drag Settings")]
-    public LayerMask dragSurfaceMask;   // Layer for the Surface (Desk / Ground)
+    public LayerMask dragSurfaceMask;
     public float followSpeed = 25f;
     public float returnSpeed = 20f;
 
@@ -21,9 +21,7 @@ public class DraggableItem : MonoBehaviour
 
     void Start()
     {
-        // Cache the camera once, or Update will handle the switch
         cam = Camera.main;
-        // IMPORTANT: Cache the start position ONLY at the start, not every frame
         CacheInitialTransform();
     }
 
@@ -35,26 +33,15 @@ public class DraggableItem : MonoBehaviour
 
     void Update()
     {
-        // 1. Ensure 'cam' always points to the currently active camera (LevelCam)
         if (cam == null || !cam.isActiveAndEnabled)
         {
             cam = Camera.main;
         }
 
-        // 2. Handle the returning logic
         if (returning)
         {
-            transform.position = Vector3.Lerp(
-                transform.position,
-                startPos,
-                Time.deltaTime * returnSpeed
-            );
-
-            transform.rotation = Quaternion.Slerp(
-                transform.rotation,
-                startRot,
-                Time.deltaTime * returnSpeed
-            );
+            transform.position = Vector3.Lerp(transform.position, startPos, Time.deltaTime * returnSpeed);
+            transform.rotation = Quaternion.Slerp(transform.rotation, startRot, Time.deltaTime * returnSpeed);
 
             if (Vector3.Distance(transform.position, startPos) < 0.01f)
             {
@@ -67,18 +54,12 @@ public class DraggableItem : MonoBehaviour
 
     void OnMouseDown()
     {
-        // If we want to grab it from where it currently is in the kit
         CacheInitialTransform();
-
         dragging = true;
         returning = false;
 
-        if (RayToSurface(out Vector3 hit))
-            grabOffset = transform.position - hit;
-        else
-            grabOffset = Vector3.zero;
-
-        Debug.Log($"[DRAG] Grab {name}");
+        if (RayToSurface(out Vector3 hit)) grabOffset = transform.position - hit;
+        else grabOffset = Vector3.zero;
     }
 
     void OnMouseDrag()
@@ -88,11 +69,7 @@ public class DraggableItem : MonoBehaviour
         if (RayToSurface(out Vector3 hit))
         {
             Vector3 targetPos = hit + grabOffset;
-            transform.position = Vector3.Lerp(
-                transform.position,
-                targetPos,
-                Time.deltaTime * followSpeed
-            );
+            transform.position = Vector3.Lerp(transform.position, targetPos, Time.deltaTime * followSpeed);
         }
     }
 
@@ -107,9 +84,7 @@ public class DraggableItem : MonoBehaviour
 
             Debug.Log($"[DRAG] Dropped ON TARGET: {name}");
 
-            HeadTargetTrigger target = FindObjectOfType<HeadTargetTrigger>();
-            if (target != null)
-                target.NotifyDrop(gameObject);
+            snapPoint.SendMessage("NotifyDrop", gameObject, SendMessageOptions.DontRequireReceiver);
         }
         else
         {
@@ -142,6 +117,5 @@ public class DraggableItem : MonoBehaviour
     {
         dragging = false;
         returning = true;
-        Debug.Log($"[DRAG] ForceReturn {name}");
     }
 }

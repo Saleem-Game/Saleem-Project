@@ -65,4 +65,25 @@ public class CoinManager : MonoBehaviour
             scoreText.text = _currentScore.ToString();
         }
     }
+
+    public int GetCoins()
+    {
+        return _currentScore;
+    }
+
+    public bool SpendCoins(int amount)
+    {
+        if (_currentScore >= amount)
+        {
+            _currentScore -= amount;
+
+            PlayerPrefs.SetInt("SavedCoins", _currentScore);
+            PlayerPrefs.Save();
+
+            UpdateScoreUI();
+            return true;
+        }
+
+        return false;
+    }
 }

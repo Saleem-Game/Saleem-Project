@@ -1,22 +1,43 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using TMPro; // Use this if you are using TextMeshPro
 
 public class ConfirmationPopup : MonoBehaviour
 {
-    public Image popupImageDisplay; // The Image component in the popup
+    public Image displayImage;        // confirmation popup preview
+    public Image successDisplayImage; // bought panel preview image
+    public GameObject successPanel;
 
-    public void OpenPopup(Sprite selectedSprite)
+    private ShopItem pendingItem;
+
+    public void OpenPopup(ShopItem item)
     {
-        // 1. Set the sprite to match the one clicked
-        popupImageDisplay.sprite = selectedSprite;
-
-        // 3. Show the panel
+        pendingItem = item;
+        displayImage.sprite = item.previewSprite;
         gameObject.SetActive(true);
     }
 
-    public void ClosePopup()
+    public void OnYesPressed()
     {
-        gameObject.SetActive(false);
+        if (pendingItem != null)
+        {
+            pendingItem.CompletePurchase();
+
+            // Show correct sprite in success panel too
+            if (successDisplayImage != null && pendingItem.previewSprite != null)
+                successDisplayImage.sprite = pendingItem.previewSprite;
+
+            GetComponentInParent<UIPanelController>().Close();
+            successPanel.SetActive(true);
+        }
+    }
+
+    public void OnNoPressed()
+    {
+        GetComponentInParent<UIPanelController>().Close();
+    }
+
+    public void OnSuccessPanelClose()
+    {
+        successPanel.SetActive(false);
     }
 }
