@@ -19,7 +19,7 @@ public class circleminimap : MonoBehaviour
 
     void Reset()
     {
-      player=GameObject.FindGameObjectWithTag("Player").GetComponent<RectTransform>();
+      player=GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     void Update()
