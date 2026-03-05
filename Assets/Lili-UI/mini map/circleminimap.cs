@@ -17,6 +17,11 @@ public class circleminimap : MonoBehaviour
     [Range(0, 1)] public float paddingTop = 0.2f;
     [Range(0, 1)] public float paddingBottom = 0.1f;
 
+    void Reset()
+    {
+      player=GameObject.FindGameObjectWithTag("Player").GetComponent<RectTransform>();
+    }
+
     void Update()
     {
         // 1. Get the percentage position of Saleem in the world
