@@ -31,11 +31,6 @@ public class CafeteriaLevel : LevelController
     public float timeLimit = 80f;
     public GameObject timerFailPanel;
 
-    [Header("Nurse Swapping")]
-    public GameObject walkingNurseObj;
-    public GameObject sittingNurseObj;
-    public NurseAI nurseAI;
-
     [Header("Dialogue UI & Feedback")]
     public GameObject dialoguePanel;
     public GameObject rightAnswerPanel;

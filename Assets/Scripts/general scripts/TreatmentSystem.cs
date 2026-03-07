@@ -23,10 +23,6 @@ public class TreatmentSystem : MonoBehaviour
     [Header("Steps")]
     public List<string> correctToolTags;
     public GameObject[] instructionCards;
-    public AudioClip[] instructionVOs;
-
-    [Tooltip("Drag your Voice-Over audio clips here in the exact same order as the instruction cards!")]
-    public AudioClip[] instructionVOs; // <--- NEW: Voice Overs!
 
     [Tooltip("Drag your Voice-Over audio clips here in the exact same order as the instruction cards!")]
     public AudioClip[] instructionVOs; // <--- NEW: Voice Overs!
