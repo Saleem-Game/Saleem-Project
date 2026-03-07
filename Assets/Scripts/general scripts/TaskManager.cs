@@ -18,6 +18,7 @@ public class TaskManager : MonoBehaviour
 
     void Update()
     {
+
         // ==========================================
         // DEV CHEAT: ERASES ALL PROGRESS!
         // Press LEFT SHIFT + R to clear your hard drive so you can test cleanly!
@@ -43,11 +44,9 @@ public class TaskManager : MonoBehaviour
     {
         Debug.Log($"--- [TaskManager] SAVING TASK {taskID} AS COMPLETE! ---");
 
-        // 1. Force save it permanently to the hard drive
         PlayerPrefs.SetInt("TaskCompleted_" + taskID, 1);
         PlayerPrefs.Save();
 
-        // 2. Force the parent canvas to wake up
         if (tasksPanel != null)
         {
             if (tasksPanel.transform.parent != null)
@@ -56,10 +55,13 @@ public class TaskManager : MonoBehaviour
             }
             tasksPanel.SetActive(true);
 
-            // Safety catch: Ensures the panel isn't accidentally set to transparent
             CanvasGroup cg = tasksPanel.GetComponent<CanvasGroup>();
             if (cg != null) cg.alpha = 1f;
         }
+
+        UpdateTaskList();
+
+        gameObject.SetActive(true);
 
         // 3. Update the UI right now
         UpdateTaskList();

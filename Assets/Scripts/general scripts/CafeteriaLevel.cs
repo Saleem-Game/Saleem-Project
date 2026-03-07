@@ -2,11 +2,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
+using UnityEngine.AI;
 
 public class CafeteriaLevel : LevelController
 {
+    [Header("Level Start Trigger & Visuals")]
+    [Tooltip("Drag the invisible box collider that you interact with here.")]
+    public GameObject levelStartTrigger;
+
+    [Tooltip("Drag the actual 3D Visual Blue Cross object here so it hides during gameplay!")]
+    public GameObject visualBlueCross; // <--- NEW FIX!
+
+    [Header("Nurse AI & Reset")]
+    public GameObject walkingNurseObj;
+    public GameObject sittingNurseObj;
+    public NurseAI nurseAI;
+
+    [Tooltip("Create an Empty GameObject where the nurse starts in her clinic. Drag it here!")]
+    public Transform nurseStartingPosition;
+
     [Header("Cafeteria Triggers")]
-    public GameObject blueCrossTrigger;
     public GameObject nurseInteractTrigger;
     public GameObject seatInteractTrigger;
 
@@ -38,7 +53,7 @@ public class CafeteriaLevel : LevelController
     [Header("Treatment Phase")]
     public GameObject treatmentCamera;
     public GameObject medicalKit;
-    public TreatmentSystem treatmentManager; // minigameUI removed!
+    public TreatmentSystem treatmentManager;
 
     [Header("Minigame Actors")]
     public GameObject injuredCharacter;
@@ -80,7 +95,9 @@ public class CafeteriaLevel : LevelController
         currentMistakes = 0;
         LockRoom();
 
-        if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
+        // Turns off both the trigger AND the visual cross instantly
+        if (levelStartTrigger) levelStartTrigger.SetActive(false);
+        if (visualBlueCross) visualBlueCross.SetActive(false);
 
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;
@@ -96,7 +113,8 @@ public class CafeteriaLevel : LevelController
         ResetActorPositions();
         TogglePlayer(true);
 
-        if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
+        if (levelStartTrigger) levelStartTrigger.SetActive(false);
+        if (visualBlueCross) visualBlueCross.SetActive(false);
 
         StartCoroutine(StartTimerSequence());
     }
@@ -231,13 +249,18 @@ public class CafeteriaLevel : LevelController
 
     private IEnumerator WaitBeforeTreatmentSequence()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(2f);
         StartTreatmentPhase();
     }
 
     private void StartTreatmentPhase()
     {
         TogglePlayer(false);
+
+        if (walkingNurseObj) walkingNurseObj.SetActive(false);
+        if (sittingNurseObj) sittingNurseObj.SetActive(true);
+        if (injuredCharacter) injuredCharacter.SetActive(true);
+
         treatmentCamera.SetActive(true);
         medicalKit.SetActive(true);
 
@@ -252,11 +275,20 @@ public class CafeteriaLevel : LevelController
         TogglePlayer(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-        if (timerFailPanel) timerFailPanel.SetActive(true);
+        if (timerFailPanel)
+        {
+            if (timerFailPanel.transform.parent != null) timerFailPanel.transform.parent.gameObject.SetActive(true);
+            timerFailPanel.SetActive(true);
+        }
     }
 
     public void RetryTimerPhase()
     {
+        if (timerFailPanel)
+        {
+            timerFailPanel.SetActive(false);
+            if (timerFailPanel.transform.parent != null) timerFailPanel.transform.parent.gameObject.SetActive(false);
+        }
         ResetLevel();
         StartLevel();
     }
@@ -273,6 +305,8 @@ public class CafeteriaLevel : LevelController
 
         if (treatmentCamera) treatmentCamera.SetActive(false);
         if (injuredCharacter) injuredCharacter.SetActive(false);
+
+        if (treatmentManager != null) treatmentManager.ResetAllTools();
 
         if (medicalKit)
         {
@@ -311,6 +345,8 @@ public class CafeteriaLevel : LevelController
 
         if (dialogueStrikePanel != null) dialogueStrikePanel.SetActive(false);
 
+        if (treatmentManager != null) treatmentManager.ResetAllTools();
+
         if (medicalKit)
         {
             MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
@@ -318,11 +354,21 @@ public class CafeteriaLevel : LevelController
             medicalKit.SetActive(false);
         }
 
+        if (walkingNurseObj != null && nurseStartingPosition != null)
+        {
+            NavMeshAgent agent = walkingNurseObj.GetComponent<NavMeshAgent>();
+            if (agent != null) agent.Warp(nurseStartingPosition.position);
+
+            walkingNurseObj.transform.position = nurseStartingPosition.position;
+            walkingNurseObj.transform.rotation = nurseStartingPosition.rotation;
+        }
+
         if (walkingNurseObj) walkingNurseObj.SetActive(true);
         if (sittingNurseObj) sittingNurseObj.SetActive(false);
         if (injuredCharacter) injuredCharacter.SetActive(false);
 
-        if (blueCrossTrigger) blueCrossTrigger.SetActive(true);
+        if (levelStartTrigger) levelStartTrigger.SetActive(true);
+        if (visualBlueCross) visualBlueCross.SetActive(true);
 
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;

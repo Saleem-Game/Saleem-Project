@@ -11,9 +11,22 @@ public class TreatmentSystem : MonoBehaviour
     public float dropDistance = 1.0f;
     public GameObject firstAidKit3D;
 
+    [Header("Healing Visuals (NEW)")]
+    [Tooltip("Drag the 3D Model object of the girl (or her arm) that has the Renderer component here!")]
+    public Renderer injuredCharacterRenderer;
+
+    [Tooltip("Drag your HEALED Texture here! (e.g., the skin with the Band-Aid drawn on it)")]
+    public Texture healedTexture;
+
+    private Texture originalTexture;
+
     [Header("Steps")]
     public List<string> correctToolTags;
     public GameObject[] instructionCards;
+    public AudioClip[] instructionVOs;
+
+    [Tooltip("Drag your Voice-Over audio clips here in the exact same order as the instruction cards!")]
+    public AudioClip[] instructionVOs; // <--- NEW: Voice Overs!
 
     [Tooltip("Drag your Voice-Over audio clips here in the exact same order as the instruction cards!")]
     public AudioClip[] instructionVOs; // <--- NEW: Voice Overs!
@@ -24,7 +37,7 @@ public class TreatmentSystem : MonoBehaviour
     public GameObject strikesPanel;
     public GameObject[] strikeXIcons;
 
-    [Header("Dynamic Rewards (NEW)")]
+    [Header("Dynamic Rewards")]
     public int coinsFor3Stars = 20;
     public int coinsFor2Stars = 15;
     public int coinsFor1Star = 10;
@@ -32,7 +45,7 @@ public class TreatmentSystem : MonoBehaviour
     public TextMeshProUGUI winScreenRewardText;
     public GameObject[] winStars = new GameObject[3];
 
-    [Header("Audio (Optional)")]
+    [Header("Audio")]
     public AudioSource sfxSource;
     public AudioClip correctClip;
     public AudioClip wrongClip;
@@ -41,11 +54,21 @@ public class TreatmentSystem : MonoBehaviour
     private int currentStep = 0;
     private int strikes = 0;
     private bool isGameActive = false;
-
     private Coroutine strikeCoroutine;
+
+    void Awake()
+    {
+        if (injuredCharacterRenderer != null)
+        {
+            originalTexture = injuredCharacterRenderer.material.GetTexture("_BaseMap");
+            if (originalTexture == null) originalTexture = injuredCharacterRenderer.material.mainTexture;
+        }
+    }
 
     public void StartMinigame(int startingStrikes)
     {
+        ResetAllTools();
+
         firstAidKit3D.SetActive(true);
         currentStep = 0;
         strikes = startingStrikes;
@@ -61,6 +84,7 @@ public class TreatmentSystem : MonoBehaviour
         UpdateUI();
 
         if (strikes > 0) UpdateStrikesUI();
+        if (strikes >= 3) ShowCompleteFail();
 
         if (strikes >= 3)
         {
@@ -79,27 +103,15 @@ public class TreatmentSystem : MonoBehaviour
 
             currentStep++;
 
-            if (currentStep >= correctToolTags.Count)
-            {
-                DetermineWinState();
-            }
-            else
-            {
-                // Instantly shows the next card and plays the next Voice-Over!
-                UpdateUI();
-            }
+            if (currentStep >= correctToolTags.Count) DetermineWinState();
+            else UpdateUI();
         }
         else
         {
             strikes++;
             if (sfxSource && wrongClip) sfxSource.PlayOneShot(wrongClip);
-
             UpdateStrikesUI();
-
-            if (strikes >= 3)
-            {
-                ShowCompleteFail();
-            }
+            if (strikes >= 3) ShowCompleteFail();
         }
     }
 
@@ -108,7 +120,45 @@ public class TreatmentSystem : MonoBehaviour
         // 1. Show the correct text card
         for (int i = 0; i < instructionCards.Length; i++)
         {
-            if (instructionCards[i]) instructionCards[i].SetActive(i == currentStep);
+            if (instructionCards[i] != null)
+            {
+                if (instructionCards[i].transform.parent != null)
+                    instructionCards[i].transform.parent.gameObject.SetActive(true);
+
+                instructionCards[i].SetActive(i == currentStep);
+            }
+        }
+
+        if (instructionVOs != null && currentStep < instructionVOs.Length)
+        {
+            if (sfxSource != null && instructionVOs[currentStep] != null)
+            {
+                sfxSource.Stop();
+                sfxSource.PlayOneShot(instructionVOs[currentStep]);
+            }
+        }
+    }
+
+    void HideAllInstructions()
+    {
+        // 1. Show the correct text card
+        for (int i = 0; i < instructionCards.Length; i++)
+        {
+            if (instructionCards[i] != null)
+            {
+                instructionCards[i].SetActive(false);
+                if (instructionCards[i].transform.parent != null)
+                    instructionCards[i].transform.parent.gameObject.SetActive(false);
+            }
+        }
+
+        // 2. Play the corresponding Voice-Over!
+        if (instructionVOs != null && currentStep < instructionVOs.Length)
+        {
+            if (sfxSource != null && instructionVOs[currentStep] != null)
+            {
+                sfxSource.PlayOneShot(instructionVOs[currentStep]);
+            }
         }
 
         // 2. Play the corresponding Voice-Over!
@@ -141,28 +191,64 @@ public class TreatmentSystem : MonoBehaviour
         {
             strikesPanel.SetActive(false);
         }
+
+        if (strikeCoroutine != null) StopCoroutine(strikeCoroutine);
+        strikeCoroutine = StartCoroutine(ShowStrikesRoutine());
     }
 
     void DetermineWinState()
     {
         isGameActive = false;
-        firstAidKit3D.SetActive(false);
+        HideAllInstructions();
         strikesPanel.SetActive(false);
 
+        // --- NEW: APPLIES THE HEALED TEXTURE ---
+        if (injuredCharacterRenderer != null && healedTexture != null)
+        {
+            injuredCharacterRenderer.material.SetTexture("_BaseMap", healedTexture); // URP
+            injuredCharacterRenderer.material.mainTexture = healedTexture;         // Standard
+        }
+
         int starsEarned = 1;
+        if (strikes == 0) { starsEarned = 3; calculatedReward = coinsFor3Stars; }
+        else if (strikes == 1) { starsEarned = 2; calculatedReward = coinsFor2Stars; }
+        else { starsEarned = 1; calculatedReward = coinsFor1Star; }
+
+        if (winScreenRewardText) winScreenRewardText.text = calculatedReward.ToString();
+
+        if (sfxSource != null)
+        {
+            sfxSource.Stop();
+            if (winClip) sfxSource.PlayOneShot(winClip);
+        }
+
+        for (int i = 0; i < winStars.Length; i++)
+        {
+            if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
+        }
+
+        if (winScreenPanel != null)
+        {
+            if (winScreenPanel.transform.parent != null)
+                winScreenPanel.transform.parent.gameObject.SetActive(true);
+
+            winScreenPanel.SetActive(true);
+        }
+
+        int starsEarned2 = 1;
         if (strikes == 0)
         {
-            starsEarned = 3;
+            starsEarned2 = 3;
             calculatedReward = coinsFor3Stars;
         }
         else if (strikes == 1)
         {
-            starsEarned = 2;
+            starsEarned2 = 2;
             calculatedReward = coinsFor2Stars;
         }
         else
         {
-            starsEarned = 1;
+            starsEarned2 = 1;
             calculatedReward = coinsFor1Star;
         }
 
@@ -171,7 +257,7 @@ public class TreatmentSystem : MonoBehaviour
 
         for (int i = 0; i < winStars.Length; i++)
         {
-            if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
+            if (winStars[i] != null) winStars[i].SetActive(i < starsEarned2);
         }
 
         winScreenPanel.SetActive(true);
@@ -180,26 +266,65 @@ public class TreatmentSystem : MonoBehaviour
     void ShowCompleteFail()
     {
         isGameActive = false;
-        firstAidKit3D.SetActive(false);
+        HideAllInstructions();
         strikesPanel.SetActive(false);
-        failScreenPanel.SetActive(true);
+        if (sfxSource != null) sfxSource.Stop();
+
+        if (failScreenPanel != null)
+        {
+            if (failScreenPanel.transform.parent != null)
+                failScreenPanel.transform.parent.gameObject.SetActive(true);
+
+            failScreenPanel.SetActive(true);
+        }
+    }
+
+    public void ResetAllTools()
+    {
+        // --- NEW: REVERTS THE TEXTURE BACK TO INJURED ---
+        if (injuredCharacterRenderer != null && originalTexture != null)
+        {
+            injuredCharacterRenderer.material.SetTexture("_BaseMap", originalTexture);
+            injuredCharacterRenderer.material.mainTexture = originalTexture;
+        }
+
+        if (firstAidKit3D == null) return;
+        DraggableItem2[] allTools = firstAidKit3D.GetComponentsInChildren<DraggableItem2>(true);
+        foreach (DraggableItem2 tool in allTools)
+        {
+            tool.ResetToBox();
+            tool.gameObject.SetActive(true);
+        }
     }
 
     public void OnWinPanelClaimed()
     {
-        winScreenPanel.SetActive(false);
+        if (winScreenPanel != null)
+        {
+            winScreenPanel.SetActive(false);
+            if (winScreenPanel.transform.parent != null) winScreenPanel.transform.parent.gameObject.SetActive(false);
+        }
+
         if (levelManager != null) levelManager.CompleteWholeLevel(calculatedReward);
     }
 
     public void RetryTreatmentPhase()
     {
-        failScreenPanel.SetActive(false);
+        if (failScreenPanel != null)
+        {
+            failScreenPanel.SetActive(false);
+            if (failScreenPanel.transform.parent != null) failScreenPanel.transform.parent.gameObject.SetActive(false);
+        }
         if (levelManager != null) levelManager.ResetLevel();
     }
 
     public void ContinueFromFail()
     {
-        failScreenPanel.SetActive(false);
+        if (failScreenPanel != null)
+        {
+            failScreenPanel.SetActive(false);
+            if (failScreenPanel.transform.parent != null) failScreenPanel.transform.parent.gameObject.SetActive(false);
+        }
         if (levelManager != null) levelManager.ResetLevel();
     }
 }
