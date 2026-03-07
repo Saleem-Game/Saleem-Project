@@ -28,17 +28,16 @@ public class TreatmentSystem : MonoBehaviour
     [Tooltip("Drag your Voice-Over audio clips here in the exact same order as the instruction cards!")]
     public AudioClip[] instructionVOs; // <--- NEW: Voice Overs!
 
+    [Tooltip("Drag your Voice-Over audio clips here in the exact same order as the instruction cards!")]
+    public AudioClip[] instructionVOs; // <--- NEW: Voice Overs!
+
     [Header("UI Panels")]
     public GameObject winScreenPanel;
     public GameObject failScreenPanel;
     public GameObject strikesPanel;
     public GameObject[] strikeXIcons;
 
-<<<<<<< Updated upstream
     [Header("Dynamic Rewards")]
-=======
-    [Header("Dynamic Rewards (NEW)")]
->>>>>>> Stashed changes
     public int coinsFor3Stars = 20;
     public int coinsFor2Stars = 15;
     public int coinsFor1Star = 10;
@@ -46,11 +45,7 @@ public class TreatmentSystem : MonoBehaviour
     public TextMeshProUGUI winScreenRewardText;
     public GameObject[] winStars = new GameObject[3];
 
-<<<<<<< Updated upstream
     [Header("Audio")]
-=======
-    [Header("Audio (Optional)")]
->>>>>>> Stashed changes
     public AudioSource sfxSource;
     public AudioClip correctClip;
     public AudioClip wrongClip;
@@ -61,13 +56,7 @@ public class TreatmentSystem : MonoBehaviour
     private bool isGameActive = false;
     private Coroutine strikeCoroutine;
 
-<<<<<<< Updated upstream
     void Awake()
-=======
-    private Coroutine strikeCoroutine;
-
-    public void StartMinigame(int startingStrikes)
->>>>>>> Stashed changes
     {
         if (injuredCharacterRenderer != null)
         {
@@ -95,15 +84,12 @@ public class TreatmentSystem : MonoBehaviour
         UpdateUI();
 
         if (strikes > 0) UpdateStrikesUI();
-<<<<<<< Updated upstream
         if (strikes >= 3) ShowCompleteFail();
-=======
 
         if (strikes >= 3)
         {
             ShowCompleteFail();
         }
->>>>>>> Stashed changes
     }
 
     public void CheckToolDrop(string droppedTag, GameObject toolObj)
@@ -117,29 +103,13 @@ public class TreatmentSystem : MonoBehaviour
 
             currentStep++;
 
-<<<<<<< Updated upstream
             if (currentStep >= correctToolTags.Count) DetermineWinState();
             else UpdateUI();
-=======
-            if (currentStep >= correctToolTags.Count)
-            {
-                DetermineWinState();
-            }
-            else
-            {
-                // Instantly shows the next card and plays the next Voice-Over!
-                UpdateUI();
-            }
->>>>>>> Stashed changes
         }
         else
         {
             strikes++;
             if (sfxSource && wrongClip) sfxSource.PlayOneShot(wrongClip);
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
             UpdateStrikesUI();
             if (strikes >= 3) ShowCompleteFail();
         }
@@ -171,6 +141,7 @@ public class TreatmentSystem : MonoBehaviour
 
     void HideAllInstructions()
     {
+        // 1. Show the correct text card
         for (int i = 0; i < instructionCards.Length; i++)
         {
             if (instructionCards[i] != null)
@@ -189,6 +160,15 @@ public class TreatmentSystem : MonoBehaviour
                 sfxSource.PlayOneShot(instructionVOs[currentStep]);
             }
         }
+
+        // 2. Play the corresponding Voice-Over!
+        if (instructionVOs != null && currentStep < instructionVOs.Length)
+        {
+            if (sfxSource != null && instructionVOs[currentStep] != null)
+            {
+                sfxSource.PlayOneShot(instructionVOs[currentStep]);
+            }
+        }
     }
 
     void UpdateStrikesUI()
@@ -196,8 +176,6 @@ public class TreatmentSystem : MonoBehaviour
         for (int i = 0; i < strikes; i++)
         {
             if (i < strikeXIcons.Length && strikeXIcons[i] != null) strikeXIcons[i].SetActive(true);
-<<<<<<< Updated upstream
-=======
         }
 
         if (strikeCoroutine != null) StopCoroutine(strikeCoroutine);
@@ -212,24 +190,15 @@ public class TreatmentSystem : MonoBehaviour
         if (isGameActive)
         {
             strikesPanel.SetActive(false);
->>>>>>> Stashed changes
         }
 
         if (strikeCoroutine != null) StopCoroutine(strikeCoroutine);
         strikeCoroutine = StartCoroutine(ShowStrikesRoutine());
     }
 
-    private IEnumerator ShowStrikesRoutine()
-    {
-        strikesPanel.SetActive(true);
-        yield return new WaitForSeconds(2f);
-        if (isGameActive) strikesPanel.SetActive(false);
-    }
-
     void DetermineWinState()
     {
         isGameActive = false;
-<<<<<<< Updated upstream
         HideAllInstructions();
         strikesPanel.SetActive(false);
 
@@ -265,24 +234,21 @@ public class TreatmentSystem : MonoBehaviour
 
             winScreenPanel.SetActive(true);
         }
-=======
-        firstAidKit3D.SetActive(false);
-        strikesPanel.SetActive(false);
 
-        int starsEarned = 1;
+        int starsEarned2 = 1;
         if (strikes == 0)
         {
-            starsEarned = 3;
+            starsEarned2 = 3;
             calculatedReward = coinsFor3Stars;
         }
         else if (strikes == 1)
         {
-            starsEarned = 2;
+            starsEarned2 = 2;
             calculatedReward = coinsFor2Stars;
         }
         else
         {
-            starsEarned = 1;
+            starsEarned2 = 1;
             calculatedReward = coinsFor1Star;
         }
 
@@ -291,11 +257,10 @@ public class TreatmentSystem : MonoBehaviour
 
         for (int i = 0; i < winStars.Length; i++)
         {
-            if (winStars[i] != null) winStars[i].SetActive(i < starsEarned);
+            if (winStars[i] != null) winStars[i].SetActive(i < starsEarned2);
         }
 
         winScreenPanel.SetActive(true);
->>>>>>> Stashed changes
     }
 
     void ShowCompleteFail()
@@ -314,7 +279,6 @@ public class TreatmentSystem : MonoBehaviour
         }
     }
 
-<<<<<<< Updated upstream
     public void ResetAllTools()
     {
         // --- NEW: REVERTS THE TEXTURE BACK TO INJURED ---
@@ -341,39 +305,26 @@ public class TreatmentSystem : MonoBehaviour
             if (winScreenPanel.transform.parent != null) winScreenPanel.transform.parent.gameObject.SetActive(false);
         }
 
-=======
-    public void OnWinPanelClaimed()
-    {
-        winScreenPanel.SetActive(false);
->>>>>>> Stashed changes
         if (levelManager != null) levelManager.CompleteWholeLevel(calculatedReward);
     }
 
     public void RetryTreatmentPhase()
     {
-<<<<<<< Updated upstream
         if (failScreenPanel != null)
         {
             failScreenPanel.SetActive(false);
             if (failScreenPanel.transform.parent != null) failScreenPanel.transform.parent.gameObject.SetActive(false);
         }
-=======
-        failScreenPanel.SetActive(false);
->>>>>>> Stashed changes
         if (levelManager != null) levelManager.ResetLevel();
     }
 
     public void ContinueFromFail()
     {
-<<<<<<< Updated upstream
         if (failScreenPanel != null)
         {
             failScreenPanel.SetActive(false);
             if (failScreenPanel.transform.parent != null) failScreenPanel.transform.parent.gameObject.SetActive(false);
         }
-=======
-        failScreenPanel.SetActive(false);
->>>>>>> Stashed changes
         if (levelManager != null) levelManager.ResetLevel();
     }
 }

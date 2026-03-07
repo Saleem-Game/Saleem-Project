@@ -2,7 +2,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using TMPro;
-<<<<<<< Updated upstream
 using UnityEngine.AI;
 
 public class CafeteriaLevel : LevelController
@@ -23,13 +22,6 @@ public class CafeteriaLevel : LevelController
     public Transform nurseStartingPosition;
 
     [Header("Cafeteria Triggers")]
-=======
-
-public class CafeteriaLevel : LevelController
-{
-    [Header("Cafeteria Triggers")]
-    public GameObject blueCrossTrigger;
->>>>>>> Stashed changes
     public GameObject nurseInteractTrigger;
     public GameObject seatInteractTrigger;
 
@@ -39,14 +31,11 @@ public class CafeteriaLevel : LevelController
     public float timeLimit = 80f;
     public GameObject timerFailPanel;
 
-<<<<<<< Updated upstream
-=======
     [Header("Nurse Swapping")]
     public GameObject walkingNurseObj;
     public GameObject sittingNurseObj;
     public NurseAI nurseAI;
 
->>>>>>> Stashed changes
     [Header("Dialogue UI & Feedback")]
     public GameObject dialoguePanel;
     public GameObject rightAnswerPanel;
@@ -64,11 +53,7 @@ public class CafeteriaLevel : LevelController
     [Header("Treatment Phase")]
     public GameObject treatmentCamera;
     public GameObject medicalKit;
-<<<<<<< Updated upstream
     public TreatmentSystem treatmentManager;
-=======
-    public TreatmentSystem treatmentManager; // minigameUI removed!
->>>>>>> Stashed changes
 
     [Header("Minigame Actors")]
     public GameObject injuredCharacter;
@@ -110,13 +95,9 @@ public class CafeteriaLevel : LevelController
         currentMistakes = 0;
         LockRoom();
 
-<<<<<<< Updated upstream
         // Turns off both the trigger AND the visual cross instantly
         if (levelStartTrigger) levelStartTrigger.SetActive(false);
         if (visualBlueCross) visualBlueCross.SetActive(false);
-=======
-        if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
->>>>>>> Stashed changes
 
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;
@@ -132,12 +113,8 @@ public class CafeteriaLevel : LevelController
         ResetActorPositions();
         TogglePlayer(true);
 
-<<<<<<< Updated upstream
         if (levelStartTrigger) levelStartTrigger.SetActive(false);
         if (visualBlueCross) visualBlueCross.SetActive(false);
-=======
-        if (blueCrossTrigger) blueCrossTrigger.SetActive(false);
->>>>>>> Stashed changes
 
         StartCoroutine(StartTimerSequence());
     }
@@ -262,24 +239,17 @@ public class CafeteriaLevel : LevelController
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;
 
-<<<<<<< Updated upstream
-=======
         if (walkingNurseObj) walkingNurseObj.SetActive(false);
         if (sittingNurseObj) sittingNurseObj.SetActive(true);
 
         if (injuredCharacter) injuredCharacter.SetActive(true);
 
->>>>>>> Stashed changes
         StartCoroutine(WaitBeforeTreatmentSequence());
     }
 
     private IEnumerator WaitBeforeTreatmentSequence()
     {
-<<<<<<< Updated upstream
         yield return new WaitForSeconds(2f);
-=======
-        yield return new WaitForSeconds(5f);
->>>>>>> Stashed changes
         StartTreatmentPhase();
     }
 
@@ -305,15 +275,11 @@ public class CafeteriaLevel : LevelController
         TogglePlayer(false);
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-<<<<<<< Updated upstream
         if (timerFailPanel)
         {
             if (timerFailPanel.transform.parent != null) timerFailPanel.transform.parent.gameObject.SetActive(true);
             timerFailPanel.SetActive(true);
         }
-=======
-        if (timerFailPanel) timerFailPanel.SetActive(true);
->>>>>>> Stashed changes
     }
 
     public void RetryTimerPhase()
@@ -340,11 +306,8 @@ public class CafeteriaLevel : LevelController
         if (treatmentCamera) treatmentCamera.SetActive(false);
         if (injuredCharacter) injuredCharacter.SetActive(false);
 
-<<<<<<< Updated upstream
         if (treatmentManager != null) treatmentManager.ResetAllTools();
 
-=======
->>>>>>> Stashed changes
         if (medicalKit)
         {
             MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
@@ -382,11 +345,8 @@ public class CafeteriaLevel : LevelController
 
         if (dialogueStrikePanel != null) dialogueStrikePanel.SetActive(false);
 
-<<<<<<< Updated upstream
         if (treatmentManager != null) treatmentManager.ResetAllTools();
 
-=======
->>>>>>> Stashed changes
         if (medicalKit)
         {
             MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
@@ -394,7 +354,6 @@ public class CafeteriaLevel : LevelController
             medicalKit.SetActive(false);
         }
 
-<<<<<<< Updated upstream
         if (walkingNurseObj != null && nurseStartingPosition != null)
         {
             NavMeshAgent agent = walkingNurseObj.GetComponent<NavMeshAgent>();
@@ -404,18 +363,12 @@ public class CafeteriaLevel : LevelController
             walkingNurseObj.transform.rotation = nurseStartingPosition.rotation;
         }
 
-=======
->>>>>>> Stashed changes
         if (walkingNurseObj) walkingNurseObj.SetActive(true);
         if (sittingNurseObj) sittingNurseObj.SetActive(false);
         if (injuredCharacter) injuredCharacter.SetActive(false);
 
-<<<<<<< Updated upstream
         if (levelStartTrigger) levelStartTrigger.SetActive(true);
         if (visualBlueCross) visualBlueCross.SetActive(true);
-=======
-        if (blueCrossTrigger) blueCrossTrigger.SetActive(true);
->>>>>>> Stashed changes
 
         if (seatInteractTrigger != null && seatInteractTrigger.GetComponent<Collider>() != null)
             seatInteractTrigger.GetComponent<Collider>().enabled = false;
