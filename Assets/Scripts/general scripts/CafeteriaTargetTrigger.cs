@@ -6,23 +6,27 @@ public class CafeteriaTargetTrigger : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        DraggableItem drag = other.GetComponent<DraggableItem>();
+        // Now specifically looks for DraggableItem2!
+        DraggableItem2 drag = other.GetComponent<DraggableItem2>();
         if (drag != null) drag.SetOverTarget(true, transform);
     }
 
     void OnTriggerExit(Collider other)
     {
-        DraggableItem drag = other.GetComponent<DraggableItem>();
+        DraggableItem2 drag = other.GetComponent<DraggableItem2>();
         if (drag != null) drag.SetOverTarget(false, null);
     }
 
-    // Our Universal DraggableItem calls this the moment you let go of the mouse!
     public void NotifyDrop(GameObject item)
     {
         if (treatmentSystem != null)
         {
-            // FIXED: We now call CheckToolDrop, passing in the item's tag and the item itself!
-            treatmentSystem.CheckToolDrop(item.tag, item);
+            DraggableItem2 drag = item.GetComponent<DraggableItem2>();
+            if (drag != null)
+            {
+                // We use your CUSTOM Item Tag from the script, not Unity's built-in tags!
+                treatmentSystem.CheckToolDrop(drag.itemTag, item);
+            }
         }
     }
 }
