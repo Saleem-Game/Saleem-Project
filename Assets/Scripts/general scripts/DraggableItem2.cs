@@ -93,14 +93,13 @@ public class DraggableItem2 : MonoBehaviour
 
         if (customCamera != null)
         {
-            lockedZDepth = customCamera.WorldToScreenPoint(transform.position).z - liftAmount;
+            // FIX: Don't subtract liftAmount from Z yet. 
+            // Just get the current distance from camera.
+            Vector3 screenPos = customCamera.WorldToScreenPoint(transform.position);
+            lockedZDepth = screenPos.z;
 
-            Vector3 liftedScreenPos = customCamera.WorldToScreenPoint(transform.position);
-            liftedScreenPos.z = lockedZDepth;
-            transform.position = customCamera.ScreenToWorldPoint(liftedScreenPos);
-
-            if (maintainClickOffset) clickOffset = transform.position - GetMouseAsWorldPoint();
-            else clickOffset = Vector3.zero;
+            // Calculate offset so the item doesn't "snap" its center to the mouse
+            clickOffset = transform.position - GetMouseAsWorldPoint();
         }
 
         transform.SetParent(null);
@@ -111,7 +110,9 @@ public class DraggableItem2 : MonoBehaviour
     private Vector3 GetMouseAsWorldPoint()
     {
         Vector3 mousePoint = Input.mousePosition;
-        mousePoint.z = lockedZDepth;
+        // FIX: Add the liftAmount here instead, or keep it 0 to stay 
+        // exactly on the mouse plane.
+        mousePoint.z = lockedZDepth - liftAmount;
         return customCamera.ScreenToWorldPoint(mousePoint);
     }
 

@@ -293,6 +293,21 @@ public class CafeteriaLevel : LevelController
         StartCoroutine(DoneButtonSequence(rewardCoins));
     }
 
+    // Call this when the player clicks "Retry" or "Continue" on the FAIL screen
+    public void RetryFromFail()
+    {
+        if (timerFailPanel)
+        {
+            timerFailPanel.SetActive(false);
+            if (timerFailPanel.transform.parent != null)
+                timerFailPanel.transform.parent.gameObject.SetActive(false);
+        }
+
+        // This triggers the teleportation logic you already have
+        ResetLevel();
+    }
+
+    // Update your DoneButtonSequence to ensure the nurse is reset after winning
     private IEnumerator DoneButtonSequence(int rewardCoins)
     {
         CoinManager coinManager = UnityEngine.Object.FindFirstObjectByType<CoinManager>(FindObjectsInactive.Include);
@@ -303,13 +318,7 @@ public class CafeteriaLevel : LevelController
 
         if (treatmentManager != null) treatmentManager.ResetAllTools();
 
-        if (medicalKit)
-        {
-            MedicalKit kitScript = medicalKit.GetComponent<MedicalKit>();
-            if (kitScript != null) kitScript.ResetKit();
-            medicalKit.SetActive(false);
-        }
-
+        // Reset everything, including moving the nurse back to the clinic
         ResetLevel();
 
         yield return new WaitForSeconds(1f);

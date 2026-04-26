@@ -171,25 +171,33 @@ public class TreatmentSystem : MonoBehaviour
     {
         for (int i = 0; i < strikes; i++)
         {
-            if (i < strikeXIcons.Length && strikeXIcons[i] != null) strikeXIcons[i].SetActive(true);
+            if (i < strikeXIcons.Length && strikeXIcons[i] != null)
+                strikeXIcons[i].SetActive(true);
         }
 
-        if (strikeCoroutine != null) StopCoroutine(strikeCoroutine);
+        // Stop the old one if it's currently running
+        if (strikeCoroutine != null)
+        {
+            StopCoroutine(strikeCoroutine);
+            strikesPanel.SetActive(false); // Make sure it's off before restarting
+        }
+
         strikeCoroutine = StartCoroutine(ShowStrikesRoutine());
     }
 
     private IEnumerator ShowStrikesRoutine()
     {
+        // 1. Show the panel
         strikesPanel.SetActive(true);
+
+        // 2. Wait for 2 seconds
         yield return new WaitForSeconds(2f);
 
-        if (isGameActive)
-        {
-            strikesPanel.SetActive(false);
-        }
+        // 3. Hide the panel
+        strikesPanel.SetActive(false);
 
-        if (strikeCoroutine != null) StopCoroutine(strikeCoroutine);
-        strikeCoroutine = StartCoroutine(ShowStrikesRoutine());
+        // 4. Clear the reference so we know it's finished
+        strikeCoroutine = null;
     }
 
     void DetermineWinState()

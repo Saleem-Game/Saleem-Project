@@ -193,17 +193,6 @@ public class NosebleedLevelManager : MonoBehaviour
             PlaySfx(winClip);
             SetStage(Stage.Completed);
 
-            if (!taskAlreadyChecked)
-            {
-                taskAlreadyChecked = true;
-                TaskManager tm = Object.FindFirstObjectByType<TaskManager>();
-                if (tm != null)
-                {
-                    Debug.Log("[LEVEL] Win Screen Active! Checking Classroom Task...");
-                    tm.CompleteTask(classroomTaskID);
-                }
-            }
-
             Debug.Log("[LEVEL] WIN 🎉 Waiting for Done Button...");
             return;
         }
@@ -234,12 +223,6 @@ public class NosebleedLevelManager : MonoBehaviour
         Debug.Log("[LEVEL] Win Screen closed! Handing control back to Player.");
 
         if (ui != null) ui.ShowWin(false);
-
-        TaskManager tm = Object.FindFirstObjectByType<TaskManager>();
-        if (tm != null)
-        {
-            tm.CompleteTask(classroomTaskID);
-        }
 
         // --- UPDATED: Uses the dynamic reward we calculated! ---
         CoinManager coinManager = Object.FindFirstObjectByType<CoinManager>();
