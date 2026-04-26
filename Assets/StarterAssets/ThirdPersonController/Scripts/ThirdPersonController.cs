@@ -114,6 +114,8 @@ namespace StarterAssets
             AssignAnimationIDs();
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            StartCoroutine(RestartArmature());
         }
 
         private void Update()
@@ -360,6 +362,27 @@ namespace StarterAssets
             if (animationEvent.animatorClipInfo.weight > 0.5f)
             {
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
+            }
+        }
+        
+        private System.Collections.IEnumerator RestartArmature()
+        {
+            // Wait just one frame for Unity to "settle"
+            yield return null;
+
+            if (_animator != null)
+            {
+                // The "Force Refresh" sequence
+                _animator.gameObject.SetActive(false);
+
+                // Immediately turn it back on in the same frame
+                _animator.gameObject.SetActive(true);
+
+                // Re-sync the animation logic
+                _animator.Rebind();
+                _animator.Update(0f);
+
+                Debug.Log("Saleem's Armature was refreshed successfully!");
             }
         }
     }

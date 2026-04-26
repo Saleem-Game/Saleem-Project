@@ -1,29 +1,24 @@
 using UnityEngine;
+using System.Collections; // <--- Add this line
 
 public class PlayerSpawner : MonoBehaviour
 {
-    void Start()
+    IEnumerator Start() // Change void to IEnumerator
     {
-        // If we don't have a target spawn point, just stay where we are in the scene
-        if (string.IsNullOrEmpty(SceneData.targetSpawnPoint)) return;
+        if (string.IsNullOrEmpty(SceneData.targetSpawnPoint)) yield break;
 
-        // Find the spawn point GameObject by its name
         GameObject spawnPoint = GameObject.Find(SceneData.targetSpawnPoint);
-
         if (spawnPoint != null)
         {
-            // CRITICAL: We must disable the CharacterController before teleporting!
             CharacterController cc = GetComponent<CharacterController>();
             if (cc != null) cc.enabled = false;
 
-            // Move the player and rotate them to face the right way
             transform.position = spawnPoint.transform.position;
             transform.rotation = spawnPoint.transform.rotation;
 
+            yield return new WaitForEndOfFrame(); // Wait 1 frame for Unity to catch up
             if (cc != null) cc.enabled = true;
         }
-
-        // Clear the memory so it doesn't accidentally trigger again
         SceneData.targetSpawnPoint = "";
     }
 }
